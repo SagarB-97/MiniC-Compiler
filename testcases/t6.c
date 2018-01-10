@@ -1,4 +1,12 @@
-#include <stdio.h
+#include <stdio.h>
+
+// T6
+/*
+Support extended for :
+    - Nested while loops
+    - If conditional statements
+    - Nested conditional statemets
+*/
 
 
 int main()
@@ -7,7 +15,6 @@ int main()
 
     while(f>0)
     {
-        {
         g = 5;
         while(g > 0)
         {
@@ -15,6 +22,14 @@ int main()
         }
         f--;
     }
-
+    if(f==5){
+        g++;
+        if(g==6){
+            f++;
+        }
+        else{
+            g++;
+        }
+    }
     return 0;
 }

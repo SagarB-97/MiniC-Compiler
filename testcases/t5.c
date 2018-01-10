@@ -1,8 +1,13 @@
 #include <stdio.h
 
-// error for missing paranthesis, >, quote
-
-void main(
+// T5
+/*
+Errors include :
+    - Unbalanced angular braces
+    - Unbalanced quotes
+    - Unbalanced parantheses
+*/
+void main()
 {
     char x, y, z;
     scanf("%c %c",&x, &y);

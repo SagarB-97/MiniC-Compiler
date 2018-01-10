@@ -1,13 +1,21 @@
 #include<stdio.h>
 
+// T2
 /*
-t2
+Test case to test following errors :
+- Missing Parantheses
+- Missing quotes
+
+Extened token support for :
+    - Operators including Arithmetic, assignment and Comma
 */
-// error for missing parathesis and quote
 
 int main()
 {
-        printf("hello;
-
+    printf("hello;
+    int a,b,c;
+    a = 10;
+    b = 20;
+    c = a+b;
     return 0;
 }

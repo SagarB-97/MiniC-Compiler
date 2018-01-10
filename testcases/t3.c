@@ -1,10 +1,32 @@
 #include <stdio.h>
 
-
+// T3
+/*
+Extended support for datatypes :
+    - short and long int
+    - float
+Added support for while loop
+Errors include :
+    - Unbalanced braces in while loop
+    - Unclosed comment
+*/
 int main()
 {
-    int a = 10, b = 5, c;
+    short int a = 10;
+    long long b = 5, c;
+    float floatVar = 2.3;
     c = a + b;
 
-    printf("sum = %d\n", c);
+    while(a--){
+    {
+        printf("sum = %d\n", c);
+    }
+
+    printf("Enter a number : ");
+    scanf("%d",&a);
+
+    while(a--){
+        printf("%d\n",a);
+    }
 }
+/* Hello this is a sample comment
