@@ -13,12 +13,12 @@ operator [+-<>*=/%,.]
 [\n] {lineNo++;
       printf("%s",yytext);
      }
-[{] { braces++; 
-      printf("LEFT BRACE\t\t%s\n\n",yytext); 
+[{] { braces++;
+      printf("LEFT BRACE\t\t%s\n\n",yytext);
       lastBraceOpen=lineNo;
     }
-[}] { braces--; 
-      printf("RIGHT BRACE\t\t%s\n\n",yytext); 
+[}] { braces--;
+      printf("RIGHT BRACE\t\t%s\n\n",yytext);
       lastBraceClosed=lineNo;
     }
 [/][*] {  comment++;
@@ -26,7 +26,7 @@ operator [+-<>*=/%,.]
           lastCommentOpen = lineNo;
         }
 [*][/] {  comment--;
-          printf("CLOSE COMMENT\t\t%s\n\n",yytext); 
+          printf("CLOSE COMMENT\t\t%s\n\n",yytext);
           lastCommentClosed = lineNo;
        }
 \"[^"\n]*["\n] {  if(yytext[yyleng-1]!='"'){

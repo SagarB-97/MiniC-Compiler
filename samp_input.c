@@ -1,8 +1,5 @@
 #include <stdio.h>
 
-/*Sample C /*Program
-*/
-*/
 struct samp{
   long int a;
   int _bcd_678;
@@ -15,6 +12,6 @@ int main(){
   test1.a = 5;
 
   test2.a = test1.a + 5645;
-  sendToFunction("Hel  jhklh  kjhgkj lo"");
+  sendToFunction("Hel  jhklh  kjhgkj lo");
   return 0;
 }
