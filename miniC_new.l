@@ -1,6 +1,8 @@
 %{
     #define RED   "\x1B[31m"
     #define RESET "\x1B[0m"
+    #define GRN   "\x1B[32m"
+    #define BLU   "\x1B[34m"
 
     int lookUpSymbolItem();
     void insertSymbolItem();
@@ -13,6 +15,7 @@
         struct symbolItemStruct* next;
     } symbolItem;
     symbolItem * symbolTable[1000];
+    symbolItem * constantTable[1000];
 
     int lineNo = 1;
     int comment = 0;
@@ -46,13 +49,14 @@ function        (_|{letter})({letter}|{number}|_)*"()"
                                             lineNo++;
                                         }
                                         printf("%-20s%20s%20d\n", "STRING", yytext, lineNo);
+                                        insertSymbolItem(yytext, "STRING", lineNo, 1);
                                       }
                                     }
 
 {keyword}                           { if(!comment){
                                         printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
                                         // if(!lookUpSymbolItem(yytext))
-                                        //     insertSymbolItem(yytext, "KEYWORD", lineNo);
+                                        //     insertSymbolItem(yytext, "KEYWORD", lineNo, 0);
                                       }
                                     }
 
@@ -63,12 +67,16 @@ function        (_|{letter})({letter}|{number}|_)*"()"
 
 [;]                                 { if(!comment) printf("%-20s%20s%20d\n", "SEMICOLON", yytext, lineNo); }
 
-{number}+                           { if(!comment) printf("%-20s%20s%20d\n", "NUMBER", yytext, lineNo); }
+{number}+                           { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "NUMBER", yytext, lineNo); 
+                                        insertSymbolItem(yytext, "INTEGER", lineNo, 1);
+                                        }
+                                    }    
 
 (_|{letter})({letter}|{number}|_)*  { if(!comment){
                                         printf("%-20s%20s%20d\n", "IDENTIFIER", yytext, lineNo);
                                         if(!lookUpSymbolItem(yytext))
-                                            insertSymbolItem(yytext, "IDENTIFIER", lineNo);
+                                            insertSymbolItem(yytext, "IDENTIFIER", lineNo, 0);
                                       }
                                     }
 
@@ -87,6 +95,9 @@ void initSymbolTable(){
     int i;
     for(i = 0;i<symbolTableSize; i++)
         symbolTable[i] = NULL;
+
+    for(i = 0;i<symbolTableSize; i++)
+        constantTable[i] = NULL;
 }
 
 int hash(unsigned char *str)
@@ -110,29 +121,47 @@ symbolItem* createSymbolItem(char *tokenValue, char *tokenType, int lineNumber){
     return item;
 }
 
-void insertSymbolItem(char *tokenValue, char *tokenType, int lineNumber){
+void insertSymbolItem(char *tokenValue, char *tokenType, int lineNumber, int tableno){
     int hashIndex = hash(tokenValue);
 
     symbolItem *item = createSymbolItem(tokenValue, tokenType, lineNumber);
-    symbolItem * temp = symbolTable[hashIndex];
-    while(temp!=NULL && temp->next!=NULL)
-        temp = temp->next;
 
-    if(temp == NULL)
-        symbolTable[hashIndex] = item;
+    if(tableno == 0)
+    {
+        symbolItem * temp = symbolTable[hashIndex];
+        while(temp!=NULL && temp->next!=NULL)
+            temp = temp->next;
+
+        if(temp == NULL)
+            symbolTable[hashIndex] = item;
+        else
+            temp->next = item;
+    }
+
     else
-        temp->next = item;
+    {
+        symbolItem * temp = constantTable[hashIndex];
+        while(temp!=NULL && temp->next!=NULL)
+            temp = temp->next;
+
+        if(temp == NULL)
+            constantTable[hashIndex] = item;
+        else
+            temp->next = item;
+    }
+    
 }
 
 int lookUpSymbolItem(char * tokenValue){
     int hashIndex = hash(tokenValue);
 
-    symbolItem * temp = symbolTable[hashIndex];
-    while(temp!=NULL && strcmp(tokenValue, temp->tokenValue)!=0)
-        temp=temp->next;
+        symbolItem * temp = symbolTable[hashIndex];
+        while(temp!=NULL && strcmp(tokenValue, temp->tokenValue)!=0)
+            temp=temp->next;
 
-    if(temp==NULL) return 0;
-    else return 1;
+        if(temp==NULL) return 0;
+        else return 1;
+    
 }
 
 void printSymbolItem(symbolItem * item){
@@ -141,7 +170,8 @@ void printSymbolItem(symbolItem * item){
 
 void showSymbolTable(){
     int i;
-    printf("\n\n%-20s%10s%20s\n","VALUE","TYPE","LINE NUMBER");
+    printf("\n-----------------------------------------------------------------\n");
+    printf(BLU "%-20s%10s%20s\n","VALUE","TYPE","LINE NUMBER" RESET);
     printf("-----------------------------------------------------------------\n");
 
     for(int i=0;i<symbolTableSize;i++){
@@ -153,17 +183,36 @@ void showSymbolTable(){
     }
 }
 
+void showConstantTable(){
+    int i;
+    printf("\n-----------------------------------------------------------------\n");
+    printf(BLU "%-20s%10s%20s\n","VALUE","TYPE","LINE NUMBER" RESET);
+    printf("-----------------------------------------------------------------\n");
+
+    for(int i=0;i<symbolTableSize;i++){
+        symbolItem* temp = constantTable[i];
+        while(temp!=NULL){
+            printSymbolItem(temp);
+            temp=temp->next;
+        }
+    }
+}
+
 int main(int argc, char** argv){
     initSymbolTable();
     yyin = fopen("samp_input.c", "r");
-    printf("\n\n%-20s%20s%20s\n", "TOKEN VALUE", "TOKEN TYPE", "LINE NUMBER");
+    printf("\n\n-----------------------------------------------------------------\n");
+    printf(BLU "%-20s%20s%20s\n", "TOKEN VALUE", "TOKEN TYPE", "LINE NUMBER" RESET);
     printf("-----------------------------------------------------------------\n");
     yylex();
 
     if(comment)
         printf(RED "Error : Error in parsing comments" RESET);
 
+    printf(GRN "\n\nSYMBOL TABLE" RESET);
     showSymbolTable();
+    printf(GRN "\n\nCONSTANT TABLE" RESET);
+    showConstantTable();
     printf("\n\n");
 }
 

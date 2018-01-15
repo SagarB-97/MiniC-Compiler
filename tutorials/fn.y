@@ -5,11 +5,12 @@
 %}
 
 %%
-    ED: E {printf("Valid Expression: ");}
+    ED: E {printf("Valid Expression\n\n");}
     ;
     E:    E '+' E
         | E '*' E
         | E '/' E
+        | E '-' E
         | '(' E ')'
         | ID
         | NUM
@@ -18,7 +19,7 @@
 
 void yyerror()
 {
-    printf("Invalid expression");
+    printf("Invalid expression\n\n");
 }
 
 int main()

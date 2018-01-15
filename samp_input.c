@@ -1,7 +1,9 @@
 /*
+/*
 This is a multi line comment
 int a, b, c;
-*/
+*/iuytuyi*/
+
 #include <stdio.h>
 
 struct samp{
