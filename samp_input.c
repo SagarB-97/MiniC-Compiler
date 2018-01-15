@@ -1,3 +1,7 @@
+/*
+This is a multi line comment
+int a, b, c;
+*/
 #include <stdio.h>
 
 struct samp{
@@ -10,8 +14,8 @@ int main(){
 {
   struct test1, test2;
   test1.a = 5;
-
   test2.a = test1.a + 5645;
-  sendToFunction("Hel  jhklh  kjhgkj lo");
+  sendToFunction("Hel  jhklh");
+  printf("Hello World\n");
   return 0;
 }

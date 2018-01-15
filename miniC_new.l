@@ -1,4 +1,7 @@
 %{
+    #define RED   "\x1B[31m"
+    #define RESET "\x1B[0m"
+
     int lookUpSymbolItem();
     void insertSymbolItem();
 
@@ -12,55 +15,66 @@
     symbolItem * symbolTable[1000];
 
     int lineNo = 1;
+    int comment = 0;
 %}
 
 keyword         char|int|float|short|long|unsigned|signed|main|while|for|break|case|if|else|continue|default|do|goto|return|void|struct|switch
 number          [0-9]
 letter          [a-zA-Z]
 operator        [+-<>*=/%,.]
+function        (_|{letter})({letter}|{number}|_)*"()"
 
 
 %%
+\/\/(.)*[\n]                        {lineNo++;}
 
-#(.*)                               { printf("%-20s%20s\n","PREPROCESSOR", yytext); }
+[/][*]                              { printf("%-20s%20s%20d\n", "OPEN COMMENT",yytext, lineNo); comment++; }
+[*][/]                              { printf("%-20s%20s%20d\n", "CLOSE COMMENT",yytext, lineNo); comment--; }
+
+{function}                          { printf("%-20s%20s%20d\n", "FUNCTION", yytext, lineNo); }
+
+#(.*)                               { if(!comment) printf("%-20s%20s%20d\n","PREPROCESSOR", yytext, lineNo); }
 
 [\n]                                { lineNo++; }
 
-[{]                                 { printf("%-20s%20s\n","LEFT BRACE", yytext); }
-[}]                                 { printf("%-20s%20s\n", "RIGHT BRACE", yytext); }
+[{]                                 { if(!comment) printf("%-20s%20s%20d\n","LEFT BRACE", yytext, lineNo); }
+[}]                                 { if(!comment) printf("%-20s%20s%20d\n", "RIGHT BRACE", yytext, lineNo); }
 
-[/][*]                              { printf("%-20s%20s\n", "OPEN COMMENT",yytext); }
-[*][/]                              { printf("%-20s%20s\n", "CLOSE COMMENT",yytext); }
-
-\"[^"\n]*["\n]                      { if(yytext[yyleng-1]!='"'){
-                                        printf("Error : Quote unbalanced at line number %d\n",lineNo);
-                                        lineNo++;
-                                    }
-                                    printf("%-20s%20s\n", "STRING", yytext);
-                                    }
-
-{keyword}                           { printf("%-20s%20s\n", "KEYWORD", yytext);
-                                    // if(!lookUpSymbolItem(yytext))
-                                    //     insertSymbolItem(yytext, "KEYWORD", lineNo);
+\"[^"\n]*["\n]                      { if(!comment) {
+                                        if(yytext[yyleng-1]!='"'){
+                                            printf(RED "Error : Quote unbalanced at line number %d\n" RESET,lineNo);
+                                            lineNo++;
+                                        }
+                                        printf("%-20s%20s%20d\n", "STRING", yytext, lineNo);
+                                      }
                                     }
 
-\/\/(.)*[\n]                        {lineNo++;}
+{keyword}                           { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        // if(!lookUpSymbolItem(yytext))
+                                        //     insertSymbolItem(yytext, "KEYWORD", lineNo);
+                                      }
+                                    }
 
-[(]                                 { printf("%-20s%20s\n", "OPEN PARANTHESIS", yytext); }
-[)]                                 { printf("%-20s%20s\n", "CLOSE PARANTHESIS", yytext); }
+[(]                                 { if(!comment) printf("%-20s%20s%20d\n", "OPEN PARANTHESIS", yytext, lineNo); }
+[)]                                 { if(!comment) printf("%-20s%20s%20d\n", "CLOSE PARANTHESIS", yytext, lineNo); }
 
 [\t ]                               { ; }
 
-[;]                                 { printf("%-20s%20s\n", "SEMICOLON", yytext); }
+[;]                                 { if(!comment) printf("%-20s%20s%20d\n", "SEMICOLON", yytext, lineNo); }
 
-{number}+                           { printf("%-20s%20s\n", "NUMBER", yytext); }
+{number}+                           { if(!comment) printf("%-20s%20s%20d\n", "NUMBER", yytext, lineNo); }
 
-(_|{letter})({letter}|{number}|_)*  { printf("%-20s%20s\n", "IDENTIFIER", yytext);
-                                      if(!lookUpSymbolItem(yytext))
-                                        insertSymbolItem(yytext, "IDENTIFIER", lineNo);
+(_|{letter})({letter}|{number}|_)*  { if(!comment){
+                                        printf("%-20s%20s%20d\n", "IDENTIFIER", yytext, lineNo);
+                                        if(!lookUpSymbolItem(yytext))
+                                            insertSymbolItem(yytext, "IDENTIFIER", lineNo);
+                                      }
                                     }
 
-{operator}                          { printf("%-20s%20s\n", "OPERATOR", yytext); }
+{operator}                          { if(!comment) printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); }
+
+.                                   { if(!comment) printf(RED "Error : Invalid Token %s at Line %d\n" RESET, yytext, lineNo); }
 
 %%
 
@@ -139,13 +153,17 @@ void showSymbolTable(){
     }
 }
 
-int main(){
+int main(int argc, char** argv){
     initSymbolTable();
     yyin = fopen("samp_input.c", "r");
-    printf("\n\n%-20s%20s\n", "TOKEN VALUE", "TOKEN TYPE");
+    printf("\n\n%-20s%20s%20s\n", "TOKEN VALUE", "TOKEN TYPE", "LINE NUMBER");
     printf("-----------------------------------------------------------------\n");
     yylex();
 
+    if(comment)
+        printf(RED "Error : Error in parsing comments" RESET);
+
     showSymbolTable();
+    printf("\n\n");
 }
 
