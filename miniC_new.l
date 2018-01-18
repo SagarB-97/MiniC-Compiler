@@ -24,7 +24,7 @@
 keyword         char|int|float|short|long|unsigned|signed|main|while|for|break|case|if|else|continue|default|do|goto|return|void|struct|switch
 number          [0-9]
 letter          [a-zA-Z]
-operator        [+-<>*=/!%,\[\]^&.]
+operator        [+-<>*=/!%^&.]
 function        (_|{letter})({letter}|{number}|_)*"()"
 
 
@@ -62,6 +62,9 @@ function        (_|{letter})({letter}|{number}|_)*"()"
 
 [(]                                 { if(!comment) printf("%-20s%20s%20d\n", "OPEN PARANTHESIS", yytext, lineNo); }
 [)]                                 { if(!comment) printf("%-20s%20s%20d\n", "CLOSE PARANTHESIS", yytext, lineNo); }
+[\[\]]                              { if(!comment) printf("%-20s%20s%20d\n", "SQUARE BRACKETS", yytext, lineNo); }
+[,]                                 { if(!comment) printf("%-20s%20s%20d\n", "COMMA", yytext, lineNo); }
+
 
 [\t ]                               { ; }
 
