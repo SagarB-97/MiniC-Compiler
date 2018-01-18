@@ -3,7 +3,6 @@
 // T2
 /*
 Test case to test following errors :
-- Missing Parantheses
 - Missing quotes
 
 Extened token support for :
@@ -12,7 +11,7 @@ Extened token support for :
 
 int main()
 {
-    printf("hello;
+    printf("hello);
     int a,b,c;
     a = 10;
     b = 20;

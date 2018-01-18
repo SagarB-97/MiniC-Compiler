@@ -6,7 +6,6 @@ Suppport extended for :
     - Combined declaration and definition of arrays
     - Array subscript operator ([])
 Errors :
-    - Unbalanced braces
     - Extra comment closing token
 */
 */
@@ -14,8 +13,7 @@ Errors :
 int main()
 {
     int arr[3] = {-1,0,9};
-    {
-        printf("t4s");
+    printf("t4s");
 
     int search;
     printf("Enter a number to search : ");

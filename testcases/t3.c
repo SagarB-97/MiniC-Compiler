@@ -7,7 +7,6 @@ Extended support for datatypes :
     - float
 Added support for while loop
 Errors include :
-    - Unbalanced braces in while loop
     - Unclosed comment
 */
 int main()
@@ -18,7 +17,6 @@ int main()
     c = a + b;
 
     while(a--){
-    {
         printf("sum = %d\n", c);
     }
 
