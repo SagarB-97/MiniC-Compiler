@@ -7,9 +7,9 @@ Errors include :
 */
 void main()
 {
-    char x, y, z;
+    char x = 'g', y, z;
     scanf("%c %c",&x, &y);
     z = x + y;
 
-    printf("Result = %c, z);
+    printf("Result = %c", z);
 }

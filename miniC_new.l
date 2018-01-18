@@ -24,7 +24,7 @@
 keyword         char|int|float|short|long|unsigned|signed|main|while|for|break|case|if|else|continue|default|do|goto|return|void|struct|switch
 number          [0-9]
 letter          [a-zA-Z]
-operator        [+-<>*=/%,.]
+operator        [+-<>*=/!%,\[\]^&.]
 function        (_|{letter})({letter}|{number}|_)*"()"
 
 
@@ -34,7 +34,7 @@ function        (_|{letter})({letter}|{number}|_)*"()"
 [/][*]                              { printf("%-20s%20s%20d\n", "OPEN COMMENT",yytext, lineNo); comment++; }
 [*][/]                              { printf("%-20s%20s%20d\n", "CLOSE COMMENT",yytext, lineNo); comment--; }
 
-{function}                          { printf("%-20s%20s%20d\n", "FUNCTION", yytext, lineNo); }
+{function}                          { if(!comment) printf("%-20s%20s%20d\n", "FUNCTION", yytext, lineNo); }
 
 #(.*)                               { if(!comment) printf("%-20s%20s%20d\n","PREPROCESSOR", yytext, lineNo); }
 
@@ -66,6 +66,18 @@ function        (_|{letter})({letter}|{number}|_)*"()"
 [\t ]                               { ; }
 
 [;]                                 { if(!comment) printf("%-20s%20s%20d\n", "SEMICOLON", yytext, lineNo); }
+
+\'.\'                               { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "CHARACTER", yytext, lineNo); 
+                                        insertSymbolItem(yytext, "CHARACTER", lineNo, 1);
+                                        }
+                                    }
+
+{number}+\.{number}+                { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "FLOAT NUMBER", yytext, lineNo); 
+                                        insertSymbolItem(yytext, "FLOAT", lineNo, 1);
+                                        }
+                                    } 
 
 {number}+                           { if(!comment) {
                                         printf("%-20s%20s%20d\n", "NUMBER", yytext, lineNo); 
@@ -171,7 +183,7 @@ void printSymbolItem(symbolItem * item){
 void showSymbolTable(){
     int i;
     printf("\n-----------------------------------------------------------------\n");
-    printf(BLU "%-20s%10s%20s\n","VALUE","TYPE","LINE NUMBER" RESET);
+    printf(BLU "%-20s%10s%24s\n","VALUE","TYPE","LINE NUMBER" RESET);
     printf("-----------------------------------------------------------------\n");
 
     for(int i=0;i<symbolTableSize;i++){
@@ -186,7 +198,7 @@ void showSymbolTable(){
 void showConstantTable(){
     int i;
     printf("\n-----------------------------------------------------------------\n");
-    printf(BLU "%-20s%10s%20s\n","VALUE","TYPE","LINE NUMBER" RESET);
+    printf(BLU "%-20s%10s%24s\n","VALUE","TYPE","LINE NUMBER" RESET);
     printf("-----------------------------------------------------------------\n");
 
     for(int i=0;i<symbolTableSize;i++){
@@ -199,10 +211,14 @@ void showConstantTable(){
 }
 
 int main(int argc, char** argv){
+    if(argc < 2){
+        printf(RED "Pass input file as command line argument\n" RESET);
+        exit(0);
+    }
     initSymbolTable();
-    yyin = fopen("samp_input.c", "r");
+    yyin = fopen(argv[1], "r");
     printf("\n\n-----------------------------------------------------------------\n");
-    printf(BLU "%-20s%20s%20s\n", "TOKEN VALUE", "TOKEN TYPE", "LINE NUMBER" RESET);
+    printf(BLU "%-20s%20s%24s\n", "TOKEN VALUE", "TOKEN TYPE", "LINE NUMBER" RESET);
     printf("-----------------------------------------------------------------\n");
     yylex();
 
