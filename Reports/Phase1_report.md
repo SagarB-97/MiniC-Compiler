@@ -474,6 +474,3 @@ int main()
 ```
 
 
-## Screenshots
-
-

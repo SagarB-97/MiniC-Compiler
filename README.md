@@ -1,7 +1,10 @@
 # MiniC-Compiler
+
+**Note :** Find all reports in `Reports/`
+
 A compiler for a subset of C language
 </br></br>
-Lex helps write programs whose control flow is directed by instances of regular expressions in the input stream. It is well suited for editor-script type transformations and for segmenting input in preparation for a parsing routine. 
+Lex helps write programs whose control flow is directed by instances of regular expressions in the input stream. It is well suited for editor-script type transformations and for segmenting input in preparation for a parsing routine.
 Using Lex we will design a lexical analyser for a subset of the C language.
 - It will support nested while loops.
 - It will support the char and int datatype and its subtypes (short, long, default). 
