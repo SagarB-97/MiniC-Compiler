@@ -1,3 +1,5 @@
+**Note : A pdf version for this report is generated : `Phase1-Report.pdf`. Please download that version**
+
 # Phase 1 - Lexical Analyser Report
 
 ## Introduction
@@ -8,29 +10,29 @@ In other words, compiler parses the code in source language and converts it into
 <br><br>
 
 ### Structure of Compiler
-The structure of a compiler is divided into two main phases :   
+The structure of a compiler is divided into two main phases :
 - Analysis Phase
-- Synthesis Phase 
+- Synthesis Phase
 
 #### Analysis Phase
-The analysis part breaks up the source program into constituent pieces and imposes a grammatical structure on them. If the program is found to violate the grammar of the language, then, appropriate error messages are raised by the compiler in this phase. The analysis part also collects information about the source program and stores it in a data structure called a symbol table, which is passed along with the intermediate representation to the synthesis part. 
+The analysis part breaks up the source program into constituent pieces and imposes a grammatical structure on them. If the program is found to violate the grammar of the language, then, appropriate error messages are raised by the compiler in this phase. The analysis part also collects information about the source program and stores it in a data structure called a symbol table, which is passed along with the intermediate representation to the synthesis part.
 
 The analysis phase is divided into the following four sub phases :
 - **Lexical analysis** :  Lexical analysis or tokenization is the process of converting a sequence of characters in a computer program into a sequence of tokens.
 - **Syntax analysis** : Syntax analysis or parsing refers to the formal analysis of a string of tokens into its constituents, resulting in a parse tree showing their syntactic relation to each other.
-- **Semantic analysis** : The semantic analyzer uses the syntax tree and the information in the symbol table to check the source program for semantic consistency with the language definition. 
+- **Semantic analysis** : The semantic analyzer uses the syntax tree and the information in the symbol table to check the source program for semantic consistency with the language definition.
 - **Intermediate code generation** : This phase involves generation of an explicit low-level or machine-like intermediate representation, which can be thought of as a program for an abstract machine.
 
 #### Synthesis Phase
 
-Synthesis phase involves the following two phases : 
+Synthesis phase involves the following two phases :
 - **Code Optimisation** : This phase involves optimisation of intermediate code to generate an optimised target code. Compilers specifically written for producing optimized build spend most time in this phase.
 - **Code Generation** : The code generator takes as input an intermediate representation of the source
 program and maps it into the target language.
 
 ## Lexical Analysis
 
-The lexical analyzer reads the stream of characters making up the source program and groups the characters into meaningful sequences called lexemes. The lexical analyser outputs a token for each lexeme it recognises. The token is of the form : 
+The lexical analyzer reads the stream of characters making up the source program and groups the characters into meaningful sequences called lexemes. The lexical analyser outputs a token for each lexeme it recognises. The token is of the form :
 ```
 (token name, attribute value)
 ```
@@ -207,7 +209,7 @@ void insertSymbolItem(char *tokenValue, char *tokenType, int lineNumber, int tab
         else
             temp->next = item;
     }
-    
+
 }
 
 int lookUpSymbolItem(char * tokenValue){
@@ -219,7 +221,7 @@ int lookUpSymbolItem(char * tokenValue){
 
         if(temp==NULL) return 0;
         else return 1;
-    
+
 }
 
 void printSymbolItem(symbolItem * item){
@@ -280,4 +282,198 @@ int main(int argc, char** argv){
 
 
 ```
+
+## Testcases
+
+### 1
+
+```
+#include <stdio.h>
+
+// T1
+/*
+A very Basic Program
+Tests for :
+ - Comment removal (Both Single line and multi line)
+ - Basic Tokenisation
+    - Keywords
+    - Identifiers
+    - Strings
+    - Function Calls
+*/
+
+int main()
+{
+    printf("Hello World");
+
+    int a,b,c;
+    a = 5;
+    b = 6;
+    c = 7;
+    b = a + c;
+    return 0;
+}
+```
+
+### 2
+
+```
+#include<stdio.h>
+
+// T2
+/*
+Test case to test following errors :
+- Missing quotes
+
+Extened token support for :
+    - Operators including Arithmetic, assignment and Comma
+*/
+
+int main()
+{
+    printf("hello);
+    int a,b,c;
+    a = 10;
+    b = 20;
+    c = a+b;
+    return 0;
+}
+```
+
+### 3
+
+```
+#include <stdio.h>
+
+// T3
+/*
+Extended support for datatypes :
+    - short and long int
+    - float
+Added support for while loop
+Errors include :
+    - Unclosed comment
+*/
+int main()
+{
+    short int a = 10;
+    long long b = 5, c;
+    float floatVar = 2.3;
+    c = a + b;
+
+    while(a--){
+        printf("sum = %d\n", c);
+    }
+
+    printf("Enter a number : ");
+    scanf("%d",&a);
+
+    while(a--){
+        printf("%d\n",a);
+    }
+}
+/* Hello this is a sample comment
+```
+
+### 4
+
+```
+#include<stdio.h>
+
+// T4
+/*
+Suppport extended for :
+    - Combined declaration and definition of arrays
+    - Array subscript operator ([])
+Errors :
+    - Extra comment closing token
+*/
+*/
+
+int main()
+{
+    int arr[3] = {-1,0,9};
+    printf("t4s");
+
+    int search;
+    printf("Enter a number to search : ");
+    scanf("%d", &search);
+
+    int l = 0,r = 2;
+    while(l<=r){
+        int mid = (l+r)/2;
+        if(arr[mid] == search)
+            break;
+        else if(arr[mid]<search)
+            r = mid - 1;
+        else
+            l = mid + 1;
+    }
+    return 0;
+}
+```
+
+### 5
+
+```
+#include <stdio.h>
+
+// T5
+/*
+Errors include :
+    - Unbalanced quotes
+*/
+void main()
+{
+    char x = 'g', y, z;
+    scanf("%c %c",&x, &y);
+    z = x + y;
+
+    printf("Result = %c", z);
+}
+```
+
+### 6
+
+```
+#include <stdio.h>
+
+// T6
+/*
+Support extended for :
+    - Nested while loops
+    - If conditional statements
+    - Nested conditional statemets
+*/
+
+
+int main()
+{
+    short int f = 5, g = 5;
+
+    while(f>0)
+    {
+        g = 5;
+        while(g > 0)
+        {
+            g--;
+        }
+        f--;
+    }
+    if(f==5){
+        g++;
+        if(g==6){
+            f++;
+        }
+        else{
+            g++;
+        }
+    }
+    return 0;
+}
+```
+
+
+## Screenshots
+
 
