@@ -75,20 +75,12 @@ function        (_|{letter})({letter}|{number}|_)*"()"
                                         insertSymbolItem(yytext, "CHARACTER", lineNo, 1);
                                         }
                                     }
-\[{number}*\]                       { if(!comment) printf("%-20s%20s%20d\n", "ARRAY SUBSCRIPT", yytext, lineNo); }
-
-{number}+(\.{number}+)?e{number}+    { if(!comment) {
-                                        printf("%-20s%20s%20d\n", "FLOAT EXP FORM", yytext, lineNo); 
-                                        insertSymbolItem(yytext, "FLOAT", lineNo, 1);
-                                        }
-                                    } 
 
 {number}+\.{number}+                { if(!comment) {
                                         printf("%-20s%20s%20d\n", "FLOAT NUMBER", yytext, lineNo); 
                                         insertSymbolItem(yytext, "FLOAT", lineNo, 1);
                                         }
                                     } 
-
 
 {number}+                           { if(!comment) {
                                         printf("%-20s%20s%20d\n", "NUMBER", yytext, lineNo); 
@@ -100,20 +92,12 @@ function        (_|{letter})({letter}|{number}|_)*"()"
                                         printf("%-20s%20s%20d\n", "IDENTIFIER", yytext, lineNo);
                                         if(!lookUpSymbolItem(yytext))
                                             insertSymbolItem(yytext, "IDENTIFIER", lineNo, 0);
-                                            
-                                      }
-                                    }
-\(_|{letter})({letter}|{number}|_)*  { if(!comment){
-                                        printf("%-20s%20s%20d\n", "IDENTIFIER", yytext, lineNo);
-                                        if(!lookUpSymbolItem(yytext))
-                                            insertSymbolItem(yytext, "IDENTIFIER", lineNo, 0);
-                                            
                                       }
                                     }
 
 {operator}                          { if(!comment) printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); }
 
-{number}({letter}|{number}|_)+      { if(!comment) printf(RED "Error : Invalid Token %s at Line %d\n" RESET, yytext, lineNo); }
+{number}({letter}|{number}|_)+         { if(!comment) printf(RED "Error : Invalid Token %s at Line %d\n" RESET, yytext, lineNo); }
 
 .                                   { if(!comment) printf(RED "Error : Invalid Token %s at Line %d\n" RESET, yytext, lineNo); }
 

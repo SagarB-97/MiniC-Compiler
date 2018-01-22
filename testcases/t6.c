@@ -18,17 +18,17 @@ int main()
         g = 5;
         while(g > 0)
         {
-            g--;
+            g=g-1;
         }
-        f--;
+        f=f-1;
     }
-    if(f==5){
-        g++;
-        if(g==6){
-            f++;
+    if(f){
+        g=g-1;
+        if(g){
+            f=f+1;
         }
         else{
-            g++;
+            g=g+1;
         }
     }
     return 0;

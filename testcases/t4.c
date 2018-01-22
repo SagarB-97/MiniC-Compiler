@@ -8,7 +8,7 @@ Suppport extended for :
 Errors :
     - Extra comment closing token
 */
-*/
+
 
 int main()
 {
@@ -20,9 +20,9 @@ int main()
     scanf("%d", &search);
 
     int l = 0,r = 2;
-    while(l<=r){
+    while(l<r){
         int mid = (l+r)/2;
-        if(arr[mid] == search)
+        if(arr[mid])
             break;
         else if(arr[mid]<search)
             r = mid - 1;
