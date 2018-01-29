@@ -21,7 +21,7 @@
     int comment = 0;
 %}
 
-keyword         char|int|float|short|long|unsigned|signed|main|while|for|break|case|if|else|continue|default|do|goto|return|void|struct|switch
+keyword         char|int|float|short|long|unsigned|signed|main|while|for|break|case|if|else|continue|default|do|return|void|struct|switch
 number          [0-9]
 letter          [a-zA-Z]
 operator        [+-<>*=/!%^&.]
