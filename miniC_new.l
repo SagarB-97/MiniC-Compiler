@@ -34,14 +34,25 @@ function        (_|{letter})({letter}|{number}|_)*"()"
 [/][*]                              { printf("%-20s%20s%20d\n", "OPEN COMMENT",yytext, lineNo); comment++; }
 [*][/]                              { printf("%-20s%20s%20d\n", "CLOSE COMMENT",yytext, lineNo); comment--; }
 
-{function}                          { if(!comment) printf("%-20s%20s%20d\n", "FUNCTION", yytext, lineNo); }
 
-#(.*)                               { if(!comment) printf("%-20s%20s%20d\n","PREPROCESSOR", yytext, lineNo); }
+'#'                                 { if(!comment){ 
+                                            printf("%-20s%20s%20d\n","PREPROCESSOR", yytext, lineNo);
+                                            return *yytext;  
+                                        }
+                                    }
 
 [\n]                                { lineNo++; }
 
-[{]                                 { if(!comment) printf("%-20s%20s%20d\n","LEFT BRACE", yytext, lineNo); }
-[}]                                 { if(!comment) printf("%-20s%20s%20d\n", "RIGHT BRACE", yytext, lineNo); }
+[{]                                 { if(!comment){
+                                            printf("%-20s%20s%20d\n","LEFT BRACE", yytext, lineNo);
+                                            return *yytext;
+                                        }  
+                                    }
+[}]                                 { if(!comment){
+                                            printf("%-20s%20s%20d\n","RIGHT BRACE", yytext, lineNo);
+                                            return *yytext;
+                                        }  
+                                    }
 
 \"[^"\n]*["\n]                      { if(!comment) {
                                         if(yytext[yyleng-1]!='"'){
@@ -49,43 +60,174 @@ function        (_|{letter})({letter}|{number}|_)*"()"
                                             lineNo++;
                                         }
                                         printf("%-20s%20s%20d\n", "STRING", yytext, lineNo);
+                                        strcpy(yylval, yytext);
                                         insertSymbolItem(yytext, "STRING", lineNo, 1);
+                                        return STRING;
                                       }
                                     }
 
-{keyword}                           { if(!comment){
+int                                 { if(!comment){
                                         printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
-                                        if(!lookUpSymbolItem(yytext))
-                                            insertSymbolItem(yytext, "KEYWORD", lineNo, 0);
+                                        return INT;
                                       }
                                     }
 
-[(]                                 { if(!comment) printf("%-20s%20s%20d\n", "OPEN PARANTHESIS", yytext, lineNo); }
-[)]                                 { if(!comment) printf("%-20s%20s%20d\n", "CLOSE PARANTHESIS", yytext, lineNo); }
-[\[\]]                              { if(!comment) printf("%-20s%20s%20d\n", "SQUARE BRACKETS", yytext, lineNo); }
-[,]                                 { if(!comment) printf("%-20s%20s%20d\n", "COMMA", yytext, lineNo); }
+float                              { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return FLOAT;
+                                      }
+                                    }
+char                               { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return CHAR;
+                                      }
+                                    }
+double                             { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return DOUBLE;
+                                      }
+                                    }
+void                               { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return VOID;
+                                      }
+                                    }
+signed                             { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return SIGNED;
+                                      }
+                                    }
+unsigned                           { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return UNSIGNED;
+                                      }
+                                    }
+long                               { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return LONG;
+                                      }
+                                    }
+short                              { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return SHORT;
+                                      }
+                                    }
+switch                             { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return SWITCH;
+                                      }
+                                    }
+break                              { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return BREAK;
+                                      }
+                                    }
+continue                           { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return CONTINUE;
+                                      }
+                                    }
+case                               { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return CASE;
+                                      }
+                                    }
+default                           { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return DEFAULT;
+                                      }
+                                    }
+for                                { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return FOR;
+                                      }
+                                    }
+while                              { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return WHILE;
+                                      }
+                                    }
+do                                 { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return DO;
+                                      }
+                                    }
+if                                 { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return IF;
+                                      }
+                                    }
+else                               { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return ELSE;
+                                      }
+                                    }
+struct                             { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return STRUCT;
+                                      }
+                                    }
+                                                                                                            
+
+[(]                                 { if(!comment) {
+                                            printf("%-20s%20s%20d\n", "OPEN PARANTHESIS", yytext, lineNo);
+                                            return *yytext;
+                                        }
+                                    }
+
+[)]                                 { if(!comment) {
+                                            printf("%-20s%20s%20d\n", "CLOSE PARANTHESIS", yytext, lineNo);
+                                            return *yytext;
+                                        }
+                                    }
+[\[]                                { if(!comment) {
+                                            printf("%-20s%20s%20d\n", "SQUARE BRACKETS", yytext, lineNo);
+                                            return *yytext;
+                                        } 
+                                    }
+
+[\]]                                { if(!comment) {
+                                            printf("%-20s%20s%20d\n", "SQUARE BRACKETS", yytext, lineNo);
+                                            return *yytext;
+                                        } 
+                                    }
+
+[,]                                 { if(!comment) {
+                                            printf("%-20s%20s%20d\n", "COMMA", yytext, lineNo);
+                                            return *yytext;
+                                        } 
+                                    } 
 
 
 [\t ]                               { ; }
 
-[;]                                 { if(!comment) printf("%-20s%20s%20d\n", "SEMICOLON", yytext, lineNo); }
+[;]                                 { if(!comment) {
+                                            printf("%-20s%20s%20d\n", "SEMI COLON", yytext, lineNo);
+                                            return *yytext;
+                                        } 
+                                    }
 
 \'.\'                               { if(!comment) {
                                         printf("%-20s%20s%20d\n", "CHARACTER", yytext, lineNo); 
                                         insertSymbolItem(yytext, "CHARACTER", lineNo, 1);
+                                        strcpy(yylval, yytext);
+                                        return CHARCONST;
                                         }
                                     }
-\[{number}*\]                       { if(!comment) printf("%-20s%20s%20d\n", "ARRAY SUBSCRIPT", yytext, lineNo); }
 
 {number}+(\.{number}+)?e{number}+    { if(!comment) {
                                         printf("%-20s%20s%20d\n", "FLOAT EXP FORM", yytext, lineNo); 
                                         insertSymbolItem(yytext, "FLOAT", lineNo, 1);
+                                        yylval = atof(yytext);
+                                        return FLOATNUM;
                                         }
                                     } 
 
 {number}+\.{number}+                { if(!comment) {
                                         printf("%-20s%20s%20d\n", "FLOAT NUMBER", yytext, lineNo); 
                                         insertSymbolItem(yytext, "FLOAT", lineNo, 1);
+                                        yylval = atof(yytext);
+                                        return FLOATNUM;
                                         }
                                     } 
 
@@ -93,6 +235,8 @@ function        (_|{letter})({letter}|{number}|_)*"()"
 {number}+                           { if(!comment) {
                                         printf("%-20s%20s%20d\n", "NUMBER", yytext, lineNo); 
                                         insertSymbolItem(yytext, "INTEGER", lineNo, 1);
+                                        yylval = atoi(yytext);
+                                        return NUM;
                                         }
                                     }    
 
@@ -100,14 +244,16 @@ function        (_|{letter})({letter}|{number}|_)*"()"
                                         printf("%-20s%20s%20d\n", "IDENTIFIER", yytext, lineNo);
                                         if(!lookUpSymbolItem(yytext))
                                             insertSymbolItem(yytext, "IDENTIFIER", lineNo, 0);
-                                            
+                                        strcpy(yylval, yytext);
+                                        return ID;
                                       }
                                     }
 \(_|{letter})({letter}|{number}|_)*  { if(!comment){
                                         printf("%-20s%20s%20d\n", "IDENTIFIER", yytext, lineNo);
                                         if(!lookUpSymbolItem(yytext))
                                             insertSymbolItem(yytext, "IDENTIFIER", lineNo, 0);
-                                            
+                                        strcpy(yylval, yytext);
+                                        return ID;
                                       }
                                     }
 
