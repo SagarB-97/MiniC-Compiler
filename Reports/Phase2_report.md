@@ -6,7 +6,7 @@ The second phase of the compiler is syntax analysis or parsing. The parser uses 
 of the token stream. It also checks for correct syntax in the process. A typical representation is a syntax tree in which each interior node represents an operation and the children of the node represent the arguments of the operation. The subsequent phases of the compiler use the grammatical structure to help analyze the source program and generate the target program.
 <br><br>
  By design, every programming language has precise rules that prescribe the
-syntactic structure of well-formed programs. In C, for example, a program is made up of functions, a function out of declarations and statements, a statement out of expressions, and so on. The syntax of programming language constructs can be specied by context-free grammars or BNF (Backus-Naur Form) notation.Grammars oer signicant benets for both language designers and compiler writers.
+syntactic structure of well-formed programs. In C, for example, a program is made up of functions, a function out of declarations and statements, a statement out of expressions, and so on. The syntax of programming language constructs can be specied by context-free grammars or BNF (Backus-Naur Form) notation.Grammars offer significant benefits for both language designers and compiler writers.
 <br><br>
 
 ## Type of Parsers
