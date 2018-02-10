@@ -257,7 +257,104 @@ struct                             { if(!comment){
                                       }
                                     }
 
-{operator}                          { if(!comment) printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); }
+"+"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+"-"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+"*"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+"/"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+"+"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return OP;
+                                        }                   
+                                    }
+"%"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+"^"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+
+"!"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+"&"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+"."                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+"=="                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return EQQ;
+                                        }                   
+                                    }
+"="                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return *yytext;
+                                        }                   
+                                    }
+"!="                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return NE;
+                                        }                   
+                                    }
+"<"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return LT;
+                                        }                   
+                                    }
+">"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return GT;
+                                        }                   
+                                    }
+"<="                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return LE;
+                                        }                   
+                                    }
+">="                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return GE;
+                                        }                   
+                                    }
+"&&"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return AND;
+                                        }                   
+                                    }
+"||"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return OR;
+                                        }                   
+                                    }
+
+
 
 {number}({letter}|{number}|_)+      { if(!comment) printf(RED "Error : Invalid Token %s at Line %d\n" RESET, yytext, lineNo); }
 

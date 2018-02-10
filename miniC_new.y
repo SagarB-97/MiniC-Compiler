@@ -13,19 +13,19 @@
 %token NUM ID FLOATNUM STRING CHARCONST
 %token INCLUDE
 
-%right '=' '+=' '-=' '/=' '*='
+%right '=' '+=' '-=' '/=' '*='            //Last four not defined
 %left AND OR
-%left LE GE EQ NE LT GT 
-%left '+' '-' '*' '/' '%' '^' '!' '&' '.' '==' '!=' 
+%left LE GE EQ NE LT GT                        // LE <= GE >= EQ == NE != LT < GT >
+%left '+' '-' '*' '/' '%' '^' '!' '&' '.'  
 %start start
 
 %% 
 start:	FunctionDef
-	    | Declaration
+	| Declaration
         | Include
         | start FunctionDef
         | start Declaration
-	    ;
+	;
 
 Declaration: Type IDList ';'
               ;
@@ -88,6 +88,33 @@ Primary: '(' Expr ')'
          | Expr
          ;
 
+CompoundStatement: '{' StatementList '}'
+	;
+StmtList: StatementList Statement
+	|
+	;
+Statement: WhileStatement
+	| Declaration
+	| ForStatement
+	| IfStatement
+	| FunctionCall                                  
+	| ';'
+        ; 
+
+WhileStatement: WHILE '(' Expr1 ')' Statement            //NEED TO DEFINE Expr1 to include comparison operators                                            
+                | WHILE '(' Expr1 ')' CompoundStatement
+                ;
+
+ForStatement: FOR '(' Expr ';' Expr ';' Expr ')' Statement 
+              | FOR '(' Expr ';' Expr ';' Expr ')' CompoundStatement 
+              ;
+
+IfStatement: IF '(' Expr1 ')' Statement
+             | IF '(' Expr1 ')' CompoundStatement
+             ;
+
+FunctionCall: ID '(' IDList ');' 
+   
             
 
 
