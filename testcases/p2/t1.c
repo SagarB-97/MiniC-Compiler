@@ -1,7 +1,3 @@
-//T1
-// No errors
-
-
 #include <stdio.h>
 #include <stdlib.h>
 

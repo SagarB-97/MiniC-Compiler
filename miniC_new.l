@@ -4,6 +4,8 @@
     #define GRN   "\x1B[32m"
     #define BLU   "\x1B[34m"
 
+    #include "y.tab.h"
+
     int lookUpSymbolItem();
     void insertSymbolItem();
 
@@ -35,9 +37,15 @@ function        (_|{letter})({letter}|{number}|_)*"()"
 [*][/]                              { printf("%-20s%20s%20d\n", "CLOSE COMMENT",yytext, lineNo); comment--; }
 
 
-'#'                                 { if(!comment){ 
+#                                   { if(!comment){ 
                                             printf("%-20s%20s%20d\n","PREPROCESSOR", yytext, lineNo);
                                             return *yytext;  
+                                        }
+                                    }
+
+include                             { if(!comment){ 
+                                            printf("%-20s%20s%20d\n","PREPROCESSOR", yytext, lineNo);
+                                            return INCLUDE;  
                                         }
                                     }
 
@@ -60,7 +68,7 @@ function        (_|{letter})({letter}|{number}|_)*"()"
                                             lineNo++;
                                         }
                                         printf("%-20s%20s%20d\n", "STRING", yytext, lineNo);
-                                        strcpy(yylval, yytext);
+                                        // strcpy(yylval, yytext);
                                         insertSymbolItem(yytext, "STRING", lineNo, 1);
                                         return STRING;
                                       }
@@ -210,7 +218,7 @@ struct                             { if(!comment){
 \'.\'                               { if(!comment) {
                                         printf("%-20s%20s%20d\n", "CHARACTER", yytext, lineNo); 
                                         insertSymbolItem(yytext, "CHARACTER", lineNo, 1);
-                                        strcpy(yylval, yytext);
+                                        // sktrcpy(yylval, yytext);
                                         return CHARCONST;
                                         }
                                     }
@@ -218,7 +226,7 @@ struct                             { if(!comment){
 {number}+(\.{number}+)?e{number}+    { if(!comment) {
                                         printf("%-20s%20s%20d\n", "FLOAT EXP FORM", yytext, lineNo); 
                                         insertSymbolItem(yytext, "FLOAT", lineNo, 1);
-                                        yylval = atof(yytext);
+                                        // yylval = atof(yytext);
                                         return FLOATNUM;
                                         }
                                     } 
@@ -244,15 +252,7 @@ struct                             { if(!comment){
                                         printf("%-20s%20s%20d\n", "IDENTIFIER", yytext, lineNo);
                                         if(!lookUpSymbolItem(yytext))
                                             insertSymbolItem(yytext, "IDENTIFIER", lineNo, 0);
-                                        strcpy(yylval, yytext);
-                                        return ID;
-                                      }
-                                    }
-\(_|{letter})({letter}|{number}|_)*  { if(!comment){
-                                        printf("%-20s%20s%20d\n", "IDENTIFIER", yytext, lineNo);
-                                        if(!lookUpSymbolItem(yytext))
-                                            insertSymbolItem(yytext, "IDENTIFIER", lineNo, 0);
-                                        strcpy(yylval, yytext);
+                                        // strcpy(yylval, yytext);
                                         return ID;
                                       }
                                     }
@@ -277,16 +277,13 @@ struct                             { if(!comment){
                                         return *yytext;
                                         }                   
                                     }
-"+"                                 { if(!comment) {
-                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
-                                        return OP;
-                                        }                   
-                                    }
+
 "%"                                 { if(!comment) {
                                         printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
                                         return *yytext;
                                         }                   
                                     }
+
 "^"                                 { if(!comment) {
                                         printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
                                         return *yytext;
@@ -310,7 +307,7 @@ struct                             { if(!comment){
                                     }
 "=="                                 { if(!comment) {
                                         printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
-                                        return EQQ;
+                                        return EQ;
                                         }                   
                                     }
 "="                                 { if(!comment) {
@@ -336,6 +333,30 @@ struct                             { if(!comment){
 "<="                                 { if(!comment) {
                                         printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
                                         return LE;
+                                        }                   
+                                    }
+
+"+="                                { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return PAS;
+                                        }                   
+                                    }
+
+"-="                                { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return SAS;
+                                        }                   
+                                    }
+
+"*="                                { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return MAS;
+                                        }                   
+                                    }
+                                    
+"/="                                { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return DAS;
                                         }                   
                                     }
 ">="                                 { if(!comment) {
@@ -473,7 +494,7 @@ void showConstantTable(){
         }
     }
 }
-
+/*
 int main(int argc, char** argv){
     if(argc < 2){
         printf(RED "Pass input file as command line argument\n" RESET);
@@ -495,4 +516,5 @@ int main(int argc, char** argv){
     showConstantTable();
     printf("\n\n");
 }
+*/
 

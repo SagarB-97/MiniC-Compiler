@@ -1,6 +1,19 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+
+
+
+extern int yyparse (void);
+
+extern FILE *yyin, *yyout;
+
+extern int yylineno;
+
+extern yylineno;
+
+extern char *yytext;
+
 %}
 
 
@@ -13,7 +26,7 @@
 %token NUM ID FLOATNUM STRING CHARCONST
 %token INCLUDE
 
-%right '=' '+=' '-=' '/=' '*='            //Last four not defined
+%right '=' PAS MAS DAS SAS            //Last four not defined
 %left AND OR
 %left LE GE EQ NE LT GT                        // LE <= GE >= EQ == NE != LT < GT >
 %left '+' '-' '*' '/' '%' '^' '!' '&' '.'  
@@ -30,8 +43,8 @@ start:	FunctionDef
 Declaration: Type IDList ';'
               ;
 
-IncludeStatement: '#' INCLUDE LE ID GE
-                  | '#' INCLUDE LE ID '.' ID GE
+IncludeStatement: '#' INCLUDE LT ID GT
+                  | '#' INCLUDE LT ID '.' ID GT
                   ;
 Include:   IncludeStatement
            | IncludeStatement Include
@@ -60,10 +73,10 @@ IDList: ID
         ;
 
 Assignment: ID '=' Primary ';'
-            | ID "+=" Primary  ';'
-            | ID "-=" Primary  ';'
-            | ID "*=" Primary  ';'
-            | ID "/=" Primary  ';'
+            | ID PAS Primary  ';'
+            | ID SAS Primary  ';'
+            | ID MAS Primary  ';'
+            | ID DAS Primary  ';'
             ;
 
 Expr: Equality_Expr
@@ -90,9 +103,8 @@ Primary: '(' Expr ')'
 
 CompoundStatement: '{' StatementList '}'
 	;
-StmtList: StatementList Statement
-	|
-	;
+StatementList: Statement StatementList ;
+
 Statement: WhileStatement
 	| Declaration
 	| ForStatement
@@ -101,19 +113,40 @@ Statement: WhileStatement
 	| ';'
         ; 
 
-WhileStatement: WHILE '(' Expr1 ')' Statement            //NEED TO DEFINE Expr1 to include comparison operators                                            
-                | WHILE '(' Expr1 ')' CompoundStatement
+WhileStatement: WHILE '(' Expr ')' Statement            //NEED TO DEFINE Expr1 to include comparison operators                                            
+                | WHILE '(' Expr ')' CompoundStatement
                 ;
 
 ForStatement: FOR '(' Expr ';' Expr ';' Expr ')' Statement 
               | FOR '(' Expr ';' Expr ';' Expr ')' CompoundStatement 
               ;
 
-IfStatement: IF '(' Expr1 ')' Statement
-             | IF '(' Expr1 ')' CompoundStatement
+IfStatement: IF '(' Expr ')' Statement
+             | IF '(' Expr ')' CompoundStatement
              ;
 
-FunctionCall: ID '(' IDList ');' 
+FunctionCall: ID '(' IDList ");" ;
+
+%%
+#include<ctype.h>
+int count=0;
+
+int main(int argc, char *argv[])
+{
+	yyin = fopen(argv[1], "r");
+	
+   if(!yyparse())
+		printf("\nParsing complete\n");
+	else
+		printf("\nParsing failed\n");
+	
+	fclose(yyin);
+    return 0;
+}
+         
+yyerror(char *s) {
+	printf("%d : %s %s\n", yylineno, s, yytext );
+}
    
             
 
