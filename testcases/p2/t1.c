@@ -1,47 +1,47 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-struct node
-{
-     int data;
-     struct node* left;
-     struct node* right;
-};
-
-struct node* newNode(int data)
-{
-     struct node* node = (struct node*)
-                                  malloc(sizeof(struct node));
-     node->data = data;
-     node->left = NULL;
-     node->right = NULL;
- 
-     return(node);
-}
-
-void printPostorder(struct node* node)
-{
-     if (node == NULL)
-        return;
-
-     printPostorder(node->left);
-
-     printPostorder(node->right);
-
-     printf("%d ", node->data);
-}
+// T1
+/*
+A very Basic Program
+Tests for :
+ - Comment removal (Both Single line and multi line)
+ - Basic Tokenisation
+    - Keywords
+    - Identifiers
+    - Strings
+    - Function Calls
+*/
 
 int main()
 {
-     struct node *root  = newNode(1);
-     root->left             = newNode(2);
-     root->right           = newNode(3);
-     root->left->left     = newNode(4);
-     root->left->right   = newNode(5); 
+    printf("Hello World");
 
-     printf("\nPreorder traversal of binary tree is \n");
-     printPreorder(root);
+    int a,b,c;
+    if(a>5 && 5 > 4)
+    {
+        printf("Hello");
+        b = &a;
+        c = a*5;
+    }
 
-     getchar();
-     return 0;
+    else if(b<3 || a < 3)
+    {
+        if( x > 5)
+        {
+            a = 5;
+            *b = c*7;
+        }  
+        
+    }
+
+    else
+    {
+        c =6;
+    }
+
+    a = 5;
+    b = 6;
+    c = 7;
+    b = a + c;
+    return 0;
 }

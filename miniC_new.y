@@ -4,17 +4,16 @@
 
 
 
-extern int yyparse (void);
+int yyparse (void);
+int yylex();
+void yyerror(const char * s);
+
 
 extern FILE *yyin, *yyout;
 
-extern int yylineno;
-
-extern yylineno;
-
 extern char *yytext;
 
-extern lineNo;
+extern int lineNo;
 
 %}
 
@@ -30,9 +29,9 @@ extern lineNo;
 %token OPEN_PAR CLOSE_PAR
 
 %right '=' PAS MAS DAS SAS            //Last four not defined
-%left AND OR NOT
+%left AND OR NOT PP MM
 %left LE GE EQ NE LT GT                        // LE <= GE >= EQ == NE != LT < GT >
-%left '+' '-' '*' '/' '%' '^' '!' '&' '.'  
+%left '+' '-' '*' '/' '%' '^' '&' '.'  
 %start start
 
 %% 
@@ -41,7 +40,6 @@ start:	FunctionDef
         | Include
         | FunctionDef start
         | Declaration start
-        | Include FunctionDef start
         | Include start
 	;
 
@@ -52,40 +50,86 @@ Include:   IncludeStatement
            | IncludeStatement Include
            ;
 
-FunctionDef: Type ID OPEN_PAR DeclarationList CLOSE_PAR CompoundStatement       {printf("FUNCTION DEF CALLED\n");}
-            | Type ID OPEN_PAR CLOSE_PAR CompoundStatement                   {printf("FUNCTION DEF2 CALLED\n");}
-            ;
-DeclarationList: Type ID                        {printf("DECLIST Cal\n");}
-                | Type ID ',' DeclarationList   {printf("DECLIST Cal 2\n");}
+FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {printf("FUNCTION DEF CALLED 1\n");}
+             ;
+FormalParamList: Type ID                                        {printf("FLIST Call 1\n");}
+                | Type '*' ID                                   {printf("FLIST Call 2\n");}
+                | Type ArrayNotation                            {printf("FLIST Call 3\n");}
+                | Type ID ',' FormalParamList                   {printf("FLIST Call 4\n");}
+                | Type '*' ID ',' FormalParamList               {printf("FLIST Call 5\n");}
+                | Type ArrayNotation ',' FormalParamList        {printf("FLIST Call 6\n");}
+                |
                 ;
 
 
-Declaration:    Type ID ';'  {printf("DECLARATION CALLED\n");}   
-        | Type IDList ';'    {printf("DECLARATION CALLED 2\n");}
+Declaration:  Type IDList ';'    {printf("DECLARATION CALLED 3\n");}
         ;
 
-Type: INT {printf("Type called\n");}| FLOAT | VOID | CHAR | DOUBLE | 
+Type: INT | FLOAT | VOID | CHAR | DOUBLE | 
         Modifiers INT | Modifiers FLOAT | Modifiers DOUBLE | Modifiers CHAR
         ;
 Modifiers: SHORT | LONG | UNSIGNED | SIGNED
         ;
 
-ArrayNotation: ID '[' NUM ']'
-            | ID '[' ']'
+ArrayNotation: ID '[' ']'
+            | ID '[' Expr ']'
             ;
 IDList: ArrayNotation
         | ID ',' IDList
+        | '*' ID ',' IDList
         | ArrayNotation ',' IDList
-        | STRING ',' IDList
-        | NUM ',' IDList
-        | ID | NUM | STRING
+        | ID 
+        | '*' ID
+        | DefineAssign ',' IDList
+        | DefineAssign 
         ;
 
-Assignment: ID '=' Expr ';'          {printf("Assignment Rule 1 called\n");}
-            | ID PAS Expr  ';'
-            | ID SAS Expr  ';'
-            | ID MAS Expr  ';'
-            | ID DAS Expr  ';'
+DefineAssign: ID '=' Expr                   {printf("Assignment Rule 1 called\n");}
+            | ID PAS Expr  
+            | ID SAS Expr  
+            | ID MAS Expr  
+            | ID DAS Expr  
+            | '*' ID '=' Expr           
+            | '*' ID PAS Expr  
+            | '*' ID SAS Expr  
+            | '*' ID MAS Expr  
+            | '*' ID DAS Expr
+            | ArrayNotation '=' Expr                   
+            | ArrayNotation PAS Expr  
+            | ArrayNotation SAS Expr  
+            | ArrayNotation MAS Expr  
+            | ArrayNotation DAS Expr
+            ;
+
+
+ParamList: ArrayNotation
+        | ID ',' ParamList
+        | '*' ID ',' ParamList
+        | '&' ID ',' ParamList
+        | ArrayNotation ',' ParamList
+        | STRING ',' ParamList
+        | NUM ',' ParamList
+        | ID | NUM | STRING | '*' ID
+        | Expr
+        | Expr ',' ParamList
+        ;
+
+Assignment: ID '=' Expr                   {printf("Assignment Rule 1 called\n");}
+            | ID PAS Expr  
+            | ID SAS Expr  
+            | ID MAS Expr  
+            | ID DAS Expr  
+            | '*' ID '=' Expr           
+            | '*' ID PAS Expr  
+            | '*' ID SAS Expr  
+            | '*' ID MAS Expr  
+            | '*' ID DAS Expr
+            | ArrayNotation '=' Expr                   
+            | ArrayNotation PAS Expr  
+            | ArrayNotation SAS Expr  
+            | ArrayNotation MAS Expr  
+            | ArrayNotation DAS Expr
+            | Primary   
             ;
 
 Expr: Logical_Expr
@@ -118,7 +162,15 @@ Multiplicative_Expr: Primary
 Primary: OPEN_PAR Expr CLOSE_PAR
          | NUM | FLOATNUM | CHARCONST   
          | ID                           {printf("Primary Identifier\n");}
+         | '*' ID                       {printf("Pointer Identifier\n");}
+         | '&' ID                       {printf("Address of Identifier\n");}
          | '-' Primary
+         | ArrayNotation
+         | FunctionCall
+         | PP ID
+         | ID PP
+         | MM ID
+         | ID MM
          ;
 
 CompoundStatement: '{' StatementList '}'
@@ -131,19 +183,21 @@ Statement: WhileStatement
 	| Declaration   
 	| ForStatement  
 	| IfStatement  
-	| FunctionCall     
-        | Assignment
+	| FunctionCall  ';'  
+        | Assignment    ';'
         | ReturnStatement                              
 	| ';'
         ; 
 ReturnStatement: RETURN Expr ';'   {printf("Return Statement Call\n");}
+                 | RETURN FunctionCall ';'
+                 ;
 
 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement                                                        
                 | WHILE OPEN_PAR Expr CLOSE_PAR CompoundStatement
                 ;
 
-ForStatement: FOR OPEN_PAR Expr ';' Expr ';' Expr CLOSE_PAR Statement 
-              | FOR OPEN_PAR Expr ';' Expr ';' Expr CLOSE_PAR CompoundStatement 
+ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement 
+              | FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement 
               ;
 
 IfStatement: IF OPEN_PAR Expr CLOSE_PAR Statement ElseStatement
@@ -155,7 +209,7 @@ ElseStatement: ELSE CompoundStatement
                |
                ;
 
-FunctionCall: ID OPEN_PAR IDList CLOSE_PAR ';'        {printf("Function Call\n");} 
+FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR           {printf("Function Call\n");} 
                 ;
 
 %%
@@ -175,19 +229,6 @@ int main(int argc, char *argv[])
     return 0;
 }
          
-yyerror(char *s) {
+void yyerror(const char *s) {
 	printf("%d : %s %s\n", lineNo, s, yytext );
 }
-   
-            
-
-
-
-
-
-
-
-
-
-
-

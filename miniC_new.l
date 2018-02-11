@@ -295,11 +295,6 @@ return                             { if(!comment){
                                         }                   
                                     }
 
-"!"                                 { if(!comment) {
-                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
-                                        return *yytext;
-                                        }                   
-                                    }
 "&"                                 { if(!comment) {
                                         printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
                                         return *yytext;
@@ -384,6 +379,18 @@ return                             { if(!comment){
                                         return NOT;
                                         }                   
                                     }
+  
+"++"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return PP;
+                                        }                   
+                                    }  
+"--"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return MM;
+                                        }                   
+                                    }  
+                                                                      
 
 
 
