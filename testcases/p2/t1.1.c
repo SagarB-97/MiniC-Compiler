@@ -17,28 +17,6 @@ int main()
     printf("Hello World");
 
     int a,b,c;
-    if(a>5 && 5 > 4)
-    {
-        printf("Hello");
-        b = 7;
-        c = a+5;
-    }
-
-    else if(b<3 || a < 3)
-    {
-        if( x > 5)
-        {
-            a = 5;
-            b = c+ 7;
-        }  
-        
-    }
-
-    else
-    {
-        c =6;
-    }
-
     a = 5;
     b = 6;
     c = 7;

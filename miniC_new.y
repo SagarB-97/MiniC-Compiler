@@ -14,10 +14,12 @@ extern yylineno;
 
 extern char *yytext;
 
+extern lineNo;
+
 %}
 
 
-%token INT FLOAT CHAR DOUBLE VOID
+%token INT FLOAT CHAR DOUBLE VOID RETURN
 %token SIGNED UNSIGNED LONG SHORT
 %token SWITCH BREAK CONTINUE CASE DEFAULT  
 %token FOR WHILE DO
@@ -25,9 +27,10 @@ extern char *yytext;
 %token STRUCT 
 %token NUM ID FLOATNUM STRING CHARCONST
 %token INCLUDE
+%token OPEN_PAR CLOSE_PAR
 
 %right '=' PAS MAS DAS SAS            //Last four not defined
-%left AND OR
+%left AND OR NOT
 %left LE GE EQ NE LT GT                        // LE <= GE >= EQ == NE != LT < GT >
 %left '+' '-' '*' '/' '%' '^' '!' '&' '.'  
 %start start
@@ -36,12 +39,11 @@ extern char *yytext;
 start:	FunctionDef
 	| Declaration
         | Include
-        | start FunctionDef
-        | start Declaration
+        | FunctionDef start
+        | Declaration start
+        | Include FunctionDef start
+        | Include start
 	;
-
-Declaration: Type IDList ';'
-              ;
 
 IncludeStatement: '#' INCLUDE LT ID GT
                   | '#' INCLUDE LT ID '.' ID GT
@@ -50,14 +52,19 @@ Include:   IncludeStatement
            | IncludeStatement Include
            ;
 
-FunctionDef: Type ID '(' DeclarationList ')' CompoundStatement
-            | Type ID '(' ')' CompoundStatement
+FunctionDef: Type ID OPEN_PAR DeclarationList CLOSE_PAR CompoundStatement       {printf("FUNCTION DEF CALLED\n");}
+            | Type ID OPEN_PAR CLOSE_PAR CompoundStatement                   {printf("FUNCTION DEF2 CALLED\n");}
             ;
-DeclarationList: Type ID
-                | Type ID ',' DeclarationList
+DeclarationList: Type ID                        {printf("DECLIST Cal\n");}
+                | Type ID ',' DeclarationList   {printf("DECLIST Cal 2\n");}
                 ;
 
-Type: INT | FLOAT | VOID | CHAR | DOUBLE | 
+
+Declaration:    Type ID ';'  {printf("DECLARATION CALLED\n");}   
+        | Type IDList ';'    {printf("DECLARATION CALLED 2\n");}
+        ;
+
+Type: INT {printf("Type called\n");}| FLOAT | VOID | CHAR | DOUBLE | 
         Modifiers INT | Modifiers FLOAT | Modifiers DOUBLE | Modifiers CHAR
         ;
 Modifiers: SHORT | LONG | UNSIGNED | SIGNED
@@ -66,66 +73,90 @@ Modifiers: SHORT | LONG | UNSIGNED | SIGNED
 ArrayNotation: ID '[' NUM ']'
             | ID '[' ']'
             ;
-IDList: ID
-        | ArrayNotation
+IDList: ArrayNotation
         | ID ',' IDList
         | ArrayNotation ',' IDList
+        | STRING ',' IDList
+        | NUM ',' IDList
+        | ID | NUM | STRING
         ;
 
-Assignment: ID '=' Primary ';'
-            | ID PAS Primary  ';'
-            | ID SAS Primary  ';'
-            | ID MAS Primary  ';'
-            | ID DAS Primary  ';'
+Assignment: ID '=' Expr ';'          {printf("Assignment Rule 1 called\n");}
+            | ID PAS Expr  ';'
+            | ID SAS Expr  ';'
+            | ID MAS Expr  ';'
+            | ID DAS Expr  ';'
             ;
 
-Expr: Equality_Expr
+Expr: Logical_Expr
       ;
 
-Equality_Expr: Additive_Expr
-              | Equality_Expr "==" Equality_Expr
-              | Equality_Expr "!=" Equality_Expr
+Logical_Expr: Relational_Expr
+              | Logical_Expr AND Relational_Expr
+              | Logical_Expr OR Relational_Expr
+              | NOT Relational_Expr 
               ;
+
+Relational_Expr: Additive_Expr
+                 | Relational_Expr GT Additive_Expr
+                 | Relational_Expr LT Additive_Expr
+                 | Relational_Expr GE Additive_Expr
+                 | Relational_Expr LE Additive_Expr
+                 | Relational_Expr EQ Additive_Expr
+                 | Relational_Expr NE Additive_Expr
+                 ;
+
+
 Additive_Expr: Multiplicative_Expr
-               | Additive_Expr '+' Additive_Expr
-               | Additive_Expr '-' Additive_Expr
+               | Additive_Expr '+' Multiplicative_Expr
+               | Additive_Expr '-' Multiplicative_Expr
                ;
 Multiplicative_Expr: Primary
-                     | Multiplicative_Expr '*' Multiplicative_Expr
-                     | Multiplicative_Expr '/' Multiplicative_Expr
+                     | Multiplicative_Expr '*' Primary
+                     | Multiplicative_Expr '/' Primary
                      ;
-Primary: '(' Expr ')'
-         | NUM | FLOATNUM | CHARCONST
-         | ID
+Primary: OPEN_PAR Expr CLOSE_PAR
+         | NUM | FLOATNUM | CHARCONST   
+         | ID                           {printf("Primary Identifier\n");}
          | '-' Primary
-         | Expr
          ;
 
 CompoundStatement: '{' StatementList '}'
 	;
-StatementList: Statement StatementList ;
+StatementList: Statement StatementList
+               |
+               ;
 
-Statement: WhileStatement
-	| Declaration
-	| ForStatement
-	| IfStatement
-	| FunctionCall                                  
+Statement: WhileStatement 
+	| Declaration   
+	| ForStatement  
+	| IfStatement  
+	| FunctionCall     
+        | Assignment
+        | ReturnStatement                              
 	| ';'
         ; 
+ReturnStatement: RETURN Expr ';'   {printf("Return Statement Call\n");}
 
-WhileStatement: WHILE '(' Expr ')' Statement            //NEED TO DEFINE Expr1 to include comparison operators                                            
-                | WHILE '(' Expr ')' CompoundStatement
+WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement                                                        
+                | WHILE OPEN_PAR Expr CLOSE_PAR CompoundStatement
                 ;
 
-ForStatement: FOR '(' Expr ';' Expr ';' Expr ')' Statement 
-              | FOR '(' Expr ';' Expr ';' Expr ')' CompoundStatement 
+ForStatement: FOR OPEN_PAR Expr ';' Expr ';' Expr CLOSE_PAR Statement 
+              | FOR OPEN_PAR Expr ';' Expr ';' Expr CLOSE_PAR CompoundStatement 
               ;
 
-IfStatement: IF '(' Expr ')' Statement
-             | IF '(' Expr ')' CompoundStatement
+IfStatement: IF OPEN_PAR Expr CLOSE_PAR Statement ElseStatement
+             | IF OPEN_PAR Expr CLOSE_PAR CompoundStatement ElseStatement
              ;
 
-FunctionCall: ID '(' IDList ");" ;
+ElseStatement: ELSE CompoundStatement
+               | ELSE Statement
+               |
+               ;
+
+FunctionCall: ID OPEN_PAR IDList CLOSE_PAR ';'        {printf("Function Call\n");} 
+                ;
 
 %%
 #include<ctype.h>
@@ -145,7 +176,7 @@ int main(int argc, char *argv[])
 }
          
 yyerror(char *s) {
-	printf("%d : %s %s\n", yylineno, s, yytext );
+	printf("%d : %s %s\n", lineNo, s, yytext );
 }
    
             

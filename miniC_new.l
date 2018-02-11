@@ -175,17 +175,22 @@ struct                             { if(!comment){
                                         return STRUCT;
                                       }
                                     }
+return                             { if(!comment){
+                                        printf("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+                                        return RETURN;
+                                      }
+                                    }
                                                                                                             
 
 [(]                                 { if(!comment) {
                                             printf("%-20s%20s%20d\n", "OPEN PARANTHESIS", yytext, lineNo);
-                                            return *yytext;
+                                            return OPEN_PAR;
                                         }
                                     }
 
 [)]                                 { if(!comment) {
                                             printf("%-20s%20s%20d\n", "CLOSE PARANTHESIS", yytext, lineNo);
-                                            return *yytext;
+                                            return CLOSE_PAR;
                                         }
                                     }
 [\[]                                { if(!comment) {
@@ -372,6 +377,11 @@ struct                             { if(!comment){
 "||"                                 { if(!comment) {
                                         printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
                                         return OR;
+                                        }                   
+                                    }
+"!"                                 { if(!comment) {
+                                        printf("%-20s%20s%20d\n", "OPERATOR", yytext, lineNo); 
+                                        return NOT;
                                         }                   
                                     }
 
