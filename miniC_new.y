@@ -2,6 +2,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define DEBUGY 0
+
+#if defined(DEBUGY) && DEBUGY > 0
+        #define DEBUGY_PRINT(fmt, args...) fprintf(stderr, fmt, ##args)
+#else
+        #define DEBUGY_PRINT(fmt, args...) /* Don't do anything in release builds */
+#endif
+
+
+#define RED   "\x1B[31m"
+#define RESET "\x1B[0m"
+#define GRN   "\x1B[32m"
+#define BLU   "\x1B[34m"
 
 
 int yyparse (void);
@@ -20,15 +33,14 @@ extern int lineNo;
 
 %token INT FLOAT CHAR DOUBLE VOID RETURN
 %token SIGNED UNSIGNED LONG SHORT
-%token SWITCH BREAK CONTINUE CASE DEFAULT  
+%token BREAK CONTINUE 
 %token FOR WHILE DO
-%token IF ELSE 
-%token STRUCT 
+%token IF ELSE  
 %token NUM ID FLOATNUM STRING CHARCONST
 %token INCLUDE
 %token OPEN_PAR CLOSE_PAR
 
-%right '=' PAS MAS DAS SAS            //Last four not defined
+%right '=' PAS MAS DAS SAS           
 %left AND OR NOT PP MM
 %left LE GE EQ NE LT GT                        // LE <= GE >= EQ == NE != LT < GT >
 %left '+' '-' '*' '/' '%' '^' '&' '.'  
@@ -47,22 +59,21 @@ IncludeStatement: '#' INCLUDE LT ID GT
                   | '#' INCLUDE LT ID '.' ID GT
                   ;
 Include:   IncludeStatement
-           | IncludeStatement Include
            ;
 
-FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {printf("FUNCTION DEF CALLED 1\n");}
+FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {DEBUGY_PRINT("FUNCTION DEF CALLED 1\n");}
              ;
-FormalParamList: Type ID                                        {printf("FLIST Call 1\n");}
-                | Type '*' ID                                   {printf("FLIST Call 2\n");}
-                | Type ArrayNotation                            {printf("FLIST Call 3\n");}
-                | Type ID ',' FormalParamList                   {printf("FLIST Call 4\n");}
-                | Type '*' ID ',' FormalParamList               {printf("FLIST Call 5\n");}
-                | Type ArrayNotation ',' FormalParamList        {printf("FLIST Call 6\n");}
+FormalParamList: Type ID                                        {DEBUGY_PRINT("FLIST Call 1\n");}
+                | Type '*' ID                                   {DEBUGY_PRINT("FLIST Call 2\n");}
+                | Type ArrayNotation                            {DEBUGY_PRINT("FLIST Call 3\n");}
+                | Type ID ',' FormalParamList                   {DEBUGY_PRINT("FLIST Call 4\n");}
+                | Type '*' ID ',' FormalParamList               {DEBUGY_PRINT("FLIST Call 5\n");}
+                | Type ArrayNotation ',' FormalParamList        {DEBUGY_PRINT("FLIST Call 6\n");}
                 |
                 ;
 
 
-Declaration:  Type IDList ';'    {printf("DECLARATION CALLED 3\n");}
+Declaration:  Type IDList ';'    {DEBUGY_PRINT("DECLARATION CALLED 3\n");}
         ;
 
 Type: INT | FLOAT | VOID | CHAR | DOUBLE | 
@@ -84,7 +95,7 @@ IDList: ArrayNotation
         | DefineAssign 
         ;
 
-DefineAssign: ID '=' Expr                   {printf("Assignment Rule 1 called\n");}
+DefineAssign: ID '=' Expr                   {DEBUGY_PRINT("Assignment Rule 1 called\n");}
             | ID PAS Expr  
             | ID SAS Expr  
             | ID MAS Expr  
@@ -102,19 +113,12 @@ DefineAssign: ID '=' Expr                   {printf("Assignment Rule 1 called\n"
             ;
 
 
-ParamList: ArrayNotation
-        | ID ',' ParamList
-        | '*' ID ',' ParamList
-        | '&' ID ',' ParamList
-        | ArrayNotation ',' ParamList
-        | STRING ',' ParamList
-        | NUM ',' ParamList
-        | ID | NUM | STRING | '*' ID
-        | Expr
+ParamList: Expr
         | Expr ',' ParamList
+        | 
         ;
 
-Assignment: ID '=' Expr                   {printf("Assignment Rule 1 called\n");}
+Assignment: ID '=' Expr                   {DEBUGY_PRINT("Assignment Rule 1 called\n");}
             | ID PAS Expr  
             | ID SAS Expr  
             | ID MAS Expr  
@@ -134,6 +138,7 @@ Assignment: ID '=' Expr                   {printf("Assignment Rule 1 called\n");
 
 Expr: Logical_Expr
       ;
+
 
 Logical_Expr: Relational_Expr
               | Logical_Expr AND Relational_Expr
@@ -158,12 +163,13 @@ Additive_Expr: Multiplicative_Expr
 Multiplicative_Expr: Primary
                      | Multiplicative_Expr '*' Primary
                      | Multiplicative_Expr '/' Primary
+                     | Multiplicative_Expr '%' Primary
                      ;
 Primary: OPEN_PAR Expr CLOSE_PAR
-         | NUM | FLOATNUM | CHARCONST   
-         | ID                           {printf("Primary Identifier\n");}
-         | '*' ID                       {printf("Pointer Identifier\n");}
-         | '&' ID                       {printf("Address of Identifier\n");}
+         | NUM | FLOATNUM | CHARCONST | STRING 
+         | ID                           {DEBUGY_PRINT("Primary Identifier\n");}
+         | '*' ID                       {DEBUGY_PRINT("Pointer Identifier\n");}
+         | '&' ID                       {DEBUGY_PRINT("Address of Identifier\n");}
          | '-' Primary
          | ArrayNotation
          | FunctionCall
@@ -183,18 +189,23 @@ Statement: WhileStatement
 	| Declaration   
 	| ForStatement  
 	| IfStatement  
-	| FunctionCall  ';'  
         | Assignment    ';'
-        | ReturnStatement                              
+        | ReturnStatement    
+        | DoWhileStatement      
+        | BREAK ';'
+        | CONTINUE ';'                    
 	| ';'
         ; 
-ReturnStatement: RETURN Expr ';'   {printf("Return Statement Call\n");}
-                 | RETURN FunctionCall ';'
+ReturnStatement: RETURN Expr ';'   {DEBUGY_PRINT("Return Statement Call\n");}
                  ;
 
 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement                                                        
                 | WHILE OPEN_PAR Expr CLOSE_PAR CompoundStatement
                 ;
+
+DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR ';'
+                  ;
+
 
 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement 
               | FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement 
@@ -209,7 +220,7 @@ ElseStatement: ELSE CompoundStatement
                |
                ;
 
-FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR           {printf("Function Call\n");} 
+FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR           {DEBUGY_PRINT("Function Call\n");} 
                 ;
 
 %%
@@ -223,12 +234,12 @@ int main(int argc, char *argv[])
    if(!yyparse())
 		printf("\nParsing complete\n");
 	else
-		printf("\nParsing failed\n");
+		printf(RED "\nParsing failed\n" RESET);
 	
 	fclose(yyin);
     return 0;
 }
          
 void yyerror(const char *s) {
-	printf("%d : %s %s\n", lineNo, s, yytext );
+	printf(RED "%d : %s %s\n" RESET, lineNo, s, yytext );
 }

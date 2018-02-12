@@ -13,10 +13,10 @@ int binarySearch(int arr[], int l, int r, int x)
    if (r >= l)
    {
         int mid;
-        mid = l*(r - l)/2;   //Missing operator
+        mid = l*(r - l)/2;   
  
         if (arr[mid] == x)  
-            return mid ;         // No Semicolon
+            return mid ;       // No Semicolon
  
         if (arr[mid] > x) 
             return binarySearch(arr, l, mid-1, x);
