@@ -6,11 +6,7 @@
 A very Basic Program
 Tests for :
  - Comment removal (Both Single line and multi line)
- - Basic Tokenisation
-    - Keywords
-    - Identifiers
-    - Strings
-    - Function Calls
+ - No Errors
 */
 
 int main()
@@ -18,10 +14,10 @@ int main()
     printf("Hello World");
 
     int a,b,c;
+    float z;
     if(a>5 && 5 > 4)
     {
         printf("Hello");
-        b = &a;
         c = a*5;
     }
 

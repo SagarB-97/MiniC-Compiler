@@ -28,6 +28,8 @@ extern char *yytext;
 
 extern int lineNo;
 
+extern void showSymbolTable();
+
 %}
 
 
@@ -238,6 +240,8 @@ int main(int argc, char *argv[])
 		printf(RED "\nParsing failed\n" RESET);
 	
 	fclose(yyin);
+
+        showSymbolTable();
     return 0;
 }
          
