@@ -7,8 +7,8 @@ Terminals unused in grammar
    '^'
 
 
-State 236 conflicts: 1 shift/reduce
-State 237 conflicts: 1 shift/reduce
+State 238 conflicts: 1 shift/reduce
+State 239 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -136,47 +136,48 @@ Grammar
   101        | '*' ID
   102        | '&' ID
   103        | '-' Primary
-  104        | ArrayNotation
-  105        | FunctionCall
-  106        | PP ID
-  107        | ID PP
-  108        | MM ID
-  109        | ID MM
+  104        | '+' Primary
+  105        | ArrayNotation
+  106        | FunctionCall
+  107        | PP ID
+  108        | ID PP
+  109        | MM ID
+  110        | ID MM
 
-  110 CompoundStatement: '{' StatementList '}'
+  111 CompoundStatement: '{' StatementList '}'
 
-  111 StatementList: Statement StatementList
-  112              | %empty
+  112 StatementList: Statement StatementList
+  113              | %empty
 
-  113 Statement: WhileStatement
-  114          | Declaration
-  115          | ForStatement
-  116          | IfStatement
-  117          | Assignment ';'
-  118          | ReturnStatement
-  119          | DoWhileStatement
-  120          | BREAK ';'
-  121          | CONTINUE ';'
-  122          | ';'
+  114 Statement: WhileStatement
+  115          | Declaration
+  116          | ForStatement
+  117          | IfStatement
+  118          | Assignment ';'
+  119          | ReturnStatement
+  120          | DoWhileStatement
+  121          | BREAK ';'
+  122          | CONTINUE ';'
+  123          | ';'
 
-  123 ReturnStatement: RETURN Expr ';'
+  124 ReturnStatement: RETURN Expr ';'
 
-  124 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement
-  125               | WHILE OPEN_PAR Expr CLOSE_PAR CompoundStatement
+  125 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement
+  126               | WHILE OPEN_PAR Expr CLOSE_PAR CompoundStatement
 
-  126 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR ';'
+  127 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR ';'
 
-  127 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement
-  128             | FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement
+  128 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement
+  129             | FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement
 
-  129 IfStatement: IF OPEN_PAR Expr CLOSE_PAR Statement ElseStatement
-  130            | IF OPEN_PAR Expr CLOSE_PAR CompoundStatement ElseStatement
+  130 IfStatement: IF OPEN_PAR Expr CLOSE_PAR Statement ElseStatement
+  131            | IF OPEN_PAR Expr CLOSE_PAR CompoundStatement ElseStatement
 
-  131 ElseStatement: ELSE CompoundStatement
-  132              | ELSE Statement
-  133              | %empty
+  132 ElseStatement: ELSE CompoundStatement
+  133              | ELSE Statement
+  134              | %empty
 
-  134 FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR
+  135 FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR
 
 
 Terminals, with rules where they appear
@@ -186,50 +187,50 @@ $end (0) 0
 '%' (37) 94
 '&' (38) 102
 '*' (42) 12 15 36 39 47 48 49 50 51 65 66 67 68 69 92 101
-'+' (43) 89
+'+' (43) 89 104
 ',' (44) 14 15 16 35 36 37 40 58
 '-' (45) 90 103
 '.' (46) 8
 '/' (47) 93
-';' (59) 18 117 120 121 122 123 126 127 128
+';' (59) 18 118 121 122 123 124 127 128 129
 '=' (61) 42 47 52 60 65 70
 '[' (91) 32 33
 ']' (93) 32 33
 '^' (94)
-'{' (123) 110
-'}' (125) 110
+'{' (123) 111
+'}' (125) 111
 error (256)
 INT (258) 19 24
 FLOAT (259) 20 25
 CHAR (260) 22 27
 DOUBLE (261) 23 26
 VOID (262) 21
-RETURN (263) 123
+RETURN (263) 124
 SIGNED (264) 31
 UNSIGNED (265) 30
 LONG (266) 29
 SHORT (267) 28
 SWITCH (268)
-BREAK (269) 120
-CONTINUE (270) 121
+BREAK (269) 121
+CONTINUE (270) 122
 CASE (271)
 DEFAULT (272)
-FOR (273) 127 128
-WHILE (274) 124 125 126
-DO (275) 126
-IF (276) 129 130
-ELSE (277) 131 132
-STRUCT (278)
+STRUCT (273)
+FOR (274) 128 129
+WHILE (275) 125 126 127
+DO (276) 127
+IF (277) 130 131
+ELSE (278) 132 133
 NUM (279) 96
 ID (280) 7 8 10 11 12 14 15 32 33 35 36 38 39 42 43 44 45 46 47 48
-    49 50 51 60 61 62 63 64 65 66 67 68 69 100 101 102 106 107 108
-    109 134
+    49 50 51 60 61 62 63 64 65 66 67 68 69 100 101 102 107 108 109
+    110 135
 FLOATNUM (281) 97
 STRING (282) 99
 CHARCONST (283) 98
 INCLUDE (284) 7 8
-OPEN_PAR (285) 10 95 124 125 126 127 128 129 130 134
-CLOSE_PAR (286) 10 95 124 125 126 127 128 129 130 134
+OPEN_PAR (285) 10 95 125 126 127 128 129 130 131 135
+CLOSE_PAR (286) 10 95 125 126 127 128 129 130 131 135
 PAS (287) 43 48 53 61 66 71
 MAS (288) 45 50 55 63 68 73
 DAS (289) 46 51 56 64 69 74
@@ -237,8 +238,8 @@ SAS (290) 44 49 54 62 67 72
 AND (291) 78
 OR (292) 79
 NOT (293) 80
-PP (294) 106 107
-MM (295) 108 109
+PP (294) 107 108
+MM (295) 109 110
 LE (296) 85
 GE (297) 84
 EQ (298) 86
@@ -262,7 +263,7 @@ FunctionDef (67)
 FormalParamList (68)
     on left: 11 12 13 14 15 16 17, on right: 10 14 15 16
 Declaration (69)
-    on left: 18, on right: 2 5 114
+    on left: 18, on right: 2 5 115
 Type (70)
     on left: 19 20 21 22 23 24 25 26 27, on right: 10 11 12 13 14 15
     16 18
@@ -270,21 +271,21 @@ Modifiers (71)
     on left: 28 29 30 31, on right: 24 25 26 27
 ArrayNotation (72)
     on left: 32 33, on right: 13 16 34 37 52 53 54 55 56 70 71 72 73
-    74 104
+    74 105
 IDList (73)
     on left: 34 35 36 37 38 39 40 41, on right: 18 35 36 37 40
 DefineAssign (74)
     on left: 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56, on right:
     40 41
 ParamList (75)
-    on left: 57 58 59, on right: 58 134
+    on left: 57 58 59, on right: 58 135
 Assignment (76)
     on left: 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75, on right:
-    117 127 128
+    118 128 129
 Expr (77)
     on left: 76, on right: 33 42 43 44 45 46 47 48 49 50 51 52 53 54
-    55 56 57 58 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 95 123
-    124 125 126 127 128 129 130
+    55 56 57 58 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 95 124
+    125 126 127 128 129 130 131
 Logical_Expr (78)
     on left: 77 78 79 80, on right: 76 78 79
 Relational_Expr (79)
@@ -295,29 +296,29 @@ Additive_Expr (80)
 Multiplicative_Expr (81)
     on left: 91 92 93 94, on right: 88 89 90 92 93 94
 Primary (82)
-    on left: 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109,
-    on right: 75 91 92 93 94 103
+    on left: 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109
+    110, on right: 75 91 92 93 94 103 104
 CompoundStatement (83)
-    on left: 110, on right: 10 125 126 128 130 131
+    on left: 111, on right: 10 126 127 129 131 132
 StatementList (84)
-    on left: 111 112, on right: 110 111
+    on left: 112 113, on right: 111 112
 Statement (85)
-    on left: 113 114 115 116 117 118 119 120 121 122, on right: 111
-    124 127 129 132
+    on left: 114 115 116 117 118 119 120 121 122 123, on right: 112
+    125 128 130 133
 ReturnStatement (86)
-    on left: 123, on right: 118
+    on left: 124, on right: 119
 WhileStatement (87)
-    on left: 124 125, on right: 113
+    on left: 125 126, on right: 114
 DoWhileStatement (88)
-    on left: 126, on right: 119
+    on left: 127, on right: 120
 ForStatement (89)
-    on left: 127 128, on right: 115
+    on left: 128 129, on right: 116
 IfStatement (90)
-    on left: 129 130, on right: 116
+    on left: 130 131, on right: 117
 ElseStatement (91)
-    on left: 131 132 133, on right: 129 130
+    on left: 132 133 134, on right: 130 131
 FunctionCall (92)
-    on left: 134, on right: 105
+    on left: 135, on right: 106
 
 
 State 0
@@ -717,18 +718,19 @@ State 34
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 66
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 67
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 35
@@ -744,18 +746,19 @@ State 35
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 73
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 74
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 36
@@ -771,18 +774,19 @@ State 36
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 74
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 75
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 37
@@ -798,18 +802,19 @@ State 37
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 75
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 76
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 38
@@ -825,29 +830,30 @@ State 38
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 76
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 77
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 39
 
    35 IDList: ID ',' . IDList
 
-    ID   shift, and go to state 77
+    ID   shift, and go to state 78
     '*'  shift, and go to state 24
 
     ArrayNotation  go to state 25
-    IDList         go to state 78
+    IDList         go to state 79
     DefineAssign   go to state 27
 
 
@@ -865,19 +871,20 @@ State 40
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
-    ']'        shift, and go to state 79
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
+    ']'        shift, and go to state 80
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 80
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 81
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 41
@@ -890,12 +897,12 @@ State 41
    50             | '*' ID . MAS Expr
    51             | '*' ID . DAS Expr
 
-    '='  shift, and go to state 81
-    PAS  shift, and go to state 82
-    MAS  shift, and go to state 83
-    DAS  shift, and go to state 84
-    SAS  shift, and go to state 85
-    ','  shift, and go to state 86
+    '='  shift, and go to state 82
+    PAS  shift, and go to state 83
+    MAS  shift, and go to state 84
+    DAS  shift, and go to state 85
+    SAS  shift, and go to state 86
+    ','  shift, and go to state 87
 
     $default  reduce using rule 39 (IDList)
 
@@ -913,18 +920,19 @@ State 42
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 87
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 88
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 43
@@ -940,18 +948,19 @@ State 43
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 88
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 89
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 44
@@ -967,18 +976,19 @@ State 44
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 89
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 90
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 45
@@ -994,18 +1004,19 @@ State 45
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 90
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 91
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 46
@@ -1021,29 +1032,30 @@ State 46
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 91
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 92
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 47
 
    37 IDList: ArrayNotation ',' . IDList
 
-    ID   shift, and go to state 77
+    ID   shift, and go to state 78
     '*'  shift, and go to state 24
 
     ArrayNotation  go to state 25
-    IDList         go to state 92
+    IDList         go to state 93
     DefineAssign   go to state 27
 
 
@@ -1058,11 +1070,11 @@ State 49
 
    40 IDList: DefineAssign ',' . IDList
 
-    ID   shift, and go to state 77
+    ID   shift, and go to state 78
     '*'  shift, and go to state 24
 
     ArrayNotation  go to state 25
-    IDList         go to state 93
+    IDList         go to state 94
     DefineAssign   go to state 27
 
 
@@ -1071,15 +1083,15 @@ State 50
     7 IncludeStatement: '#' INCLUDE LT ID . GT
     8                 | '#' INCLUDE LT ID . '.' ID GT
 
-    GT   shift, and go to state 94
-    '.'  shift, and go to state 95
+    GT   shift, and go to state 95
+    '.'  shift, and go to state 96
 
 
 State 51
 
    10 FunctionDef: Type ID OPEN_PAR FormalParamList . CLOSE_PAR CompoundStatement
 
-    CLOSE_PAR  shift, and go to state 96
+    CLOSE_PAR  shift, and go to state 97
 
 
 State 52
@@ -1091,10 +1103,10 @@ State 52
    15                | Type . '*' ID ',' FormalParamList
    16                | Type . ArrayNotation ',' FormalParamList
 
-    ID   shift, and go to state 97
-    '*'  shift, and go to state 98
+    ID   shift, and go to state 98
+    '*'  shift, and go to state 99
 
-    ArrayNotation  go to state 99
+    ArrayNotation  go to state 100
 
 
 State 53
@@ -1109,13 +1121,13 @@ State 54
    32 ArrayNotation: ID . '[' ']'
    33              | ID . '[' Expr ']'
   100 Primary: ID .
-  107        | ID . PP
-  109        | ID . MM
-  134 FunctionCall: ID . OPEN_PAR ParamList CLOSE_PAR
+  108        | ID . PP
+  110        | ID . MM
+  135 FunctionCall: ID . OPEN_PAR ParamList CLOSE_PAR
 
-    OPEN_PAR  shift, and go to state 100
-    PP        shift, and go to state 101
-    MM        shift, and go to state 102
+    OPEN_PAR  shift, and go to state 101
+    PP        shift, and go to state 102
+    MM        shift, and go to state 103
     '['       shift, and go to state 40
 
     $default  reduce using rule 100 (Primary)
@@ -1155,18 +1167,19 @@ State 58
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 103
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 104
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 59
@@ -1181,33 +1194,56 @@ State 59
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Relational_Expr      go to state 104
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Relational_Expr      go to state 105
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 60
 
-  106 Primary: PP . ID
-
-    ID  shift, and go to state 105
-
-
-State 61
-
-  108 Primary: MM . ID
+  107 Primary: PP . ID
 
     ID  shift, and go to state 106
 
 
+State 61
+
+  109 Primary: MM . ID
+
+    ID  shift, and go to state 107
+
+
 State 62
+
+  104 Primary: '+' . Primary
+
+    NUM        shift, and go to state 53
+    ID         shift, and go to state 54
+    FLOATNUM   shift, and go to state 55
+    STRING     shift, and go to state 56
+    CHARCONST  shift, and go to state 57
+    OPEN_PAR   shift, and go to state 58
+    PP         shift, and go to state 60
+    MM         shift, and go to state 61
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
+
+    ArrayNotation  go to state 66
+    Primary        go to state 108
+    FunctionCall   go to state 73
+
+
+State 63
 
   103 Primary: '-' . Primary
 
@@ -1219,56 +1255,57 @@ State 62
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation  go to state 65
-    Primary        go to state 107
-    FunctionCall   go to state 72
-
-
-State 63
-
-  101 Primary: '*' . ID
-
-    ID  shift, and go to state 108
+    ArrayNotation  go to state 66
+    Primary        go to state 109
+    FunctionCall   go to state 73
 
 
 State 64
 
-  102 Primary: '&' . ID
+  101 Primary: '*' . ID
 
-    ID  shift, and go to state 109
+    ID  shift, and go to state 110
 
 
 State 65
 
-  104 Primary: ArrayNotation .
+  102 Primary: '&' . ID
 
-    $default  reduce using rule 104 (Primary)
+    ID  shift, and go to state 111
 
 
 State 66
+
+  105 Primary: ArrayNotation .
+
+    $default  reduce using rule 105 (Primary)
+
+
+State 67
 
    42 DefineAssign: ID '=' Expr .
 
     $default  reduce using rule 42 (DefineAssign)
 
 
-State 67
+State 68
 
    76 Expr: Logical_Expr .
    78 Logical_Expr: Logical_Expr . AND Relational_Expr
    79             | Logical_Expr . OR Relational_Expr
 
-    AND  shift, and go to state 110
-    OR   shift, and go to state 111
+    AND  shift, and go to state 112
+    OR   shift, and go to state 113
 
     $default  reduce using rule 76 (Expr)
 
 
-State 68
+State 69
 
    77 Logical_Expr: Relational_Expr .
    82 Relational_Expr: Relational_Expr . GT Additive_Expr
@@ -1278,85 +1315,85 @@ State 68
    86                | Relational_Expr . EQ Additive_Expr
    87                | Relational_Expr . NE Additive_Expr
 
-    LE  shift, and go to state 112
-    GE  shift, and go to state 113
-    EQ  shift, and go to state 114
-    NE  shift, and go to state 115
-    LT  shift, and go to state 116
-    GT  shift, and go to state 117
+    LE  shift, and go to state 114
+    GE  shift, and go to state 115
+    EQ  shift, and go to state 116
+    NE  shift, and go to state 117
+    LT  shift, and go to state 118
+    GT  shift, and go to state 119
 
     $default  reduce using rule 77 (Logical_Expr)
 
 
-State 69
+State 70
 
    81 Relational_Expr: Additive_Expr .
    89 Additive_Expr: Additive_Expr . '+' Multiplicative_Expr
    90              | Additive_Expr . '-' Multiplicative_Expr
 
-    '+'  shift, and go to state 118
-    '-'  shift, and go to state 119
+    '+'  shift, and go to state 120
+    '-'  shift, and go to state 121
 
     $default  reduce using rule 81 (Relational_Expr)
 
 
-State 70
+State 71
 
    88 Additive_Expr: Multiplicative_Expr .
    92 Multiplicative_Expr: Multiplicative_Expr . '*' Primary
    93                    | Multiplicative_Expr . '/' Primary
    94                    | Multiplicative_Expr . '%' Primary
 
-    '*'  shift, and go to state 120
-    '/'  shift, and go to state 121
-    '%'  shift, and go to state 122
+    '*'  shift, and go to state 122
+    '/'  shift, and go to state 123
+    '%'  shift, and go to state 124
 
     $default  reduce using rule 88 (Additive_Expr)
 
 
-State 71
+State 72
 
    91 Multiplicative_Expr: Primary .
 
     $default  reduce using rule 91 (Multiplicative_Expr)
 
 
-State 72
-
-  105 Primary: FunctionCall .
-
-    $default  reduce using rule 105 (Primary)
-
-
 State 73
+
+  106 Primary: FunctionCall .
+
+    $default  reduce using rule 106 (Primary)
+
+
+State 74
 
    43 DefineAssign: ID PAS Expr .
 
     $default  reduce using rule 43 (DefineAssign)
 
 
-State 74
+State 75
 
    45 DefineAssign: ID MAS Expr .
 
     $default  reduce using rule 45 (DefineAssign)
 
 
-State 75
+State 76
 
    46 DefineAssign: ID DAS Expr .
 
     $default  reduce using rule 46 (DefineAssign)
 
 
-State 76
+State 77
 
    44 DefineAssign: ID SAS Expr .
 
     $default  reduce using rule 44 (DefineAssign)
 
 
-State 77
+State 78
 
    32 ArrayNotation: ID . '[' ']'
    33              | ID . '[' Expr ']'
@@ -1379,28 +1416,28 @@ State 77
     $default  reduce using rule 38 (IDList)
 
 
-State 78
+State 79
 
    35 IDList: ID ',' IDList .
 
     $default  reduce using rule 35 (IDList)
 
 
-State 79
+State 80
 
    32 ArrayNotation: ID '[' ']' .
 
     $default  reduce using rule 32 (ArrayNotation)
 
 
-State 80
+State 81
 
    33 ArrayNotation: ID '[' Expr . ']'
 
-    ']'  shift, and go to state 123
+    ']'  shift, and go to state 125
 
 
-State 81
+State 82
 
    47 DefineAssign: '*' ID '=' . Expr
 
@@ -1413,21 +1450,22 @@ State 81
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 124
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 126
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 82
+State 83
 
    48 DefineAssign: '*' ID PAS . Expr
 
@@ -1440,21 +1478,22 @@ State 82
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 125
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 127
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 83
+State 84
 
    50 DefineAssign: '*' ID MAS . Expr
 
@@ -1467,21 +1506,22 @@ State 83
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 126
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 128
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 84
+State 85
 
    51 DefineAssign: '*' ID DAS . Expr
 
@@ -1494,21 +1534,22 @@ State 84
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 127
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 129
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 85
+State 86
 
    49 DefineAssign: '*' ID SAS . Expr
 
@@ -1521,138 +1562,139 @@ State 85
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 128
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
-
-
-State 86
-
-   36 IDList: '*' ID ',' . IDList
-
-    ID   shift, and go to state 77
-    '*'  shift, and go to state 24
-
-    ArrayNotation  go to state 25
-    IDList         go to state 129
-    DefineAssign   go to state 27
+    ArrayNotation        go to state 66
+    Expr                 go to state 130
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 87
+
+   36 IDList: '*' ID ',' . IDList
+
+    ID   shift, and go to state 78
+    '*'  shift, and go to state 24
+
+    ArrayNotation  go to state 25
+    IDList         go to state 131
+    DefineAssign   go to state 27
+
+
+State 88
 
    52 DefineAssign: ArrayNotation '=' Expr .
 
     $default  reduce using rule 52 (DefineAssign)
 
 
-State 88
+State 89
 
    53 DefineAssign: ArrayNotation PAS Expr .
 
     $default  reduce using rule 53 (DefineAssign)
 
 
-State 89
+State 90
 
    55 DefineAssign: ArrayNotation MAS Expr .
 
     $default  reduce using rule 55 (DefineAssign)
 
 
-State 90
+State 91
 
    56 DefineAssign: ArrayNotation DAS Expr .
 
     $default  reduce using rule 56 (DefineAssign)
 
 
-State 91
+State 92
 
    54 DefineAssign: ArrayNotation SAS Expr .
 
     $default  reduce using rule 54 (DefineAssign)
 
 
-State 92
+State 93
 
    37 IDList: ArrayNotation ',' IDList .
 
     $default  reduce using rule 37 (IDList)
 
 
-State 93
+State 94
 
    40 IDList: DefineAssign ',' IDList .
 
     $default  reduce using rule 40 (IDList)
 
 
-State 94
+State 95
 
     7 IncludeStatement: '#' INCLUDE LT ID GT .
 
     $default  reduce using rule 7 (IncludeStatement)
 
 
-State 95
+State 96
 
     8 IncludeStatement: '#' INCLUDE LT ID '.' . ID GT
 
-    ID  shift, and go to state 130
-
-
-State 96
-
-   10 FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR . CompoundStatement
-
-    '{'  shift, and go to state 131
-
-    CompoundStatement  go to state 132
+    ID  shift, and go to state 132
 
 
 State 97
+
+   10 FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR . CompoundStatement
+
+    '{'  shift, and go to state 133
+
+    CompoundStatement  go to state 134
+
+
+State 98
 
    11 FormalParamList: Type ID .
    14                | Type ID . ',' FormalParamList
    32 ArrayNotation: ID . '[' ']'
    33              | ID . '[' Expr ']'
 
-    ','  shift, and go to state 133
+    ','  shift, and go to state 135
     '['  shift, and go to state 40
 
     $default  reduce using rule 11 (FormalParamList)
 
 
-State 98
+State 99
 
    12 FormalParamList: Type '*' . ID
    15                | Type '*' . ID ',' FormalParamList
 
-    ID  shift, and go to state 134
-
-
-State 99
-
-   13 FormalParamList: Type ArrayNotation .
-   16                | Type ArrayNotation . ',' FormalParamList
-
-    ','  shift, and go to state 135
-
-    $default  reduce using rule 13 (FormalParamList)
+    ID  shift, and go to state 136
 
 
 State 100
 
-  134 FunctionCall: ID OPEN_PAR . ParamList CLOSE_PAR
+   13 FormalParamList: Type ArrayNotation .
+   16                | Type ArrayNotation . ',' FormalParamList
+
+    ','  shift, and go to state 137
+
+    $default  reduce using rule 13 (FormalParamList)
+
+
+State 101
+
+  135 FunctionCall: ID OPEN_PAR . ParamList CLOSE_PAR
 
     NUM        shift, and go to state 53
     ID         shift, and go to state 54
@@ -1663,45 +1705,46 @@ State 100
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
     $default  reduce using rule 59 (ParamList)
 
-    ArrayNotation        go to state 65
-    ParamList            go to state 136
-    Expr                 go to state 137
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
-
-
-State 101
-
-  107 Primary: ID PP .
-
-    $default  reduce using rule 107 (Primary)
+    ArrayNotation        go to state 66
+    ParamList            go to state 138
+    Expr                 go to state 139
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 102
 
-  109 Primary: ID MM .
+  108 Primary: ID PP .
 
-    $default  reduce using rule 109 (Primary)
+    $default  reduce using rule 108 (Primary)
 
 
 State 103
 
-   95 Primary: OPEN_PAR Expr . CLOSE_PAR
+  110 Primary: ID MM .
 
-    CLOSE_PAR  shift, and go to state 138
+    $default  reduce using rule 110 (Primary)
 
 
 State 104
+
+   95 Primary: OPEN_PAR Expr . CLOSE_PAR
+
+    CLOSE_PAR  shift, and go to state 140
+
+
+State 105
 
    80 Logical_Expr: NOT Relational_Expr .
    82 Relational_Expr: Relational_Expr . GT Additive_Expr
@@ -1711,52 +1754,59 @@ State 104
    86                | Relational_Expr . EQ Additive_Expr
    87                | Relational_Expr . NE Additive_Expr
 
-    LE  shift, and go to state 112
-    GE  shift, and go to state 113
-    EQ  shift, and go to state 114
-    NE  shift, and go to state 115
-    LT  shift, and go to state 116
-    GT  shift, and go to state 117
+    LE  shift, and go to state 114
+    GE  shift, and go to state 115
+    EQ  shift, and go to state 116
+    NE  shift, and go to state 117
+    LT  shift, and go to state 118
+    GT  shift, and go to state 119
 
     $default  reduce using rule 80 (Logical_Expr)
 
 
-State 105
-
-  106 Primary: PP ID .
-
-    $default  reduce using rule 106 (Primary)
-
-
 State 106
 
-  108 Primary: MM ID .
+  107 Primary: PP ID .
 
-    $default  reduce using rule 108 (Primary)
+    $default  reduce using rule 107 (Primary)
 
 
 State 107
+
+  109 Primary: MM ID .
+
+    $default  reduce using rule 109 (Primary)
+
+
+State 108
+
+  104 Primary: '+' Primary .
+
+    $default  reduce using rule 104 (Primary)
+
+
+State 109
 
   103 Primary: '-' Primary .
 
     $default  reduce using rule 103 (Primary)
 
 
-State 108
+State 110
 
   101 Primary: '*' ID .
 
     $default  reduce using rule 101 (Primary)
 
 
-State 109
+State 111
 
   102 Primary: '&' ID .
 
     $default  reduce using rule 102 (Primary)
 
 
-State 110
+State 112
 
    78 Logical_Expr: Logical_Expr AND . Relational_Expr
 
@@ -1768,19 +1818,20 @@ State 110
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Relational_Expr      go to state 139
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Relational_Expr      go to state 141
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 111
+State 113
 
    79 Logical_Expr: Logical_Expr OR . Relational_Expr
 
@@ -1792,19 +1843,20 @@ State 111
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Relational_Expr      go to state 140
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Relational_Expr      go to state 142
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 112
+State 114
 
    85 Relational_Expr: Relational_Expr LE . Additive_Expr
 
@@ -1816,18 +1868,19 @@ State 112
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Additive_Expr        go to state 141
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Additive_Expr        go to state 143
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 113
+State 115
 
    84 Relational_Expr: Relational_Expr GE . Additive_Expr
 
@@ -1839,18 +1892,19 @@ State 113
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Additive_Expr        go to state 142
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Additive_Expr        go to state 144
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 114
+State 116
 
    86 Relational_Expr: Relational_Expr EQ . Additive_Expr
 
@@ -1862,18 +1916,19 @@ State 114
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Additive_Expr        go to state 143
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Additive_Expr        go to state 145
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 115
+State 117
 
    87 Relational_Expr: Relational_Expr NE . Additive_Expr
 
@@ -1885,18 +1940,19 @@ State 115
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Additive_Expr        go to state 144
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Additive_Expr        go to state 146
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 116
+State 118
 
    83 Relational_Expr: Relational_Expr LT . Additive_Expr
 
@@ -1908,18 +1964,19 @@ State 116
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Additive_Expr        go to state 145
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Additive_Expr        go to state 147
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 117
+State 119
 
    82 Relational_Expr: Relational_Expr GT . Additive_Expr
 
@@ -1931,18 +1988,19 @@ State 117
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Additive_Expr        go to state 146
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Additive_Expr        go to state 148
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 118
+State 120
 
    89 Additive_Expr: Additive_Expr '+' . Multiplicative_Expr
 
@@ -1954,17 +2012,18 @@ State 118
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Multiplicative_Expr  go to state 147
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Multiplicative_Expr  go to state 149
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 119
+State 121
 
    90 Additive_Expr: Additive_Expr '-' . Multiplicative_Expr
 
@@ -1976,17 +2035,18 @@ State 119
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Multiplicative_Expr  go to state 148
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Multiplicative_Expr  go to state 150
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 120
+State 122
 
    92 Multiplicative_Expr: Multiplicative_Expr '*' . Primary
 
@@ -1998,16 +2058,17 @@ State 120
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation  go to state 65
-    Primary        go to state 149
-    FunctionCall   go to state 72
+    ArrayNotation  go to state 66
+    Primary        go to state 151
+    FunctionCall   go to state 73
 
 
-State 121
+State 123
 
    93 Multiplicative_Expr: Multiplicative_Expr '/' . Primary
 
@@ -2019,16 +2080,17 @@ State 121
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation  go to state 65
-    Primary        go to state 150
-    FunctionCall   go to state 72
+    ArrayNotation  go to state 66
+    Primary        go to state 152
+    FunctionCall   go to state 73
 
 
-State 122
+State 124
 
    94 Multiplicative_Expr: Multiplicative_Expr '%' . Primary
 
@@ -2040,163 +2102,134 @@ State 122
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation  go to state 65
-    Primary        go to state 151
-    FunctionCall   go to state 72
+    ArrayNotation  go to state 66
+    Primary        go to state 153
+    FunctionCall   go to state 73
 
 
-State 123
+State 125
 
    33 ArrayNotation: ID '[' Expr ']' .
 
     $default  reduce using rule 33 (ArrayNotation)
 
 
-State 124
+State 126
 
    47 DefineAssign: '*' ID '=' Expr .
 
     $default  reduce using rule 47 (DefineAssign)
 
 
-State 125
+State 127
 
    48 DefineAssign: '*' ID PAS Expr .
 
     $default  reduce using rule 48 (DefineAssign)
 
 
-State 126
+State 128
 
    50 DefineAssign: '*' ID MAS Expr .
 
     $default  reduce using rule 50 (DefineAssign)
 
 
-State 127
+State 129
 
    51 DefineAssign: '*' ID DAS Expr .
 
     $default  reduce using rule 51 (DefineAssign)
 
 
-State 128
+State 130
 
    49 DefineAssign: '*' ID SAS Expr .
 
     $default  reduce using rule 49 (DefineAssign)
 
 
-State 129
+State 131
 
    36 IDList: '*' ID ',' IDList .
 
     $default  reduce using rule 36 (IDList)
 
 
-State 130
+State 132
 
     8 IncludeStatement: '#' INCLUDE LT ID '.' ID . GT
 
-    GT  shift, and go to state 152
+    GT  shift, and go to state 154
 
 
-State 131
+State 133
 
-  110 CompoundStatement: '{' . StatementList '}'
+  111 CompoundStatement: '{' . StatementList '}'
 
     INT        shift, and go to state 1
     FLOAT      shift, and go to state 2
     CHAR       shift, and go to state 3
     DOUBLE     shift, and go to state 4
     VOID       shift, and go to state 5
-    RETURN     shift, and go to state 153
+    RETURN     shift, and go to state 155
     SIGNED     shift, and go to state 6
     UNSIGNED   shift, and go to state 7
     LONG       shift, and go to state 8
     SHORT      shift, and go to state 9
-    BREAK      shift, and go to state 154
-    CONTINUE   shift, and go to state 155
-    FOR        shift, and go to state 156
-    WHILE      shift, and go to state 157
-    DO         shift, and go to state 158
-    IF         shift, and go to state 159
+    BREAK      shift, and go to state 156
+    CONTINUE   shift, and go to state 157
+    FOR        shift, and go to state 158
+    WHILE      shift, and go to state 159
+    DO         shift, and go to state 160
+    IF         shift, and go to state 161
     NUM        shift, and go to state 53
-    ID         shift, and go to state 160
+    ID         shift, and go to state 162
     FLOATNUM   shift, and go to state 55
     STRING     shift, and go to state 56
     CHARCONST  shift, and go to state 57
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 161
-    '&'        shift, and go to state 64
-    ';'        shift, and go to state 162
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 163
+    '&'        shift, and go to state 65
+    ';'        shift, and go to state 164
 
-    $default  reduce using rule 112 (StatementList)
+    $default  reduce using rule 113 (StatementList)
 
-    Declaration       go to state 163
-    Type              go to state 164
+    Declaration       go to state 165
+    Type              go to state 166
     Modifiers         go to state 17
-    ArrayNotation     go to state 165
-    Assignment        go to state 166
-    Primary           go to state 167
-    StatementList     go to state 168
-    Statement         go to state 169
-    ReturnStatement   go to state 170
-    WhileStatement    go to state 171
-    DoWhileStatement  go to state 172
-    ForStatement      go to state 173
-    IfStatement       go to state 174
-    FunctionCall      go to state 72
+    ArrayNotation     go to state 167
+    Assignment        go to state 168
+    Primary           go to state 169
+    StatementList     go to state 170
+    Statement         go to state 171
+    ReturnStatement   go to state 172
+    WhileStatement    go to state 173
+    DoWhileStatement  go to state 174
+    ForStatement      go to state 175
+    IfStatement       go to state 176
+    FunctionCall      go to state 73
 
 
-State 132
+State 134
 
    10 FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement .
 
     $default  reduce using rule 10 (FunctionDef)
 
 
-State 133
-
-   14 FormalParamList: Type ID ',' . FormalParamList
-
-    INT       shift, and go to state 1
-    FLOAT     shift, and go to state 2
-    CHAR      shift, and go to state 3
-    DOUBLE    shift, and go to state 4
-    VOID      shift, and go to state 5
-    SIGNED    shift, and go to state 6
-    UNSIGNED  shift, and go to state 7
-    LONG      shift, and go to state 8
-    SHORT     shift, and go to state 9
-
-    $default  reduce using rule 17 (FormalParamList)
-
-    FormalParamList  go to state 175
-    Type             go to state 52
-    Modifiers        go to state 17
-
-
-State 134
-
-   12 FormalParamList: Type '*' ID .
-   15                | Type '*' ID . ',' FormalParamList
-
-    ','  shift, and go to state 176
-
-    $default  reduce using rule 12 (FormalParamList)
-
-
 State 135
 
-   16 FormalParamList: Type ArrayNotation ',' . FormalParamList
+   14 FormalParamList: Type ID ',' . FormalParamList
 
     INT       shift, and go to state 1
     FLOAT     shift, and go to state 2
@@ -2217,29 +2250,60 @@ State 135
 
 State 136
 
-  134 FunctionCall: ID OPEN_PAR ParamList . CLOSE_PAR
+   12 FormalParamList: Type '*' ID .
+   15                | Type '*' ID . ',' FormalParamList
 
-    CLOSE_PAR  shift, and go to state 178
+    ','  shift, and go to state 178
+
+    $default  reduce using rule 12 (FormalParamList)
 
 
 State 137
 
+   16 FormalParamList: Type ArrayNotation ',' . FormalParamList
+
+    INT       shift, and go to state 1
+    FLOAT     shift, and go to state 2
+    CHAR      shift, and go to state 3
+    DOUBLE    shift, and go to state 4
+    VOID      shift, and go to state 5
+    SIGNED    shift, and go to state 6
+    UNSIGNED  shift, and go to state 7
+    LONG      shift, and go to state 8
+    SHORT     shift, and go to state 9
+
+    $default  reduce using rule 17 (FormalParamList)
+
+    FormalParamList  go to state 179
+    Type             go to state 52
+    Modifiers        go to state 17
+
+
+State 138
+
+  135 FunctionCall: ID OPEN_PAR ParamList . CLOSE_PAR
+
+    CLOSE_PAR  shift, and go to state 180
+
+
+State 139
+
    57 ParamList: Expr .
    58          | Expr . ',' ParamList
 
-    ','  shift, and go to state 179
+    ','  shift, and go to state 181
 
     $default  reduce using rule 57 (ParamList)
 
 
-State 138
+State 140
 
    95 Primary: OPEN_PAR Expr CLOSE_PAR .
 
     $default  reduce using rule 95 (Primary)
 
 
-State 139
+State 141
 
    78 Logical_Expr: Logical_Expr AND Relational_Expr .
    82 Relational_Expr: Relational_Expr . GT Additive_Expr
@@ -2249,17 +2313,17 @@ State 139
    86                | Relational_Expr . EQ Additive_Expr
    87                | Relational_Expr . NE Additive_Expr
 
-    LE  shift, and go to state 112
-    GE  shift, and go to state 113
-    EQ  shift, and go to state 114
-    NE  shift, and go to state 115
-    LT  shift, and go to state 116
-    GT  shift, and go to state 117
+    LE  shift, and go to state 114
+    GE  shift, and go to state 115
+    EQ  shift, and go to state 116
+    NE  shift, and go to state 117
+    LT  shift, and go to state 118
+    GT  shift, and go to state 119
 
     $default  reduce using rule 78 (Logical_Expr)
 
 
-State 140
+State 142
 
    79 Logical_Expr: Logical_Expr OR Relational_Expr .
    82 Relational_Expr: Relational_Expr . GT Additive_Expr
@@ -2269,147 +2333,147 @@ State 140
    86                | Relational_Expr . EQ Additive_Expr
    87                | Relational_Expr . NE Additive_Expr
 
-    LE  shift, and go to state 112
-    GE  shift, and go to state 113
-    EQ  shift, and go to state 114
-    NE  shift, and go to state 115
-    LT  shift, and go to state 116
-    GT  shift, and go to state 117
+    LE  shift, and go to state 114
+    GE  shift, and go to state 115
+    EQ  shift, and go to state 116
+    NE  shift, and go to state 117
+    LT  shift, and go to state 118
+    GT  shift, and go to state 119
 
     $default  reduce using rule 79 (Logical_Expr)
 
 
-State 141
+State 143
 
    85 Relational_Expr: Relational_Expr LE Additive_Expr .
    89 Additive_Expr: Additive_Expr . '+' Multiplicative_Expr
    90              | Additive_Expr . '-' Multiplicative_Expr
 
-    '+'  shift, and go to state 118
-    '-'  shift, and go to state 119
+    '+'  shift, and go to state 120
+    '-'  shift, and go to state 121
 
     $default  reduce using rule 85 (Relational_Expr)
 
 
-State 142
+State 144
 
    84 Relational_Expr: Relational_Expr GE Additive_Expr .
    89 Additive_Expr: Additive_Expr . '+' Multiplicative_Expr
    90              | Additive_Expr . '-' Multiplicative_Expr
 
-    '+'  shift, and go to state 118
-    '-'  shift, and go to state 119
+    '+'  shift, and go to state 120
+    '-'  shift, and go to state 121
 
     $default  reduce using rule 84 (Relational_Expr)
 
 
-State 143
+State 145
 
    86 Relational_Expr: Relational_Expr EQ Additive_Expr .
    89 Additive_Expr: Additive_Expr . '+' Multiplicative_Expr
    90              | Additive_Expr . '-' Multiplicative_Expr
 
-    '+'  shift, and go to state 118
-    '-'  shift, and go to state 119
+    '+'  shift, and go to state 120
+    '-'  shift, and go to state 121
 
     $default  reduce using rule 86 (Relational_Expr)
 
 
-State 144
+State 146
 
    87 Relational_Expr: Relational_Expr NE Additive_Expr .
    89 Additive_Expr: Additive_Expr . '+' Multiplicative_Expr
    90              | Additive_Expr . '-' Multiplicative_Expr
 
-    '+'  shift, and go to state 118
-    '-'  shift, and go to state 119
+    '+'  shift, and go to state 120
+    '-'  shift, and go to state 121
 
     $default  reduce using rule 87 (Relational_Expr)
 
 
-State 145
+State 147
 
    83 Relational_Expr: Relational_Expr LT Additive_Expr .
    89 Additive_Expr: Additive_Expr . '+' Multiplicative_Expr
    90              | Additive_Expr . '-' Multiplicative_Expr
 
-    '+'  shift, and go to state 118
-    '-'  shift, and go to state 119
+    '+'  shift, and go to state 120
+    '-'  shift, and go to state 121
 
     $default  reduce using rule 83 (Relational_Expr)
 
 
-State 146
+State 148
 
    82 Relational_Expr: Relational_Expr GT Additive_Expr .
    89 Additive_Expr: Additive_Expr . '+' Multiplicative_Expr
    90              | Additive_Expr . '-' Multiplicative_Expr
 
-    '+'  shift, and go to state 118
-    '-'  shift, and go to state 119
+    '+'  shift, and go to state 120
+    '-'  shift, and go to state 121
 
     $default  reduce using rule 82 (Relational_Expr)
 
 
-State 147
+State 149
 
    89 Additive_Expr: Additive_Expr '+' Multiplicative_Expr .
    92 Multiplicative_Expr: Multiplicative_Expr . '*' Primary
    93                    | Multiplicative_Expr . '/' Primary
    94                    | Multiplicative_Expr . '%' Primary
 
-    '*'  shift, and go to state 120
-    '/'  shift, and go to state 121
-    '%'  shift, and go to state 122
+    '*'  shift, and go to state 122
+    '/'  shift, and go to state 123
+    '%'  shift, and go to state 124
 
     $default  reduce using rule 89 (Additive_Expr)
 
 
-State 148
+State 150
 
    90 Additive_Expr: Additive_Expr '-' Multiplicative_Expr .
    92 Multiplicative_Expr: Multiplicative_Expr . '*' Primary
    93                    | Multiplicative_Expr . '/' Primary
    94                    | Multiplicative_Expr . '%' Primary
 
-    '*'  shift, and go to state 120
-    '/'  shift, and go to state 121
-    '%'  shift, and go to state 122
+    '*'  shift, and go to state 122
+    '/'  shift, and go to state 123
+    '%'  shift, and go to state 124
 
     $default  reduce using rule 90 (Additive_Expr)
 
 
-State 149
+State 151
 
    92 Multiplicative_Expr: Multiplicative_Expr '*' Primary .
 
     $default  reduce using rule 92 (Multiplicative_Expr)
 
 
-State 150
+State 152
 
    93 Multiplicative_Expr: Multiplicative_Expr '/' Primary .
 
     $default  reduce using rule 93 (Multiplicative_Expr)
 
 
-State 151
+State 153
 
    94 Multiplicative_Expr: Multiplicative_Expr '%' Primary .
 
     $default  reduce using rule 94 (Multiplicative_Expr)
 
 
-State 152
+State 154
 
     8 IncludeStatement: '#' INCLUDE LT ID '.' ID GT .
 
     $default  reduce using rule 8 (IncludeStatement)
 
 
-State 153
+State 155
 
-  123 ReturnStatement: RETURN . Expr ';'
+  124 ReturnStatement: RETURN . Expr ';'
 
     NUM        shift, and go to state 53
     ID         shift, and go to state 54
@@ -2420,68 +2484,69 @@ State 153
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 180
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
-
-
-State 154
-
-  120 Statement: BREAK . ';'
-
-    ';'  shift, and go to state 181
-
-
-State 155
-
-  121 Statement: CONTINUE . ';'
-
-    ';'  shift, and go to state 182
+    ArrayNotation        go to state 66
+    Expr                 go to state 182
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 156
 
-  127 ForStatement: FOR . OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement
-  128             | FOR . OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement
+  121 Statement: BREAK . ';'
 
-    OPEN_PAR  shift, and go to state 183
+    ';'  shift, and go to state 183
 
 
 State 157
 
-  124 WhileStatement: WHILE . OPEN_PAR Expr CLOSE_PAR Statement
-  125               | WHILE . OPEN_PAR Expr CLOSE_PAR CompoundStatement
+  122 Statement: CONTINUE . ';'
 
-    OPEN_PAR  shift, and go to state 184
+    ';'  shift, and go to state 184
 
 
 State 158
 
-  126 DoWhileStatement: DO . CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR ';'
+  128 ForStatement: FOR . OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement
+  129             | FOR . OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement
 
-    '{'  shift, and go to state 131
-
-    CompoundStatement  go to state 185
+    OPEN_PAR  shift, and go to state 185
 
 
 State 159
 
-  129 IfStatement: IF . OPEN_PAR Expr CLOSE_PAR Statement ElseStatement
-  130            | IF . OPEN_PAR Expr CLOSE_PAR CompoundStatement ElseStatement
+  125 WhileStatement: WHILE . OPEN_PAR Expr CLOSE_PAR Statement
+  126               | WHILE . OPEN_PAR Expr CLOSE_PAR CompoundStatement
 
     OPEN_PAR  shift, and go to state 186
 
 
 State 160
+
+  127 DoWhileStatement: DO . CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR ';'
+
+    '{'  shift, and go to state 133
+
+    CompoundStatement  go to state 187
+
+
+State 161
+
+  130 IfStatement: IF . OPEN_PAR Expr CLOSE_PAR Statement ElseStatement
+  131            | IF . OPEN_PAR Expr CLOSE_PAR CompoundStatement ElseStatement
+
+    OPEN_PAR  shift, and go to state 188
+
+
+State 162
 
    32 ArrayNotation: ID . '[' ']'
    33              | ID . '[' Expr ']'
@@ -2491,24 +2556,24 @@ State 160
    63           | ID . MAS Expr
    64           | ID . DAS Expr
   100 Primary: ID .
-  107        | ID . PP
-  109        | ID . MM
-  134 FunctionCall: ID . OPEN_PAR ParamList CLOSE_PAR
+  108        | ID . PP
+  110        | ID . MM
+  135 FunctionCall: ID . OPEN_PAR ParamList CLOSE_PAR
 
-    OPEN_PAR  shift, and go to state 100
-    '='       shift, and go to state 187
-    PAS       shift, and go to state 188
-    MAS       shift, and go to state 189
-    DAS       shift, and go to state 190
-    SAS       shift, and go to state 191
-    PP        shift, and go to state 101
-    MM        shift, and go to state 102
+    OPEN_PAR  shift, and go to state 101
+    '='       shift, and go to state 189
+    PAS       shift, and go to state 190
+    MAS       shift, and go to state 191
+    DAS       shift, and go to state 192
+    SAS       shift, and go to state 193
+    PP        shift, and go to state 102
+    MM        shift, and go to state 103
     '['       shift, and go to state 40
 
     $default  reduce using rule 100 (Primary)
 
 
-State 161
+State 163
 
    65 Assignment: '*' . ID '=' Expr
    66           | '*' . ID PAS Expr
@@ -2517,28 +2582,28 @@ State 161
    69           | '*' . ID DAS Expr
   101 Primary: '*' . ID
 
-    ID  shift, and go to state 192
-
-
-State 162
-
-  122 Statement: ';' .
-
-    $default  reduce using rule 122 (Statement)
-
-
-State 163
-
-  114 Statement: Declaration .
-
-    $default  reduce using rule 114 (Statement)
+    ID  shift, and go to state 194
 
 
 State 164
 
+  123 Statement: ';' .
+
+    $default  reduce using rule 123 (Statement)
+
+
+State 165
+
+  115 Statement: Declaration .
+
+    $default  reduce using rule 115 (Statement)
+
+
+State 166
+
    18 Declaration: Type . IDList ';'
 
-    ID   shift, and go to state 77
+    ID   shift, and go to state 78
     '*'  shift, and go to state 24
 
     ArrayNotation  go to state 25
@@ -2546,139 +2611,140 @@ State 164
     DefineAssign   go to state 27
 
 
-State 165
+State 167
 
    70 Assignment: ArrayNotation . '=' Expr
    71           | ArrayNotation . PAS Expr
    72           | ArrayNotation . SAS Expr
    73           | ArrayNotation . MAS Expr
    74           | ArrayNotation . DAS Expr
-  104 Primary: ArrayNotation .
+  105 Primary: ArrayNotation .
 
-    '='  shift, and go to state 193
-    PAS  shift, and go to state 194
-    MAS  shift, and go to state 195
-    DAS  shift, and go to state 196
-    SAS  shift, and go to state 197
+    '='  shift, and go to state 195
+    PAS  shift, and go to state 196
+    MAS  shift, and go to state 197
+    DAS  shift, and go to state 198
+    SAS  shift, and go to state 199
 
-    $default  reduce using rule 104 (Primary)
-
-
-State 166
-
-  117 Statement: Assignment . ';'
-
-    ';'  shift, and go to state 198
+    $default  reduce using rule 105 (Primary)
 
 
-State 167
+State 168
+
+  118 Statement: Assignment . ';'
+
+    ';'  shift, and go to state 200
+
+
+State 169
 
    75 Assignment: Primary .
 
     $default  reduce using rule 75 (Assignment)
 
 
-State 168
+State 170
 
-  110 CompoundStatement: '{' StatementList . '}'
+  111 CompoundStatement: '{' StatementList . '}'
 
-    '}'  shift, and go to state 199
+    '}'  shift, and go to state 201
 
 
-State 169
+State 171
 
-  111 StatementList: Statement . StatementList
+  112 StatementList: Statement . StatementList
 
     INT        shift, and go to state 1
     FLOAT      shift, and go to state 2
     CHAR       shift, and go to state 3
     DOUBLE     shift, and go to state 4
     VOID       shift, and go to state 5
-    RETURN     shift, and go to state 153
+    RETURN     shift, and go to state 155
     SIGNED     shift, and go to state 6
     UNSIGNED   shift, and go to state 7
     LONG       shift, and go to state 8
     SHORT      shift, and go to state 9
-    BREAK      shift, and go to state 154
-    CONTINUE   shift, and go to state 155
-    FOR        shift, and go to state 156
-    WHILE      shift, and go to state 157
-    DO         shift, and go to state 158
-    IF         shift, and go to state 159
+    BREAK      shift, and go to state 156
+    CONTINUE   shift, and go to state 157
+    FOR        shift, and go to state 158
+    WHILE      shift, and go to state 159
+    DO         shift, and go to state 160
+    IF         shift, and go to state 161
     NUM        shift, and go to state 53
-    ID         shift, and go to state 160
+    ID         shift, and go to state 162
     FLOATNUM   shift, and go to state 55
     STRING     shift, and go to state 56
     CHARCONST  shift, and go to state 57
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 161
-    '&'        shift, and go to state 64
-    ';'        shift, and go to state 162
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 163
+    '&'        shift, and go to state 65
+    ';'        shift, and go to state 164
 
-    $default  reduce using rule 112 (StatementList)
+    $default  reduce using rule 113 (StatementList)
 
-    Declaration       go to state 163
-    Type              go to state 164
+    Declaration       go to state 165
+    Type              go to state 166
     Modifiers         go to state 17
-    ArrayNotation     go to state 165
-    Assignment        go to state 166
-    Primary           go to state 167
-    StatementList     go to state 200
-    Statement         go to state 169
-    ReturnStatement   go to state 170
-    WhileStatement    go to state 171
-    DoWhileStatement  go to state 172
-    ForStatement      go to state 173
-    IfStatement       go to state 174
-    FunctionCall      go to state 72
-
-
-State 170
-
-  118 Statement: ReturnStatement .
-
-    $default  reduce using rule 118 (Statement)
-
-
-State 171
-
-  113 Statement: WhileStatement .
-
-    $default  reduce using rule 113 (Statement)
+    ArrayNotation     go to state 167
+    Assignment        go to state 168
+    Primary           go to state 169
+    StatementList     go to state 202
+    Statement         go to state 171
+    ReturnStatement   go to state 172
+    WhileStatement    go to state 173
+    DoWhileStatement  go to state 174
+    ForStatement      go to state 175
+    IfStatement       go to state 176
+    FunctionCall      go to state 73
 
 
 State 172
 
-  119 Statement: DoWhileStatement .
+  119 Statement: ReturnStatement .
 
     $default  reduce using rule 119 (Statement)
 
 
 State 173
 
-  115 Statement: ForStatement .
+  114 Statement: WhileStatement .
 
-    $default  reduce using rule 115 (Statement)
+    $default  reduce using rule 114 (Statement)
 
 
 State 174
 
-  116 Statement: IfStatement .
+  120 Statement: DoWhileStatement .
+
+    $default  reduce using rule 120 (Statement)
+
+
+State 175
+
+  116 Statement: ForStatement .
 
     $default  reduce using rule 116 (Statement)
 
 
-State 175
+State 176
+
+  117 Statement: IfStatement .
+
+    $default  reduce using rule 117 (Statement)
+
+
+State 177
 
    14 FormalParamList: Type ID ',' FormalParamList .
 
     $default  reduce using rule 14 (FormalParamList)
 
 
-State 176
+State 178
 
    15 FormalParamList: Type '*' ID ',' . FormalParamList
 
@@ -2694,26 +2760,26 @@ State 176
 
     $default  reduce using rule 17 (FormalParamList)
 
-    FormalParamList  go to state 201
+    FormalParamList  go to state 203
     Type             go to state 52
     Modifiers        go to state 17
 
 
-State 177
+State 179
 
    16 FormalParamList: Type ArrayNotation ',' FormalParamList .
 
     $default  reduce using rule 16 (FormalParamList)
 
 
-State 178
+State 180
 
-  134 FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR .
+  135 FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR .
 
-    $default  reduce using rule 134 (FunctionCall)
+    $default  reduce using rule 135 (FunctionCall)
 
 
-State 179
+State 181
 
    58 ParamList: Expr ',' . ParamList
 
@@ -2726,106 +2792,73 @@ State 179
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
     $default  reduce using rule 59 (ParamList)
 
-    ArrayNotation        go to state 65
-    ParamList            go to state 202
-    Expr                 go to state 137
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
-
-
-State 180
-
-  123 ReturnStatement: RETURN Expr . ';'
-
-    ';'  shift, and go to state 203
-
-
-State 181
-
-  120 Statement: BREAK ';' .
-
-    $default  reduce using rule 120 (Statement)
+    ArrayNotation        go to state 66
+    ParamList            go to state 204
+    Expr                 go to state 139
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 182
 
-  121 Statement: CONTINUE ';' .
+  124 ReturnStatement: RETURN Expr . ';'
 
-    $default  reduce using rule 121 (Statement)
+    ';'  shift, and go to state 205
 
 
 State 183
 
-  127 ForStatement: FOR OPEN_PAR . Assignment ';' Expr ';' Assignment CLOSE_PAR Statement
-  128             | FOR OPEN_PAR . Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement
+  121 Statement: BREAK ';' .
 
-    NUM        shift, and go to state 53
-    ID         shift, and go to state 160
-    FLOATNUM   shift, and go to state 55
-    STRING     shift, and go to state 56
-    CHARCONST  shift, and go to state 57
-    OPEN_PAR   shift, and go to state 58
-    PP         shift, and go to state 60
-    MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 161
-    '&'        shift, and go to state 64
-
-    ArrayNotation  go to state 165
-    Assignment     go to state 204
-    Primary        go to state 167
-    FunctionCall   go to state 72
+    $default  reduce using rule 121 (Statement)
 
 
 State 184
 
-  124 WhileStatement: WHILE OPEN_PAR . Expr CLOSE_PAR Statement
-  125               | WHILE OPEN_PAR . Expr CLOSE_PAR CompoundStatement
+  122 Statement: CONTINUE ';' .
 
-    NUM        shift, and go to state 53
-    ID         shift, and go to state 54
-    FLOATNUM   shift, and go to state 55
-    STRING     shift, and go to state 56
-    CHARCONST  shift, and go to state 57
-    OPEN_PAR   shift, and go to state 58
-    NOT        shift, and go to state 59
-    PP         shift, and go to state 60
-    MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
-
-    ArrayNotation        go to state 65
-    Expr                 go to state 205
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    $default  reduce using rule 122 (Statement)
 
 
 State 185
 
-  126 DoWhileStatement: DO CompoundStatement . WHILE OPEN_PAR Expr CLOSE_PAR ';'
+  128 ForStatement: FOR OPEN_PAR . Assignment ';' Expr ';' Assignment CLOSE_PAR Statement
+  129             | FOR OPEN_PAR . Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement
 
-    WHILE  shift, and go to state 206
+    NUM        shift, and go to state 53
+    ID         shift, and go to state 162
+    FLOATNUM   shift, and go to state 55
+    STRING     shift, and go to state 56
+    CHARCONST  shift, and go to state 57
+    OPEN_PAR   shift, and go to state 58
+    PP         shift, and go to state 60
+    MM         shift, and go to state 61
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 163
+    '&'        shift, and go to state 65
+
+    ArrayNotation  go to state 167
+    Assignment     go to state 206
+    Primary        go to state 169
+    FunctionCall   go to state 73
 
 
 State 186
 
-  129 IfStatement: IF OPEN_PAR . Expr CLOSE_PAR Statement ElseStatement
-  130            | IF OPEN_PAR . Expr CLOSE_PAR CompoundStatement ElseStatement
+  125 WhileStatement: WHILE OPEN_PAR . Expr CLOSE_PAR Statement
+  126               | WHILE OPEN_PAR . Expr CLOSE_PAR CompoundStatement
 
     NUM        shift, and go to state 53
     ID         shift, and go to state 54
@@ -2836,21 +2869,58 @@ State 186
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
+    ArrayNotation        go to state 66
     Expr                 go to state 207
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 187
+
+  127 DoWhileStatement: DO CompoundStatement . WHILE OPEN_PAR Expr CLOSE_PAR ';'
+
+    WHILE  shift, and go to state 208
+
+
+State 188
+
+  130 IfStatement: IF OPEN_PAR . Expr CLOSE_PAR Statement ElseStatement
+  131            | IF OPEN_PAR . Expr CLOSE_PAR CompoundStatement ElseStatement
+
+    NUM        shift, and go to state 53
+    ID         shift, and go to state 54
+    FLOATNUM   shift, and go to state 55
+    STRING     shift, and go to state 56
+    CHARCONST  shift, and go to state 57
+    OPEN_PAR   shift, and go to state 58
+    NOT        shift, and go to state 59
+    PP         shift, and go to state 60
+    MM         shift, and go to state 61
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
+
+    ArrayNotation        go to state 66
+    Expr                 go to state 209
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
+
+
+State 189
 
    60 Assignment: ID '=' . Expr
 
@@ -2863,21 +2933,22 @@ State 187
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 208
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 210
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 188
+State 190
 
    61 Assignment: ID PAS . Expr
 
@@ -2890,21 +2961,22 @@ State 188
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 209
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 211
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 189
+State 191
 
    63 Assignment: ID MAS . Expr
 
@@ -2917,21 +2989,22 @@ State 189
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 210
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 212
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 190
+State 192
 
    64 Assignment: ID DAS . Expr
 
@@ -2944,21 +3017,22 @@ State 190
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 211
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 213
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 191
+State 193
 
    62 Assignment: ID SAS . Expr
 
@@ -2971,21 +3045,22 @@ State 191
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 212
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 214
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 192
+State 194
 
    65 Assignment: '*' ID . '=' Expr
    66           | '*' ID . PAS Expr
@@ -2994,16 +3069,16 @@ State 192
    69           | '*' ID . DAS Expr
   101 Primary: '*' ID .
 
-    '='  shift, and go to state 213
-    PAS  shift, and go to state 214
-    MAS  shift, and go to state 215
-    DAS  shift, and go to state 216
-    SAS  shift, and go to state 217
+    '='  shift, and go to state 215
+    PAS  shift, and go to state 216
+    MAS  shift, and go to state 217
+    DAS  shift, and go to state 218
+    SAS  shift, and go to state 219
 
     $default  reduce using rule 101 (Primary)
 
 
-State 193
+State 195
 
    70 Assignment: ArrayNotation '=' . Expr
 
@@ -3016,21 +3091,22 @@ State 193
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 218
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 220
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 194
+State 196
 
    71 Assignment: ArrayNotation PAS . Expr
 
@@ -3043,21 +3119,22 @@ State 194
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 219
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 221
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 195
+State 197
 
    73 Assignment: ArrayNotation MAS . Expr
 
@@ -3070,21 +3147,22 @@ State 195
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 220
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 222
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 196
+State 198
 
    74 Assignment: ArrayNotation DAS . Expr
 
@@ -3097,21 +3175,22 @@ State 196
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 221
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 223
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 197
+State 199
 
    72 Assignment: ArrayNotation SAS . Expr
 
@@ -3124,129 +3203,130 @@ State 197
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 222
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
-
-
-State 198
-
-  117 Statement: Assignment ';' .
-
-    $default  reduce using rule 117 (Statement)
-
-
-State 199
-
-  110 CompoundStatement: '{' StatementList '}' .
-
-    $default  reduce using rule 110 (CompoundStatement)
+    ArrayNotation        go to state 66
+    Expr                 go to state 224
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 200
 
-  111 StatementList: Statement StatementList .
+  118 Statement: Assignment ';' .
 
-    $default  reduce using rule 111 (StatementList)
+    $default  reduce using rule 118 (Statement)
 
 
 State 201
+
+  111 CompoundStatement: '{' StatementList '}' .
+
+    $default  reduce using rule 111 (CompoundStatement)
+
+
+State 202
+
+  112 StatementList: Statement StatementList .
+
+    $default  reduce using rule 112 (StatementList)
+
+
+State 203
 
    15 FormalParamList: Type '*' ID ',' FormalParamList .
 
     $default  reduce using rule 15 (FormalParamList)
 
 
-State 202
+State 204
 
    58 ParamList: Expr ',' ParamList .
 
     $default  reduce using rule 58 (ParamList)
 
 
-State 203
-
-  123 ReturnStatement: RETURN Expr ';' .
-
-    $default  reduce using rule 123 (ReturnStatement)
-
-
-State 204
-
-  127 ForStatement: FOR OPEN_PAR Assignment . ';' Expr ';' Assignment CLOSE_PAR Statement
-  128             | FOR OPEN_PAR Assignment . ';' Expr ';' Assignment CLOSE_PAR CompoundStatement
-
-    ';'  shift, and go to state 223
-
-
 State 205
 
-  124 WhileStatement: WHILE OPEN_PAR Expr . CLOSE_PAR Statement
-  125               | WHILE OPEN_PAR Expr . CLOSE_PAR CompoundStatement
+  124 ReturnStatement: RETURN Expr ';' .
 
-    CLOSE_PAR  shift, and go to state 224
+    $default  reduce using rule 124 (ReturnStatement)
 
 
 State 206
 
-  126 DoWhileStatement: DO CompoundStatement WHILE . OPEN_PAR Expr CLOSE_PAR ';'
+  128 ForStatement: FOR OPEN_PAR Assignment . ';' Expr ';' Assignment CLOSE_PAR Statement
+  129             | FOR OPEN_PAR Assignment . ';' Expr ';' Assignment CLOSE_PAR CompoundStatement
 
-    OPEN_PAR  shift, and go to state 225
+    ';'  shift, and go to state 225
 
 
 State 207
 
-  129 IfStatement: IF OPEN_PAR Expr . CLOSE_PAR Statement ElseStatement
-  130            | IF OPEN_PAR Expr . CLOSE_PAR CompoundStatement ElseStatement
+  125 WhileStatement: WHILE OPEN_PAR Expr . CLOSE_PAR Statement
+  126               | WHILE OPEN_PAR Expr . CLOSE_PAR CompoundStatement
 
     CLOSE_PAR  shift, and go to state 226
 
 
 State 208
 
+  127 DoWhileStatement: DO CompoundStatement WHILE . OPEN_PAR Expr CLOSE_PAR ';'
+
+    OPEN_PAR  shift, and go to state 227
+
+
+State 209
+
+  130 IfStatement: IF OPEN_PAR Expr . CLOSE_PAR Statement ElseStatement
+  131            | IF OPEN_PAR Expr . CLOSE_PAR CompoundStatement ElseStatement
+
+    CLOSE_PAR  shift, and go to state 228
+
+
+State 210
+
    60 Assignment: ID '=' Expr .
 
     $default  reduce using rule 60 (Assignment)
 
 
-State 209
+State 211
 
    61 Assignment: ID PAS Expr .
 
     $default  reduce using rule 61 (Assignment)
 
 
-State 210
+State 212
 
    63 Assignment: ID MAS Expr .
 
     $default  reduce using rule 63 (Assignment)
 
 
-State 211
+State 213
 
    64 Assignment: ID DAS Expr .
 
     $default  reduce using rule 64 (Assignment)
 
 
-State 212
+State 214
 
    62 Assignment: ID SAS Expr .
 
     $default  reduce using rule 62 (Assignment)
 
 
-State 213
+State 215
 
    65 Assignment: '*' ID '=' . Expr
 
@@ -3259,21 +3339,22 @@ State 213
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 227
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 229
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 214
+State 216
 
    66 Assignment: '*' ID PAS . Expr
 
@@ -3286,21 +3367,22 @@ State 214
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 228
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 230
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 215
+State 217
 
    68 Assignment: '*' ID MAS . Expr
 
@@ -3313,21 +3395,22 @@ State 215
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 229
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 231
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 216
+State 218
 
    69 Assignment: '*' ID DAS . Expr
 
@@ -3340,21 +3423,22 @@ State 216
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 230
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 232
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 217
+State 219
 
    67 Assignment: '*' ID SAS . Expr
 
@@ -3367,137 +3451,60 @@ State 217
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 231
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 233
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
-State 218
+State 220
 
    70 Assignment: ArrayNotation '=' Expr .
 
     $default  reduce using rule 70 (Assignment)
 
 
-State 219
+State 221
 
    71 Assignment: ArrayNotation PAS Expr .
 
     $default  reduce using rule 71 (Assignment)
 
 
-State 220
+State 222
 
    73 Assignment: ArrayNotation MAS Expr .
 
     $default  reduce using rule 73 (Assignment)
 
 
-State 221
+State 223
 
    74 Assignment: ArrayNotation DAS Expr .
 
     $default  reduce using rule 74 (Assignment)
 
 
-State 222
+State 224
 
    72 Assignment: ArrayNotation SAS Expr .
 
     $default  reduce using rule 72 (Assignment)
 
 
-State 223
-
-  127 ForStatement: FOR OPEN_PAR Assignment ';' . Expr ';' Assignment CLOSE_PAR Statement
-  128             | FOR OPEN_PAR Assignment ';' . Expr ';' Assignment CLOSE_PAR CompoundStatement
-
-    NUM        shift, and go to state 53
-    ID         shift, and go to state 54
-    FLOATNUM   shift, and go to state 55
-    STRING     shift, and go to state 56
-    CHARCONST  shift, and go to state 57
-    OPEN_PAR   shift, and go to state 58
-    NOT        shift, and go to state 59
-    PP         shift, and go to state 60
-    MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
-
-    ArrayNotation        go to state 65
-    Expr                 go to state 232
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
-
-
-State 224
-
-  124 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR . Statement
-  125               | WHILE OPEN_PAR Expr CLOSE_PAR . CompoundStatement
-
-    INT        shift, and go to state 1
-    FLOAT      shift, and go to state 2
-    CHAR       shift, and go to state 3
-    DOUBLE     shift, and go to state 4
-    VOID       shift, and go to state 5
-    RETURN     shift, and go to state 153
-    SIGNED     shift, and go to state 6
-    UNSIGNED   shift, and go to state 7
-    LONG       shift, and go to state 8
-    SHORT      shift, and go to state 9
-    BREAK      shift, and go to state 154
-    CONTINUE   shift, and go to state 155
-    FOR        shift, and go to state 156
-    WHILE      shift, and go to state 157
-    DO         shift, and go to state 158
-    IF         shift, and go to state 159
-    NUM        shift, and go to state 53
-    ID         shift, and go to state 160
-    FLOATNUM   shift, and go to state 55
-    STRING     shift, and go to state 56
-    CHARCONST  shift, and go to state 57
-    OPEN_PAR   shift, and go to state 58
-    PP         shift, and go to state 60
-    MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 161
-    '&'        shift, and go to state 64
-    ';'        shift, and go to state 162
-    '{'        shift, and go to state 131
-
-    Declaration        go to state 163
-    Type               go to state 164
-    Modifiers          go to state 17
-    ArrayNotation      go to state 165
-    Assignment         go to state 166
-    Primary            go to state 167
-    CompoundStatement  go to state 233
-    Statement          go to state 234
-    ReturnStatement    go to state 170
-    WhileStatement     go to state 171
-    DoWhileStatement   go to state 172
-    ForStatement       go to state 173
-    IfStatement        go to state 174
-    FunctionCall       go to state 72
-
-
 State 225
 
-  126 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR . Expr CLOSE_PAR ';'
+  128 ForStatement: FOR OPEN_PAR Assignment ';' . Expr ';' Assignment CLOSE_PAR Statement
+  129             | FOR OPEN_PAR Assignment ';' . Expr ';' Assignment CLOSE_PAR CompoundStatement
 
     NUM        shift, and go to state 53
     ID         shift, and go to state 54
@@ -3508,343 +3515,428 @@ State 225
     NOT        shift, and go to state 59
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 63
-    '&'        shift, and go to state 64
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
 
-    ArrayNotation        go to state 65
-    Expr                 go to state 235
-    Logical_Expr         go to state 67
-    Relational_Expr      go to state 68
-    Additive_Expr        go to state 69
-    Multiplicative_Expr  go to state 70
-    Primary              go to state 71
-    FunctionCall         go to state 72
+    ArrayNotation        go to state 66
+    Expr                 go to state 234
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
 
 
 State 226
 
-  129 IfStatement: IF OPEN_PAR Expr CLOSE_PAR . Statement ElseStatement
-  130            | IF OPEN_PAR Expr CLOSE_PAR . CompoundStatement ElseStatement
+  125 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR . Statement
+  126               | WHILE OPEN_PAR Expr CLOSE_PAR . CompoundStatement
 
     INT        shift, and go to state 1
     FLOAT      shift, and go to state 2
     CHAR       shift, and go to state 3
     DOUBLE     shift, and go to state 4
     VOID       shift, and go to state 5
-    RETURN     shift, and go to state 153
+    RETURN     shift, and go to state 155
     SIGNED     shift, and go to state 6
     UNSIGNED   shift, and go to state 7
     LONG       shift, and go to state 8
     SHORT      shift, and go to state 9
-    BREAK      shift, and go to state 154
-    CONTINUE   shift, and go to state 155
-    FOR        shift, and go to state 156
-    WHILE      shift, and go to state 157
-    DO         shift, and go to state 158
-    IF         shift, and go to state 159
+    BREAK      shift, and go to state 156
+    CONTINUE   shift, and go to state 157
+    FOR        shift, and go to state 158
+    WHILE      shift, and go to state 159
+    DO         shift, and go to state 160
+    IF         shift, and go to state 161
     NUM        shift, and go to state 53
-    ID         shift, and go to state 160
+    ID         shift, and go to state 162
     FLOATNUM   shift, and go to state 55
     STRING     shift, and go to state 56
     CHARCONST  shift, and go to state 57
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 161
-    '&'        shift, and go to state 64
-    ';'        shift, and go to state 162
-    '{'        shift, and go to state 131
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 163
+    '&'        shift, and go to state 65
+    ';'        shift, and go to state 164
+    '{'        shift, and go to state 133
 
-    Declaration        go to state 163
-    Type               go to state 164
+    Declaration        go to state 165
+    Type               go to state 166
     Modifiers          go to state 17
-    ArrayNotation      go to state 165
-    Assignment         go to state 166
-    Primary            go to state 167
-    CompoundStatement  go to state 236
-    Statement          go to state 237
-    ReturnStatement    go to state 170
-    WhileStatement     go to state 171
-    DoWhileStatement   go to state 172
-    ForStatement       go to state 173
-    IfStatement        go to state 174
-    FunctionCall       go to state 72
+    ArrayNotation      go to state 167
+    Assignment         go to state 168
+    Primary            go to state 169
+    CompoundStatement  go to state 235
+    Statement          go to state 236
+    ReturnStatement    go to state 172
+    WhileStatement     go to state 173
+    DoWhileStatement   go to state 174
+    ForStatement       go to state 175
+    IfStatement        go to state 176
+    FunctionCall       go to state 73
 
 
 State 227
+
+  127 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR . Expr CLOSE_PAR ';'
+
+    NUM        shift, and go to state 53
+    ID         shift, and go to state 54
+    FLOATNUM   shift, and go to state 55
+    STRING     shift, and go to state 56
+    CHARCONST  shift, and go to state 57
+    OPEN_PAR   shift, and go to state 58
+    NOT        shift, and go to state 59
+    PP         shift, and go to state 60
+    MM         shift, and go to state 61
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 64
+    '&'        shift, and go to state 65
+
+    ArrayNotation        go to state 66
+    Expr                 go to state 237
+    Logical_Expr         go to state 68
+    Relational_Expr      go to state 69
+    Additive_Expr        go to state 70
+    Multiplicative_Expr  go to state 71
+    Primary              go to state 72
+    FunctionCall         go to state 73
+
+
+State 228
+
+  130 IfStatement: IF OPEN_PAR Expr CLOSE_PAR . Statement ElseStatement
+  131            | IF OPEN_PAR Expr CLOSE_PAR . CompoundStatement ElseStatement
+
+    INT        shift, and go to state 1
+    FLOAT      shift, and go to state 2
+    CHAR       shift, and go to state 3
+    DOUBLE     shift, and go to state 4
+    VOID       shift, and go to state 5
+    RETURN     shift, and go to state 155
+    SIGNED     shift, and go to state 6
+    UNSIGNED   shift, and go to state 7
+    LONG       shift, and go to state 8
+    SHORT      shift, and go to state 9
+    BREAK      shift, and go to state 156
+    CONTINUE   shift, and go to state 157
+    FOR        shift, and go to state 158
+    WHILE      shift, and go to state 159
+    DO         shift, and go to state 160
+    IF         shift, and go to state 161
+    NUM        shift, and go to state 53
+    ID         shift, and go to state 162
+    FLOATNUM   shift, and go to state 55
+    STRING     shift, and go to state 56
+    CHARCONST  shift, and go to state 57
+    OPEN_PAR   shift, and go to state 58
+    PP         shift, and go to state 60
+    MM         shift, and go to state 61
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 163
+    '&'        shift, and go to state 65
+    ';'        shift, and go to state 164
+    '{'        shift, and go to state 133
+
+    Declaration        go to state 165
+    Type               go to state 166
+    Modifiers          go to state 17
+    ArrayNotation      go to state 167
+    Assignment         go to state 168
+    Primary            go to state 169
+    CompoundStatement  go to state 238
+    Statement          go to state 239
+    ReturnStatement    go to state 172
+    WhileStatement     go to state 173
+    DoWhileStatement   go to state 174
+    ForStatement       go to state 175
+    IfStatement        go to state 176
+    FunctionCall       go to state 73
+
+
+State 229
 
    65 Assignment: '*' ID '=' Expr .
 
     $default  reduce using rule 65 (Assignment)
 
 
-State 228
+State 230
 
    66 Assignment: '*' ID PAS Expr .
 
     $default  reduce using rule 66 (Assignment)
 
 
-State 229
+State 231
 
    68 Assignment: '*' ID MAS Expr .
 
     $default  reduce using rule 68 (Assignment)
 
 
-State 230
+State 232
 
    69 Assignment: '*' ID DAS Expr .
 
     $default  reduce using rule 69 (Assignment)
 
 
-State 231
+State 233
 
    67 Assignment: '*' ID SAS Expr .
 
     $default  reduce using rule 67 (Assignment)
 
 
-State 232
-
-  127 ForStatement: FOR OPEN_PAR Assignment ';' Expr . ';' Assignment CLOSE_PAR Statement
-  128             | FOR OPEN_PAR Assignment ';' Expr . ';' Assignment CLOSE_PAR CompoundStatement
-
-    ';'  shift, and go to state 238
-
-
-State 233
-
-  125 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR CompoundStatement .
-
-    $default  reduce using rule 125 (WhileStatement)
-
-
 State 234
 
-  124 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement .
+  128 ForStatement: FOR OPEN_PAR Assignment ';' Expr . ';' Assignment CLOSE_PAR Statement
+  129             | FOR OPEN_PAR Assignment ';' Expr . ';' Assignment CLOSE_PAR CompoundStatement
 
-    $default  reduce using rule 124 (WhileStatement)
+    ';'  shift, and go to state 240
 
 
 State 235
 
-  126 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr . CLOSE_PAR ';'
+  126 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR CompoundStatement .
 
-    CLOSE_PAR  shift, and go to state 239
+    $default  reduce using rule 126 (WhileStatement)
 
 
 State 236
 
-  130 IfStatement: IF OPEN_PAR Expr CLOSE_PAR CompoundStatement . ElseStatement
+  125 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement .
 
-    ELSE  shift, and go to state 240
-
-    ELSE      [reduce using rule 133 (ElseStatement)]
-    $default  reduce using rule 133 (ElseStatement)
-
-    ElseStatement  go to state 241
+    $default  reduce using rule 125 (WhileStatement)
 
 
 State 237
 
-  129 IfStatement: IF OPEN_PAR Expr CLOSE_PAR Statement . ElseStatement
+  127 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr . CLOSE_PAR ';'
 
-    ELSE  shift, and go to state 240
-
-    ELSE      [reduce using rule 133 (ElseStatement)]
-    $default  reduce using rule 133 (ElseStatement)
-
-    ElseStatement  go to state 242
+    CLOSE_PAR  shift, and go to state 241
 
 
 State 238
 
-  127 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' . Assignment CLOSE_PAR Statement
-  128             | FOR OPEN_PAR Assignment ';' Expr ';' . Assignment CLOSE_PAR CompoundStatement
+  131 IfStatement: IF OPEN_PAR Expr CLOSE_PAR CompoundStatement . ElseStatement
 
-    NUM        shift, and go to state 53
-    ID         shift, and go to state 160
-    FLOATNUM   shift, and go to state 55
-    STRING     shift, and go to state 56
-    CHARCONST  shift, and go to state 57
-    OPEN_PAR   shift, and go to state 58
-    PP         shift, and go to state 60
-    MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 161
-    '&'        shift, and go to state 64
+    ELSE  shift, and go to state 242
 
-    ArrayNotation  go to state 165
-    Assignment     go to state 243
-    Primary        go to state 167
-    FunctionCall   go to state 72
+    ELSE      [reduce using rule 134 (ElseStatement)]
+    $default  reduce using rule 134 (ElseStatement)
+
+    ElseStatement  go to state 243
 
 
 State 239
 
-  126 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR . ';'
+  130 IfStatement: IF OPEN_PAR Expr CLOSE_PAR Statement . ElseStatement
 
-    ';'  shift, and go to state 244
+    ELSE  shift, and go to state 242
+
+    ELSE      [reduce using rule 134 (ElseStatement)]
+    $default  reduce using rule 134 (ElseStatement)
+
+    ElseStatement  go to state 244
 
 
 State 240
 
-  131 ElseStatement: ELSE . CompoundStatement
-  132              | ELSE . Statement
+  128 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' . Assignment CLOSE_PAR Statement
+  129             | FOR OPEN_PAR Assignment ';' Expr ';' . Assignment CLOSE_PAR CompoundStatement
 
-    INT        shift, and go to state 1
-    FLOAT      shift, and go to state 2
-    CHAR       shift, and go to state 3
-    DOUBLE     shift, and go to state 4
-    VOID       shift, and go to state 5
-    RETURN     shift, and go to state 153
-    SIGNED     shift, and go to state 6
-    UNSIGNED   shift, and go to state 7
-    LONG       shift, and go to state 8
-    SHORT      shift, and go to state 9
-    BREAK      shift, and go to state 154
-    CONTINUE   shift, and go to state 155
-    FOR        shift, and go to state 156
-    WHILE      shift, and go to state 157
-    DO         shift, and go to state 158
-    IF         shift, and go to state 159
     NUM        shift, and go to state 53
-    ID         shift, and go to state 160
+    ID         shift, and go to state 162
     FLOATNUM   shift, and go to state 55
     STRING     shift, and go to state 56
     CHARCONST  shift, and go to state 57
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 161
-    '&'        shift, and go to state 64
-    ';'        shift, and go to state 162
-    '{'        shift, and go to state 131
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 163
+    '&'        shift, and go to state 65
 
-    Declaration        go to state 163
-    Type               go to state 164
-    Modifiers          go to state 17
-    ArrayNotation      go to state 165
-    Assignment         go to state 166
-    Primary            go to state 167
-    CompoundStatement  go to state 245
-    Statement          go to state 246
-    ReturnStatement    go to state 170
-    WhileStatement     go to state 171
-    DoWhileStatement   go to state 172
-    ForStatement       go to state 173
-    IfStatement        go to state 174
-    FunctionCall       go to state 72
+    ArrayNotation  go to state 167
+    Assignment     go to state 245
+    Primary        go to state 169
+    FunctionCall   go to state 73
 
 
 State 241
 
-  130 IfStatement: IF OPEN_PAR Expr CLOSE_PAR CompoundStatement ElseStatement .
+  127 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR . ';'
 
-    $default  reduce using rule 130 (IfStatement)
+    ';'  shift, and go to state 246
 
 
 State 242
 
-  129 IfStatement: IF OPEN_PAR Expr CLOSE_PAR Statement ElseStatement .
-
-    $default  reduce using rule 129 (IfStatement)
-
-
-State 243
-
-  127 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment . CLOSE_PAR Statement
-  128             | FOR OPEN_PAR Assignment ';' Expr ';' Assignment . CLOSE_PAR CompoundStatement
-
-    CLOSE_PAR  shift, and go to state 247
-
-
-State 244
-
-  126 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR ';' .
-
-    $default  reduce using rule 126 (DoWhileStatement)
-
-
-State 245
-
-  131 ElseStatement: ELSE CompoundStatement .
-
-    $default  reduce using rule 131 (ElseStatement)
-
-
-State 246
-
-  132 ElseStatement: ELSE Statement .
-
-    $default  reduce using rule 132 (ElseStatement)
-
-
-State 247
-
-  127 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR . Statement
-  128             | FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR . CompoundStatement
+  132 ElseStatement: ELSE . CompoundStatement
+  133              | ELSE . Statement
 
     INT        shift, and go to state 1
     FLOAT      shift, and go to state 2
     CHAR       shift, and go to state 3
     DOUBLE     shift, and go to state 4
     VOID       shift, and go to state 5
-    RETURN     shift, and go to state 153
+    RETURN     shift, and go to state 155
     SIGNED     shift, and go to state 6
     UNSIGNED   shift, and go to state 7
     LONG       shift, and go to state 8
     SHORT      shift, and go to state 9
-    BREAK      shift, and go to state 154
-    CONTINUE   shift, and go to state 155
-    FOR        shift, and go to state 156
-    WHILE      shift, and go to state 157
-    DO         shift, and go to state 158
-    IF         shift, and go to state 159
+    BREAK      shift, and go to state 156
+    CONTINUE   shift, and go to state 157
+    FOR        shift, and go to state 158
+    WHILE      shift, and go to state 159
+    DO         shift, and go to state 160
+    IF         shift, and go to state 161
     NUM        shift, and go to state 53
-    ID         shift, and go to state 160
+    ID         shift, and go to state 162
     FLOATNUM   shift, and go to state 55
     STRING     shift, and go to state 56
     CHARCONST  shift, and go to state 57
     OPEN_PAR   shift, and go to state 58
     PP         shift, and go to state 60
     MM         shift, and go to state 61
-    '-'        shift, and go to state 62
-    '*'        shift, and go to state 161
-    '&'        shift, and go to state 64
-    ';'        shift, and go to state 162
-    '{'        shift, and go to state 131
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 163
+    '&'        shift, and go to state 65
+    ';'        shift, and go to state 164
+    '{'        shift, and go to state 133
 
-    Declaration        go to state 163
-    Type               go to state 164
+    Declaration        go to state 165
+    Type               go to state 166
     Modifiers          go to state 17
-    ArrayNotation      go to state 165
-    Assignment         go to state 166
-    Primary            go to state 167
-    CompoundStatement  go to state 248
-    Statement          go to state 249
-    ReturnStatement    go to state 170
-    WhileStatement     go to state 171
-    DoWhileStatement   go to state 172
-    ForStatement       go to state 173
-    IfStatement        go to state 174
-    FunctionCall       go to state 72
+    ArrayNotation      go to state 167
+    Assignment         go to state 168
+    Primary            go to state 169
+    CompoundStatement  go to state 247
+    Statement          go to state 248
+    ReturnStatement    go to state 172
+    WhileStatement     go to state 173
+    DoWhileStatement   go to state 174
+    ForStatement       go to state 175
+    IfStatement        go to state 176
+    FunctionCall       go to state 73
+
+
+State 243
+
+  131 IfStatement: IF OPEN_PAR Expr CLOSE_PAR CompoundStatement ElseStatement .
+
+    $default  reduce using rule 131 (IfStatement)
+
+
+State 244
+
+  130 IfStatement: IF OPEN_PAR Expr CLOSE_PAR Statement ElseStatement .
+
+    $default  reduce using rule 130 (IfStatement)
+
+
+State 245
+
+  128 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment . CLOSE_PAR Statement
+  129             | FOR OPEN_PAR Assignment ';' Expr ';' Assignment . CLOSE_PAR CompoundStatement
+
+    CLOSE_PAR  shift, and go to state 249
+
+
+State 246
+
+  127 DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR ';' .
+
+    $default  reduce using rule 127 (DoWhileStatement)
+
+
+State 247
+
+  132 ElseStatement: ELSE CompoundStatement .
+
+    $default  reduce using rule 132 (ElseStatement)
 
 
 State 248
 
-  128 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement .
+  133 ElseStatement: ELSE Statement .
 
-    $default  reduce using rule 128 (ForStatement)
+    $default  reduce using rule 133 (ElseStatement)
 
 
 State 249
 
-  127 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement .
+  128 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR . Statement
+  129             | FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR . CompoundStatement
 
-    $default  reduce using rule 127 (ForStatement)
+    INT        shift, and go to state 1
+    FLOAT      shift, and go to state 2
+    CHAR       shift, and go to state 3
+    DOUBLE     shift, and go to state 4
+    VOID       shift, and go to state 5
+    RETURN     shift, and go to state 155
+    SIGNED     shift, and go to state 6
+    UNSIGNED   shift, and go to state 7
+    LONG       shift, and go to state 8
+    SHORT      shift, and go to state 9
+    BREAK      shift, and go to state 156
+    CONTINUE   shift, and go to state 157
+    FOR        shift, and go to state 158
+    WHILE      shift, and go to state 159
+    DO         shift, and go to state 160
+    IF         shift, and go to state 161
+    NUM        shift, and go to state 53
+    ID         shift, and go to state 162
+    FLOATNUM   shift, and go to state 55
+    STRING     shift, and go to state 56
+    CHARCONST  shift, and go to state 57
+    OPEN_PAR   shift, and go to state 58
+    PP         shift, and go to state 60
+    MM         shift, and go to state 61
+    '+'        shift, and go to state 62
+    '-'        shift, and go to state 63
+    '*'        shift, and go to state 163
+    '&'        shift, and go to state 65
+    ';'        shift, and go to state 164
+    '{'        shift, and go to state 133
+
+    Declaration        go to state 165
+    Type               go to state 166
+    Modifiers          go to state 17
+    ArrayNotation      go to state 167
+    Assignment         go to state 168
+    Primary            go to state 169
+    CompoundStatement  go to state 250
+    Statement          go to state 251
+    ReturnStatement    go to state 172
+    WhileStatement     go to state 173
+    DoWhileStatement   go to state 174
+    ForStatement       go to state 175
+    IfStatement        go to state 176
+    FunctionCall       go to state 73
+
+
+State 250
+
+  129 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement .
+
+    $default  reduce using rule 129 (ForStatement)
+
+
+State 251
+
+  128 ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement .
+
+    $default  reduce using rule 128 (ForStatement)

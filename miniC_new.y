@@ -33,7 +33,7 @@ extern int lineNo;
 
 %token INT FLOAT CHAR DOUBLE VOID RETURN
 %token SIGNED UNSIGNED LONG SHORT
-%token BREAK CONTINUE 
+%token SWITCH BREAK CONTINUE CASE DEFAULT STRUCT  
 %token FOR WHILE DO
 %token IF ELSE  
 %token NUM ID FLOATNUM STRING CHARCONST
@@ -171,6 +171,7 @@ Primary: OPEN_PAR Expr CLOSE_PAR
          | '*' ID                       {DEBUGY_PRINT("Pointer Identifier\n");}
          | '&' ID                       {DEBUGY_PRINT("Address of Identifier\n");}
          | '-' Primary
+         | '+' Primary
          | ArrayNotation
          | FunctionCall
          | PP ID

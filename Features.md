@@ -1,0 +1,38 @@
+# Features - Parser
+
+- Iteration : For, While, Do While
+- Conditional : If, If Else, If ElseIf
+- Nested form of the above statements
+- Functions : 
+    - Function Definition
+    - Function Declaration
+    - Parameter list with expressions support
+    - Function call
+    - Function call support in expressions
+- Pointers :
+    - Referencing and dereferencing operator support in Expressions
+- Arrays : 
+    - Basic array notation support in : 
+        - Expressions
+        - Declarations
+    - Support for expressions in array subsctipt
+- Data Types :
+    - Integer
+    - Char
+    - Modifiers : 
+        - Long
+        - Short
+        - Unsigned
+        - Signed
+- Operators : Operator precedence taken care of
+    - Arithmetic
+    - Relational
+    - Logical
+    - Referencing and dereference
+    - Unary : ++,--,+,-
+    - Assignment and Short hand assignment
+- Include Statements
+- Declaration :
+    - Multi variable declaration
+    - Initialization along with declaration
+- Return statement supports recursion
