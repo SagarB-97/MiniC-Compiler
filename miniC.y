@@ -78,11 +78,11 @@ Include:   IncludeStatement
 
 FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {insertSymbolItem($2,"function",lineNo,0);}
              ;
-FormalParamList: Type ID                                        {DEBUGY_PRINT("FLIST Call 1\n");}
-                | Type '*' ID                                   {DEBUGY_PRINT("FLIST Call 2\n");}
+FormalParamList: Type ID                                        {insertSymbolItem($2,type,lineNo,0);DEBUGY_PRINT("FLIST Call 1\n");}
+                | Type '*' ID                                   {insertSymbolItem($3,type,lineNo,0);DEBUGY_PRINT("FLIST Call 2\n");}
                 | Type ArrayNotation                            {DEBUGY_PRINT("FLIST Call 3\n");}
-                | Type ID ',' FormalParamList                   {DEBUGY_PRINT("FLIST Call 4\n");}
-                | Type '*' ID ',' FormalParamList               {DEBUGY_PRINT("FLIST Call 5\n");}
+                | Type ID ',' FormalParamList                   {insertSymbolItem($2,type,lineNo,0);DEBUGY_PRINT("FLIST Call 4\n");}
+                | Type '*' ID ',' FormalParamList               {insertSymbolItem($3,type,lineNo,0);DEBUGY_PRINT("FLIST Call 5\n");}
                 | Type ArrayNotation ',' FormalParamList        {DEBUGY_PRINT("FLIST Call 6\n");}
                 |
                 ;
@@ -97,9 +97,10 @@ Type: INT {strcpy(type,$1);}| FLOAT {strcpy(type,$1);}| VOID {strcpy(type,$1);}|
 Modifiers: SHORT | LONG | UNSIGNED | SIGNED
         ;
 
-ArrayNotation: ID '[' ']'
-            | ID '[' Expr ']'
+ArrayNotation: ID '[' ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,0);}
+            | ID '[' Expr ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,0);}
             ;
+
 IDList: ArrayNotation
         | ID ',' IDList {insertSymbolItem($1,type,lineNo,0);}
         | '*' ID ',' IDList {insertSymbolItem($2,type,lineNo,0);}
