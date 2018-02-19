@@ -21,3 +21,73 @@ Yacc (Yet Another Compiler Compiler) is a program that is used to generate a par
 
 
 
+# Parse Trees for testcases
+
+### t4
+
+
+                              start
+                           /        \
+                          /             \
+                    Include                 start
+                 / | |  |  \                  |
+            '#' INCLUDE LT ID '.' ID GT   FunctionDef
+                                         /  |   |  |  | \
+                                    Type   ID  '(' FormalParamList  ')' CompoundStatement
+                                      |     |                            /    |           \
+                                     INT   main                      '{'   StatementList   '}'
+                                                                              |
+                                                                             Statement
+                                                                           /           \
+                                                                    ReturnStatement    ';'
+                                                                    /         \
+                                                                'return'      Expr
+                                                                                |
+                                                                            Logical_Expr
+                                                                                |
+                                                                            Relational_Expr
+                                                                                |
+                                                                            Additive_Expr
+                                                                                |
+                                                                            Multiplicative_Expr
+                                                                                |
+                                                                                Primary
+                                                                                |
+                                                                                NUM
+                                                                                |
+                                                                                0
+
+### t5
+                                        start
+                                         |
+                                    FunctionDef
+                                         |
+                                    FunctionDef
+                                /  |   |  |  | \
+                        Type   ID  '(' FormalParamList  ')' CompoundStatement
+                         |    |                            /    |           \
+                        VOID    main                       {'   StatementList   '}'
+                                                                /            \
+                                                            Statement       StatementList
+                                                                |                 |
+                                                            Declaration        Statement
+                                                            /    |     \         |      \ 
+                                                        Type   IDList   ';'  Assignment  ';'
+                                                         |       |          /    |    \
+                                                        INT      ID        ID   '='   Expr
+                                                                 |         |           |
+                                                                'a'        'a'      Logical_Expr
+                                                                                        |
+                                                                                    Relational_Expr
+                                                                                        |
+                                                                                    Additive_Expr
+                                                                                   /     |       \
+                                                                        Additive_Expr   '+'  Multiplicative_Expr
+                                                                                |                   |
+                                                                        Multiplicative_Expr      Primary
+                                                                                |                   |    
+                                                                             Primary               NUM
+                                                                                |                   |
+                                                                               NUM                  4
+                                                                                |
+                                                                                5
