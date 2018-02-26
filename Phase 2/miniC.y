@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "symbolTable.h"
+
 #define DEBUGY 0
 
 #if defined(DEBUGY) && DEBUGY > 0
@@ -28,7 +30,7 @@ extern char *yytext;
 
 extern int lineNo;
 
-extern void showSymbolTable();
+char type[100];
 
 %}
 
@@ -38,9 +40,20 @@ extern void showSymbolTable();
 %token SWITCH BREAK CONTINUE CASE DEFAULT STRUCT  
 %token FOR WHILE DO
 %token IF ELSE  
-%token NUM ID FLOATNUM STRING CHARCONST
+%token NUM FLOATNUM STRING CHARCONST
 %token INCLUDE
 %token OPEN_PAR CLOSE_PAR
+
+%union {
+	char id[100];
+}
+%token <id> ID
+%token <id> INT
+%token <id> CHAR
+%token <id> FLOAT
+%token <id> DOUBLE
+%token <id> VOID
+
 
 %right '=' PAS MAS DAS SAS           
 %left AND OR NOT PP MM
@@ -63,36 +76,37 @@ IncludeStatement: '#' INCLUDE LT ID GT
 Include:   IncludeStatement
            ;
 
-FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {DEBUGY_PRINT("FUNCTION DEF CALLED 1\n");}
+FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {insertSymbolItem($2,"function",lineNo,0);}
              ;
-FormalParamList: Type ID                                        {DEBUGY_PRINT("FLIST Call 1\n");}
-                | Type '*' ID                                   {DEBUGY_PRINT("FLIST Call 2\n");}
+FormalParamList: Type ID                                        {insertSymbolItem($2,type,lineNo,0);DEBUGY_PRINT("FLIST Call 1\n");}
+                | Type '*' ID                                   {insertSymbolItem($3,type,lineNo,0);DEBUGY_PRINT("FLIST Call 2\n");}
                 | Type ArrayNotation                            {DEBUGY_PRINT("FLIST Call 3\n");}
-                | Type ID ',' FormalParamList                   {DEBUGY_PRINT("FLIST Call 4\n");}
-                | Type '*' ID ',' FormalParamList               {DEBUGY_PRINT("FLIST Call 5\n");}
+                | Type ID ',' FormalParamList                   {insertSymbolItem($2,type,lineNo,0);DEBUGY_PRINT("FLIST Call 4\n");}
+                | Type '*' ID ',' FormalParamList               {insertSymbolItem($3,type,lineNo,0);DEBUGY_PRINT("FLIST Call 5\n");}
                 | Type ArrayNotation ',' FormalParamList        {DEBUGY_PRINT("FLIST Call 6\n");}
                 |
                 ;
 
 
-Declaration:  Type IDList ';'    {DEBUGY_PRINT("DECLARATION CALLED 3\n");}
+Declaration:  Type IDList ';'    {;}
         ;
 
-Type: INT | FLOAT | VOID | CHAR | DOUBLE | 
-        Modifiers INT | Modifiers FLOAT | Modifiers DOUBLE | Modifiers CHAR
+Type: INT {strcpy(type,$1);}| FLOAT {strcpy(type,$1);}| VOID {strcpy(type,$1);}| CHAR {strcpy(type,$1);}| DOUBLE {strcpy(type,$1);}| 
+        Modifiers INT {strcpy(type,$2);}| Modifiers FLOAT {strcpy(type,$2);}| Modifiers DOUBLE {strcpy(type,$2);}| Modifiers CHAR {strcpy(type,$2);}
         ;
 Modifiers: SHORT | LONG | UNSIGNED | SIGNED
         ;
 
-ArrayNotation: ID '[' ']'
-            | ID '[' Expr ']'
+ArrayNotation: ID '[' ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,0);}
+            | ID '[' Expr ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,0);}
             ;
+
 IDList: ArrayNotation
-        | ID ',' IDList
-        | '*' ID ',' IDList
-        | ArrayNotation ',' IDList
-        | ID 
-        | '*' ID
+        | ID ',' IDList {insertSymbolItem($1,type,lineNo,0);}
+        | '*' ID ',' IDList {insertSymbolItem($2,type,lineNo,0);}
+        | ArrayNotation ',' IDList 
+        | ID {insertSymbolItem($1,type,lineNo,0);} 
+        | '*' ID {insertSymbolItem($2,type,lineNo,0);}
         | DefineAssign ',' IDList
         | DefineAssign 
         ;
@@ -241,7 +255,7 @@ int main(int argc, char *argv[])
 	
 	fclose(yyin);
 
-        showSymbolTable();
+	showSymbolTable();
     return 0;
 }
          

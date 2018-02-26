@@ -1,3 +1,3 @@
-yacc -d miniC.y -Wnone
+yacc -d miniC.y 
 lex miniC.l
-gcc lex.yy.c y.tab.c -o compiler
+gcc lex.yy.c y.tab.c -o compiler -ll

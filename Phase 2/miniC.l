@@ -1,12 +1,12 @@
 %{
-    #define DEBUG 1
+
+    #define DEBUG 0
 
     #if defined(DEBUG) && DEBUG > 0
         #define DEBUG_PRINT(fmt, args...) fprintf(stderr, fmt, ##args)
     #else
         #define DEBUG_PRINT(fmt, args...) /* Don't do anything in release builds */
     #endif
-
 
     #define RED   "\x1B[31m"
     #define RESET "\x1B[0m"
@@ -15,19 +15,7 @@
 
     #include "y.tab.h"
 
-    int lookUpSymbolItem();
-    void insertSymbolItem();
-
-    const int symbolTableSize = 1000;
-    typedef struct symbolItemStruct{
-        char tokenValue[100];
-        char tokenType[100];
-        int lineNumber;
-        struct symbolItemStruct* next;
-    } symbolItem;
-    symbolItem * symbolTable[1000];
-    symbolItem * constantTable[1000];
-
+    int scope = 0;
     int lineNo = 1;
     int comment = 0;
 %}
@@ -62,11 +50,13 @@ include                             { if(!comment){
 
 [{]                                 { if(!comment){
                                             DEBUG_PRINT("%-20s%20s%20d\n","LEFT BRACE", yytext, lineNo);
+                                            scope++;
                                             return *yytext;
                                         }  
                                     }
 [}]                                 { if(!comment){
                                             DEBUG_PRINT("%-20s%20s%20d\n","RIGHT BRACE", yytext, lineNo);
+                                            scope--;
                                             return *yytext;
                                         }  
                                     }
@@ -78,34 +68,39 @@ include                             { if(!comment){
                                         }
                                         DEBUG_PRINT("%-20s%20s%20d\n", "STRING", yytext, lineNo);
                                         // strcpy(yylval, yytext);
-                                        insertSymbolItem(yytext, "STRING", lineNo, 1);
+                                        //insertSymbolItem(yytext, "STRING", lineNo, 1);
                                         return STRING;
                                       }
                                     }
 
 int                                 { if(!comment){
                                         DEBUG_PRINT("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+										strcpy(yylval.id, yytext);
                                         return INT;
                                       }
                                     }
 
 float                              { if(!comment){
                                         DEBUG_PRINT("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+										strcpy(yylval.id, yytext);
                                         return FLOAT;
                                       }
                                     }
 char                               { if(!comment){
                                         DEBUG_PRINT("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+										strcpy(yylval.id, yytext);
                                         return CHAR;
                                       }
                                     }
 double                             { if(!comment){
                                         DEBUG_PRINT("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+										strcpy(yylval.id, yytext);
                                         return DOUBLE;
                                       }
                                     }
 void                               { if(!comment){
                                         DEBUG_PRINT("%-20s%20s%20d\n", "KEYWORD", yytext, lineNo);
+										strcpy(yylval.id, yytext);
                                         return VOID;
                                       }
                                     }
@@ -231,7 +226,7 @@ return                             { if(!comment){
 
 \'.\'                               { if(!comment) {
                                         DEBUG_PRINT("%-20s%20s%20d\n", "CHARACTER", yytext, lineNo); 
-                                        insertSymbolItem(yytext, "CHARACTER", lineNo, 1);
+                                        //insertSymbolItem(yytext, "CHARACTER", lineNo, 1);
                                         // strcpy(yylval, yytext);
                                         return CHARCONST;
                                         }
@@ -239,7 +234,7 @@ return                             { if(!comment){
 
 {number}+(\.{number}+)?e{number}+    { if(!comment) {
                                         DEBUG_PRINT("%-20s%20s%20d\n", "FLOAT EXP FORM", yytext, lineNo); 
-                                        insertSymbolItem(yytext, "FLOAT", lineNo, 1);
+                                        //insertSymbolItem(yytext, "FLOAT", lineNo, 1);
                                         // yylval = atof(yytext);
                                         return FLOATNUM;
                                         }
@@ -247,8 +242,8 @@ return                             { if(!comment){
 
 {number}+\.{number}+                { if(!comment) {
                                         DEBUG_PRINT("%-20s%20s%20d\n", "FLOAT NUMBER", yytext, lineNo); 
-                                        insertSymbolItem(yytext, "FLOAT", lineNo, 1);
-                                        yylval = atof(yytext);
+                                        //insertSymbolItem(yytext, "FLOAT", lineNo, 1);
+                                        //yylval = atof(yytext);
                                         return FLOATNUM;
                                         }
                                     } 
@@ -256,17 +251,18 @@ return                             { if(!comment){
 
 {number}+                           { if(!comment) {
                                         DEBUG_PRINT("%-20s%20s%20d\n", "NUMBER", yytext, lineNo); 
-                                        insertSymbolItem(yytext, "INTEGER", lineNo, 1);
-                                        yylval = atoi(yytext);
+                                        //insertSymbolItem(yytext, "INTEGER", lineNo, 1);
+                                       // yylval = atoi(yytext);
                                         return NUM;
                                         }
                                     }    
 
 (_|{letter})({letter}|{number}|_)*  { if(!comment){
                                         DEBUG_PRINT("%-20s%20s%20d\n", "IDENTIFIER", yytext, lineNo);
-                                        if(!lookUpSymbolItem(yytext))
-                                            insertSymbolItem(yytext, "IDENTIFIER", lineNo, 0);
-                                        // strcpy(yylval, yytext);
+                                        /*if(!lookUpSymbolItem(yytext))
+                                            insertSymbolItem(yytext, "IDENTIFIER", lineNo, 0);*/
+									
+                                        strcpy(yylval.id, yytext);
                                         return ID;
                                       }
                                     }
@@ -412,113 +408,6 @@ return                             { if(!comment){
 
 int yywrap(){
   return 1;
-}
-
-void initSymbolTable(){
-    int i;
-    for(i = 0;i<symbolTableSize; i++)
-        symbolTable[i] = NULL;
-
-    for(i = 0;i<symbolTableSize; i++)
-        constantTable[i] = NULL;
-}
-
-int hash(unsigned char *str)
-{
-    unsigned long hashVar = 5381;
-    int c;
-
-    while (c = *str++)
-        hashVar = (((hashVar << 5) + hashVar) + c)%1000;
-
-    return hashVar;
-}
-
-symbolItem* createSymbolItem(char *tokenValue, char *tokenType, int lineNumber){
-    symbolItem *item = (symbolItem*)malloc(sizeof(symbolItem));
-    strcpy(item->tokenValue, tokenValue);
-    strcpy(item->tokenType, tokenType);
-    item->lineNumber = lineNumber;
-    item->next = NULL;
-
-    return item;
-}
-
-void insertSymbolItem(char *tokenValue, char *tokenType, int lineNumber, int tableno){
-    int hashIndex = hash(tokenValue);
-
-    symbolItem *item = createSymbolItem(tokenValue, tokenType, lineNumber);
-
-    if(tableno == 0)
-    {
-        symbolItem * temp = symbolTable[hashIndex];
-        while(temp!=NULL && temp->next!=NULL)
-            temp = temp->next;
-
-        if(temp == NULL)
-            symbolTable[hashIndex] = item;
-        else
-            temp->next = item;
-    }
-
-    else
-    {
-        symbolItem * temp = constantTable[hashIndex];
-        while(temp!=NULL && temp->next!=NULL)
-            temp = temp->next;
-
-        if(temp == NULL)
-            constantTable[hashIndex] = item;
-        else
-            temp->next = item;
-    }
-    
-}
-
-int lookUpSymbolItem(char * tokenValue){
-    int hashIndex = hash(tokenValue);
-
-        symbolItem * temp = symbolTable[hashIndex];
-        while(temp!=NULL && strcmp(tokenValue, temp->tokenValue)!=0)
-            temp=temp->next;
-
-        if(temp==NULL) return 0;
-        else return 1;
-    
-}
-
-void printSymbolItem(symbolItem * item){
-    DEBUG_PRINT("%-20s%10s%20d\n",item->tokenValue, item->tokenType, item->lineNumber);
-}
-
-void showSymbolTable(){
-    int i;
-    DEBUG_PRINT("\n-----------------------------------------------------------------\n");
-    DEBUG_PRINT(BLU "%-20s%10s%24s\n","VALUE","TYPE","LINE NUMBER" RESET);
-    DEBUG_PRINT("-----------------------------------------------------------------\n");
-
-    for(int i=0;i<symbolTableSize;i++){
-        symbolItem* temp = symbolTable[i];
-        while(temp!=NULL){
-            printSymbolItem(temp);
-            temp=temp->next;
-        }
-    }
-}
-
-void showConstantTable(){
-    int i;
-    DEBUG_PRINT("\n-----------------------------------------------------------------\n");
-    DEBUG_PRINT(BLU "%-20s%10s%24s\n","VALUE","TYPE","LINE NUMBER" RESET);
-    DEBUG_PRINT("-----------------------------------------------------------------\n");
-
-    for(int i=0;i<symbolTableSize;i++){
-        symbolItem* temp = constantTable[i];
-        while(temp!=NULL){
-            printSymbolItem(temp);
-            temp=temp->next;
-        }
-    }
 }
 /*
 int main(int argc, char** argv){

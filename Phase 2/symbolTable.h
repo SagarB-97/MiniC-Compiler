@@ -21,7 +21,6 @@ const int symbolTableSize = 1000;
         char tokenValue[100];
         char tokenType[100];
         int lineNumber;
-        int scope;
         struct symbolItemStruct* next;
     } symbolItem;
     symbolItem * symbolTable[1000];
@@ -48,12 +47,11 @@ int hash(char *str)
     return hashVar;
 }
 
-symbolItem* createSymbolItem(char *tokenValue, char *tokenType, int lineNumber, int scope){
+symbolItem* createSymbolItem(char *tokenValue, char *tokenType, int lineNumber){
     symbolItem *item = (symbolItem*)malloc(sizeof(symbolItem));
     strcpy(item->tokenValue, tokenValue);
     strcpy(item->tokenType, tokenType);
     item->lineNumber = lineNumber;
-    item->scope = scope;
     item->next = NULL;
 
     return item;
@@ -71,11 +69,11 @@ int lookUpSymbolItem(char * tokenValue){
     
 }
 
-void insertSymbolItem(char *tokenValue, char *tokenType, int lineNumber, int scope, int tableno){
+void insertSymbolItem(char *tokenValue, char *tokenType, int lineNumber, int tableno){
     if(!lookUpSymbolItem(tokenValue)){
     int hashIndex = hash(tokenValue);
 
-    symbolItem *item = createSymbolItem(tokenValue, tokenType, lineNumber, scope);
+    symbolItem *item = createSymbolItem(tokenValue, tokenType, lineNumber);
 
     if(tableno == 0)
     {
@@ -105,13 +103,13 @@ void insertSymbolItem(char *tokenValue, char *tokenType, int lineNumber, int sco
 }
 
 void printSymbolItem(symbolItem * item){
-    DEBUG_PRINT("%-20s%10s%20d%20d\n",item->tokenValue, item->tokenType, item->lineNumber, item->scope);
+    DEBUG_PRINT("%-20s%10s%20d\n",item->tokenValue, item->tokenType, item->lineNumber);
 }
 
 void showSymbolTable(){
     int i;
     DEBUG_PRINT("\n-----------------------------------------------------------------\n");
-    DEBUG_PRINT(BLU "%-20s%10s%24s%20s\n","VALUE","TYPE","LINE NUMBER", "SCOPE" RESET);
+    DEBUG_PRINT(BLU "%-20s%10s%24s\n","VALUE","TYPE","LINE NUMBER" RESET);
     DEBUG_PRINT("-----------------------------------------------------------------\n");
 
     for(int i=0;i<symbolTableSize;i++){

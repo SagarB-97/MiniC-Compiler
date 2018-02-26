@@ -1,4 +1,5 @@
 %{
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -27,15 +28,23 @@ void yyerror(const char * s);
 extern FILE *yyin, *yyout;
 
 extern char *yytext;
-
 extern int lineNo;
+extern int scope;
 
 char type[100];
+
+void printUndecVarErr(int lineNo, char * s){
+        printf(RED "Variable %s not declared at line %d\n" RESET, s,lineNo);
+}
+
+void printReDecError(int lineNo, char *s){
+        printf(RED "Variable %s redeclared at line %d\n" RESET, s,lineNo);
+}
 
 %}
 
 
-%token INT FLOAT CHAR DOUBLE VOID RETURN
+%token RETURN
 %token SIGNED UNSIGNED LONG SHORT
 %token SWITCH BREAK CONTINUE CASE DEFAULT STRUCT  
 %token FOR WHILE DO
@@ -76,13 +85,13 @@ IncludeStatement: '#' INCLUDE LT ID GT
 Include:   IncludeStatement
            ;
 
-FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {insertSymbolItem($2,"function",lineNo,0);}
+FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {insertSymbolItem($2,"function",lineNo,scope,0);}
              ;
-FormalParamList: Type ID                                        {insertSymbolItem($2,type,lineNo,0);DEBUGY_PRINT("FLIST Call 1\n");}
-                | Type '*' ID                                   {insertSymbolItem($3,type,lineNo,0);DEBUGY_PRINT("FLIST Call 2\n");}
+FormalParamList: Type ID                                        {insertSymbolItem($2,type,lineNo,scope,0);DEBUGY_PRINT("FLIST Call 1\n");}
+                | Type '*' ID                                   {insertSymbolItem($3,type,lineNo,scope,0);DEBUGY_PRINT("FLIST Call 2\n");}
                 | Type ArrayNotation                            {DEBUGY_PRINT("FLIST Call 3\n");}
-                | Type ID ',' FormalParamList                   {insertSymbolItem($2,type,lineNo,0);DEBUGY_PRINT("FLIST Call 4\n");}
-                | Type '*' ID ',' FormalParamList               {insertSymbolItem($3,type,lineNo,0);DEBUGY_PRINT("FLIST Call 5\n");}
+                | Type ID ',' FormalParamList                   {insertSymbolItem($2,type,lineNo,scope,0);DEBUGY_PRINT("FLIST Call 4\n");}
+                | Type '*' ID ',' FormalParamList               {insertSymbolItem($3,type,lineNo,scope,0);DEBUGY_PRINT("FLIST Call 5\n");}
                 | Type ArrayNotation ',' FormalParamList        {DEBUGY_PRINT("FLIST Call 6\n");}
                 |
                 ;
@@ -97,30 +106,100 @@ Type: INT {strcpy(type,$1);}| FLOAT {strcpy(type,$1);}| VOID {strcpy(type,$1);}|
 Modifiers: SHORT | LONG | UNSIGNED | SIGNED
         ;
 
-ArrayNotation: ID '[' ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,0);}
-            | ID '[' Expr ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,0);}
+ArrayNotation: ID '[' ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,scope,0);}
+            | ID '[' Expr ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,scope,0);}
             ;
 
 IDList: ArrayNotation
-        | ID ',' IDList {insertSymbolItem($1,type,lineNo,0);}
-        | '*' ID ',' IDList {insertSymbolItem($2,type,lineNo,0);}
+        | ID ',' IDList                        {
+                                                if(lookUpSymbolItem($1))
+                                                        printReDecError(lineNo, $1);
+                                                else
+                                                        insertSymbolItem($1,type,lineNo,scope,0);
+                                               }
+        | '*' ID ',' IDList                    {
+                                                if(lookUpSymbolItem($2))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,scope,0);
+                                               }
         | ArrayNotation ',' IDList 
-        | ID {insertSymbolItem($1,type,lineNo,0);} 
-        | '*' ID {insertSymbolItem($2,type,lineNo,0);}
+        | ID                                   {
+                                                if(lookUpSymbolItem($1))
+                                                        printReDecError(lineNo, $1);
+                                                else
+                                                        insertSymbolItem($1,type,lineNo,scope,0);
+                                               }
+        | '*' ID                               {
+                                                if(lookUpSymbolItem($2))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,scope,0);
+                                               }
         | DefineAssign ',' IDList
         | DefineAssign 
         ;
 
-DefineAssign: ID '=' Expr                   {DEBUGY_PRINT("Assignment Rule 1 called\n");}
-            | ID PAS Expr  
-            | ID SAS Expr  
-            | ID MAS Expr  
-            | ID DAS Expr  
-            | '*' ID '=' Expr           
-            | '*' ID PAS Expr  
-            | '*' ID SAS Expr  
-            | '*' ID MAS Expr  
-            | '*' ID DAS Expr
+DefineAssign: ID '=' Expr                      {
+                                                if(lookUpSymbolItem($1))
+                                                        printReDecError(lineNo, $1);
+                                                else
+                                                        insertSymbolItem($1,type,lineNo,scope,0);
+                                               }
+            | ID PAS Expr                      {
+                                                if(lookUpSymbolItem($1))
+                                                        printReDecError(lineNo, $1);
+                                                else
+                                                        insertSymbolItem($1,type,lineNo,scope,0);
+                                               }       
+            | ID SAS Expr                      {
+                                                if(lookUpSymbolItem($1))
+                                                        printReDecError(lineNo, $1);
+                                                else
+                                                        insertSymbolItem($1,type,lineNo,scope,0);
+                                               }  
+            | ID MAS Expr                      {
+                                                if(lookUpSymbolItem($1))
+                                                        printReDecError(lineNo, $1);
+                                                else
+                                                        insertSymbolItem($1,type,lineNo,scope,0);
+                                               }  
+            | ID DAS Expr                      {
+                                                if(lookUpSymbolItem($1))
+                                                        printReDecError(lineNo, $1);
+                                                else
+                                                        insertSymbolItem($1,type,lineNo,scope,0);
+                                               }  
+            | '*' ID '=' Expr                  {
+                                                if(lookUpSymbolItem($2))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,scope,0);
+                                               }           
+            | '*' ID PAS Expr                  {
+                                                if(lookUpSymbolItem($2))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,scope,0);
+                                               }  
+            | '*' ID SAS Expr                  {
+                                                if(lookUpSymbolItem($2))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,scope,0);
+                                               }  
+            | '*' ID MAS Expr                  {
+                                                if(lookUpSymbolItem($2))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,scope,0);
+                                               }  
+            | '*' ID DAS Expr                  {
+                                                if(lookUpSymbolItem($2))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,scope,0);
+                                               }
             | ArrayNotation '=' Expr                   
             | ArrayNotation PAS Expr  
             | ArrayNotation SAS Expr  
@@ -183,17 +262,31 @@ Multiplicative_Expr: Primary
                      ;
 Primary: OPEN_PAR Expr CLOSE_PAR
          | NUM | FLOATNUM | CHARCONST | STRING 
-         | ID                           {DEBUGY_PRINT("Primary Identifier\n");}
-         | '*' ID                       {DEBUGY_PRINT("Pointer Identifier\n");}
-         | '&' ID                       {DEBUGY_PRINT("Address of Identifier\n");}
+         | ID                           {if(!lookUpSymbolItem($1)){
+                                                printUndecVarErr(lineNo, $1);
+                                        }}
+         | '*' ID                       {if(!lookUpSymbolItem($2)){
+                                                printUndecVarErr(lineNo, $2);
+                                        }}
+         | '&' ID                       {if(!lookUpSymbolItem($2)){
+                                                printUndecVarErr(lineNo, $2);
+                                        }}
          | '-' Primary
          | '+' Primary
          | ArrayNotation
          | FunctionCall
-         | PP ID
-         | ID PP
-         | MM ID
-         | ID MM
+         | PP ID                        {if(!lookUpSymbolItem($2)){
+                                                printUndecVarErr(lineNo, $2);
+                                        }}
+         | ID PP                        {if(!lookUpSymbolItem($1)){
+                                                printUndecVarErr(lineNo, $1);
+                                        }}
+         | MM ID                        {if(!lookUpSymbolItem($2)){
+                                                printUndecVarErr(lineNo, $2);
+                                        }}
+         | ID MM                        {if(!lookUpSymbolItem($1)){
+                                                printUndecVarErr(lineNo, $1);
+                                        }}
          ;
 
 CompoundStatement: '{' StatementList '}'

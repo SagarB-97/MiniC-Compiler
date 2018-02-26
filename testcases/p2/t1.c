@@ -20,7 +20,6 @@ int main()
         printf("Hello");
         c = a*5;
     }
-
     else if(b<3 || a < 3)
     {
         if( x > 5)
@@ -30,11 +29,13 @@ int main()
         }  
         
     }
-
     else
     {
         c =6;
     }
+
+    int a = 5;
+    int z;
 
     a = 5;
     b = 6;
