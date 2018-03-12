@@ -43,7 +43,13 @@ void printReDecError(int lineNo, char *s){
 int checkAncestors(char * s)
 {
         ScopeNode *node = findChild(root, curScope);
-        
+        while(node!=NULL)
+        {
+                if(lookUpSymbolItem(s,node->scope))
+                        return 0;
+                node = node->parent;
+        }
+        return 1;
 }
 
 
