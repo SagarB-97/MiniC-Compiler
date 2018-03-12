@@ -15,8 +15,11 @@
 
     #include "y.tab.h"
 
+    void insertScope(int*);
+    int findParentScope(int);
     int lineNo = 1;
     int comment = 0;
+    int curScope = 0;
 %}
 
 keyword         char|int|float|short|long|unsigned|signed|main|while|for|break|case|if|else|continue|default|do|return|void|struct|switch
@@ -49,11 +52,13 @@ include                             { if(!comment){
 
 [{]                                 { if(!comment){
                                             DEBUG_PRINT("%-20s%20s%20d\n","LEFT BRACE", yytext, lineNo);
+                                            insertScope(&curScope);
                                             return *yytext;
                                         }  
                                     }
 [}]                                 { if(!comment){
                                             DEBUG_PRINT("%-20s%20s%20d\n","RIGHT BRACE", yytext, lineNo);
+                                            curScope = findParentScope(curScope);
                                             return *yytext;
                                         }  
                                     }
