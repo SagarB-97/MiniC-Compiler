@@ -6,31 +6,33 @@ int anyh(int arr, int l, int r, int z)
    {
         int mid;
         mid = l*(r - l)/2;   // Missing Operator
- 
+
         if (arr == z)  
             {
+                int t = 5;
                 return mid  ;      // No Semicolon
             }
  
         if (arr > z) 
             {
+                t = t + 7;
                 return binarySearch(arr, l, mid-1, z);
             }
  
         return binarySearch(arr, mid+1, r, z);
    }
-
    return -1;
+   int y;
 }
+int arr;
  
 int main()
 {
    int arr;
-   int n, x, result;
-   int x;
+   int n, result;
    //int n;
    n =  sizeof(arr)/ sizeof(arr);
-   x = 10;
+   int x = z * y;
    y = 6;
    mid = 7;
    result = binarySearch(arr, 0, n-1, x);        //No comma

@@ -42,14 +42,17 @@ void printReDecError(int lineNo, char *s){
 
 int checkAncestors(char * s)
 {
+        //printf("%s\n", s);
         ScopeNode *node = findChild(root, curScope);
         while(node!=NULL)
         {
-                if(lookUpSymbolItem(s,node->scope))
-                        return 0;
+                //printf("%d\n", node->num);
+                if(lookUpSymbolItem_scope(s,node->num))
+                        return 1; 
+                        
                 node = node->parent;
         }
-        return 1;
+        return 0;
 }
 
 
@@ -124,26 +127,26 @@ ArrayNotation: ID '[' ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, 
 
 IDList: ArrayNotation
         | ID ',' IDList                        {
-                                                if(lookUpSymbolItem($1) && findChild(findChild(root, lookUpSymbolItem($1)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($1, curScope))
                                                         printReDecError(lineNo, $1);
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }
         | '*' ID ',' IDList                    {
-                                                if(lookUpSymbolItem($2) && findChild(findChild(root, lookUpSymbolItem($2)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($2, curScope))
                                                         printReDecError(lineNo, $2);
                                                 else
                                                         insertSymbolItem($2,type,lineNo,curScope,0);
                                                }
         | ArrayNotation ',' IDList 
         | ID                                   {
-                                                if(lookUpSymbolItem($1) && findChild(findChild(root, lookUpSymbolItem($1)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($1,curScope))
                                                         printReDecError(lineNo, $1);
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }
         | '*' ID                               {
-                                                if(lookUpSymbolItem($2) && findChild(findChild(root, lookUpSymbolItem($2)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($2,curScope))
                                                         printReDecError(lineNo, $2);
                                                 else
                                                         insertSymbolItem($2,type,lineNo,curScope,0);
@@ -153,61 +156,61 @@ IDList: ArrayNotation
         ;
 
 DefineAssign: ID '=' Expr                      {
-                                                if(lookUpSymbolItem($1) && findChild(findChild(root, lookUpSymbolItem($1)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($1,curScope))
                                                         printReDecError(lineNo, $1);
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }
             | ID PAS Expr                      {
-                                                if(lookUpSymbolItem($1) && findChild(findChild(root, lookUpSymbolItem($1)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($1,curScope))
                                                         printReDecError(lineNo, $1);
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }       
             | ID SAS Expr                      {
-                                                if(lookUpSymbolItem($1) && findChild(findChild(root, lookUpSymbolItem($1)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($1,curScope))
                                                         printReDecError(lineNo, $1);
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }  
             | ID MAS Expr                      {
-                                                if(lookUpSymbolItem($1) && findChild(findChild(root, lookUpSymbolItem($1)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($1,curScope))
                                                         printReDecError(lineNo, $1);
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }  
             | ID DAS Expr                      {
-                                                if(lookUpSymbolItem($1) && findChild(findChild(root, lookUpSymbolItem($1)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($1,curScope))
                                                         printReDecError(lineNo, $1);
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }  
             | '*' ID '=' Expr                  {
-                                                if(lookUpSymbolItem($2) && findChild(findChild(root, lookUpSymbolItem($2)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($2,curScope))
                                                         printReDecError(lineNo, $2);
                                                 else
                                                         insertSymbolItem($2,type,lineNo,curScope,0);
                                                }           
             | '*' ID PAS Expr                  {
-                                                if(lookUpSymbolItem($2) && findChild(findChild(root, lookUpSymbolItem($2)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($2,curScope))
                                                         printReDecError(lineNo, $2);
                                                 else
                                                         insertSymbolItem($2,type,lineNo,curScope,0);
                                                }  
             | '*' ID SAS Expr                  {
-                                                if(lookUpSymbolItem($2) && findChild(findChild(root, lookUpSymbolItem($2)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($2,curScope))
                                                         printReDecError(lineNo, $2);
                                                 else
                                                         insertSymbolItem($2,type,lineNo,curScope,0);
                                                }  
             | '*' ID MAS Expr                  {
-                                                if(lookUpSymbolItem($2) && findChild(findChild(root, lookUpSymbolItem($2)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($2,curScope))
                                                         printReDecError(lineNo, $2);
                                                 else
                                                         insertSymbolItem($2,type,lineNo,curScope,0);
                                                }  
             | '*' ID DAS Expr                  {
-                                                if(lookUpSymbolItem($2) && findChild(findChild(root, lookUpSymbolItem($2)->scope),curScope))
+                                                if(lookUpSymbolItem_scope($2,curScope))
                                                         printReDecError(lineNo, $2);
                                                 else
                                                         insertSymbolItem($2,type,lineNo,curScope,0);
@@ -225,34 +228,34 @@ ParamList: Expr
         | 
         ;
 
-Assignment: ID '=' Expr                   {if(!lookUpSymbolItem($1)){
+Assignment: ID '=' Expr                   {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                           }}
-            | ID PAS Expr                 {if(!lookUpSymbolItem($1)){
+            | ID PAS Expr                 {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                           }}      
-            | ID SAS Expr                 {if(!lookUpSymbolItem($1)){
+            | ID SAS Expr                 {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                           }}  
-            | ID MAS Expr                 {if(!lookUpSymbolItem($1)){
+            | ID MAS Expr                 {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                           }}
-            | ID DAS Expr                 {if(!lookUpSymbolItem($1)){
+            | ID DAS Expr                 {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                           }}
-            | '*' ID '=' Expr             {if(!lookUpSymbolItem($2)){
+            | '*' ID '=' Expr             {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                           }}
-            | '*' ID PAS Expr             {if(!lookUpSymbolItem($2)){
+            | '*' ID PAS Expr             {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                           }} 
-            | '*' ID SAS Expr             {if(!lookUpSymbolItem($2)){
+            | '*' ID SAS Expr             {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                           }}
-            | '*' ID MAS Expr             {if(!lookUpSymbolItem($2)){
+            | '*' ID MAS Expr             {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                           }}
-            | '*' ID DAS Expr             {if(!lookUpSymbolItem($2)){
+            | '*' ID DAS Expr             {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                           }}
             | ArrayNotation '=' Expr                   
@@ -294,29 +297,29 @@ Multiplicative_Expr: Primary
                      ;
 Primary: OPEN_PAR Expr CLOSE_PAR
          | NUM | FLOATNUM | CHARCONST | STRING 
-         | ID                           {if(!lookUpSymbolItem($1)){
+         | ID                           {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                         }}
-         | '*' ID                       {if(!lookUpSymbolItem($2)){
+         | '*' ID                       {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                         }}
-         | '&' ID                       {if(!lookUpSymbolItem($2)){
+         | '&' ID                       {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                         }}
          | '-' Primary
          | '+' Primary
          | ArrayNotation
          | FunctionCall
-         | PP ID                        {if(!lookUpSymbolItem($2)){
+         | PP ID                        {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                         }}
-         | ID PP                        {if(!lookUpSymbolItem($1)){
+         | ID PP                        {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                         }}
-         | MM ID                        {if(!lookUpSymbolItem($2)){
+         | MM ID                        {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                         }}
-         | ID MM                        {if(!lookUpSymbolItem($1)){
+         | ID MM                        {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                         }}
          ;

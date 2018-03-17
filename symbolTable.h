@@ -59,7 +59,7 @@ symbolItem* createSymbolItem(char *tokenValue, char *tokenType, int lineNumber, 
     return item;
 }
 
-symbolItem* lookUpSymbolItem(char * tokenValue, int scope = -1){
+symbolItem* lookUpSymbolItem_scope(char * tokenValue, int scope){
     if(scope == -1){
     int hashIndex = hash(tokenValue);
     symbolItem * temp = symbolTable[hashIndex];
@@ -72,12 +72,21 @@ symbolItem* lookUpSymbolItem(char * tokenValue, int scope = -1){
     else{
         int hashIndex = hash(tokenValue);
         symbolItem * temp = symbolTable[hashIndex];
-        while(temp!=NULL && strcmp(tokenValue, temp->tokenValue)!=0 && temp->scope !=scope)
+        while(temp!=NULL && (strcmp(tokenValue, temp->tokenValue)!=0 || temp->scope !=scope))
             temp=temp->next;
 
     return temp;
     }
+}
+
+symbolItem* lookUpSymbolItem(char * tokenValue){
     
+    int hashIndex = hash(tokenValue);
+    symbolItem * temp = symbolTable[hashIndex];
+    while(temp!=NULL && strcmp(tokenValue, temp->tokenValue)!=0)
+        temp=temp->next;
+
+    return temp;
 }
 
 void insertSymbolItem(char *tokenValue, char *tokenType, int lineNumber, int scope, int tableno){
