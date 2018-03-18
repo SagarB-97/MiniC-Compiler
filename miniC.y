@@ -1,5 +1,32 @@
 %{
+/*
+        TO DO
+- Convert SymbolItem.paramList to symbolitem array type for better access. 
+- Compare return type with function type
+- Check if id is array but used as a normal variable and vice versa.
+- Expression should have variables of the same type. both lhs and rhs
+- void variables shouldn't be allowed (Low Priority)
+- Type checking in function call param list
+- redeclaration of function def variables (low pri)
+- better printing
+*/
 
+/*
+        Done
+- Scope eval
+- Undeclared variable checking
+- Undeclared function checking
+- Redeclaration checking
+- Illegal array size checking
+- Wrong parameter count in function call detected
+- Counting number of params
+- Making list of params of a function
+- array support
+- had to add different arraynotation due to differing usage
+- Checks if array size < 0
+- some more stuff
+
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "symbolTable.h"
@@ -35,9 +62,17 @@ char type[100];
 void printUndecVarErr(int lineNo, char * s){
         printf(RED "Variable %s not declared at line %d\n" RESET, s,lineNo);
 }
-
 void printReDecError(int lineNo, char *s){
         printf(RED "Variable %s redeclared at line %d\n" RESET, s,lineNo);
+}
+void printIllArrayError(int lineNo, char *s, int Dim){
+        printf(RED "Array %s of illegal dimensions %d used at line %d\n" RESET, s, Dim, lineNo);
+}
+void printRetTypeError(int lineNo, char *ret, char *typ, char *name){
+        printf(RED "Wrong return type of %s for Function %s of type %s at line %d\n" RESET, ret, typ, name, lineNo);
+}
+void printWrongParamCountError(int lineNo, int wrong, int actual, char *s){
+        printf(RED "%s expects %d parameters and not %d parameters at line %d\n" RESET, s, actual, wrong, lineNo);
 }
 
 int checkAncestors(char * s)
@@ -56,7 +91,9 @@ int checkAncestors(char * s)
 }
 
 char pList[100];
-int num;
+int num = -1;
+char returnType[100];
+int pCount = 0;
 
 %}
 
@@ -105,30 +142,42 @@ Include:   IncludeStatement
            ;
 
 FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {
-                                                                                        insertFunctionItem($2,"function",lineNo,curScope,0,pList);
-                                                                                        strcpy(pList, "");
+                                                                                        //if(strcmp(returnType,$1)!=0)
+                                                                                        //        printRetTypeError(lineNo, returnType, $1, $2);
+                                                                                        //else{
+                                                                                                strcpy(returnType, "");
+                                                                                                char ftype[100] = "func-";
+                                                                                                strcat(ftype, $1);
+                                                                                                printf("%d - ParamCount\n", pCount);
+                                                                                                insertFunctionItem($2,ftype,lineNo,curScope,0,pList, pCount);
+                                                                                                strcpy(pList, "");
+                                                                                                pCount = 0;
+                                                                                        //}
                                                                                 }
              ;
-FormalParamList: Type ID                                        {
+FormalParamList: Type ID                                        {       
+                                                                        pCount++;
                                                                         char temp[100];
-                                                                        strcpy(type, $1);
+                                                                        strcpy(temp, $1);
                                                                         strcat(pList,strcat(temp," "));
                                                                         strcpy(temp, $2);
                                                                         strcat(pList,strcat(temp,", "));
                                                                         insertSymbolItem($2,type,lineNo,nextNum + 1,0);
                                                                 }
                 | Type '*' ID                                   {
+                                                                        pCount++;
                                                                         char temp[100];
-                                                                        strcpy(type, $1);
+                                                                        strcpy(temp, $1);
                                                                         strcat(pList,strcat(temp," "));
                                                                         strcpy(temp, $3);
                                                                         strcat(pList,strcat(temp,", "));
                                                                         insertSymbolItem($3,type,lineNo,nextNum + 1,0);
                                                                 }
                 | Type FuncArrayNotation                            {DEBUGY_PRINT("FLIST Call 3\n");}
-                | Type ID ',' FormalParamList                   {
+                | Type ID ',' FormalParamList                   {       
+                                                                        pCount++;
                                                                         char temp[100];
-                                                                        strcpy(type, $1);
+                                                                        strcpy(temp, $1);
                                                                         printf("%s %s\n", $1, $2);
                                                                         strcat(pList,strcat(temp," "));
                                                                         strcpy(temp, $2);
@@ -136,8 +185,9 @@ FormalParamList: Type ID                                        {
                                                                         insertSymbolItem($2,type,lineNo,nextNum + 1,0);
                                                                 }
                 | Type '*' ID ',' FormalParamList               {
+                                                                        pCount++;
                                                                         char temp[100];
-                                                                        strcpy(type, $1);
+                                                                        strcpy(temp, $1);
                                                                         strcat(pList,strcat(temp," "));
                                                                         strcpy(temp, $3);
                                                                         strcat(pList,strcat(temp,", "));
@@ -151,32 +201,36 @@ FormalParamList: Type ID                                        {
 Declaration:  Type IDList ';'    {;}
         ;
 
-Type: INT {strcpy(type,$1);strcpy($$,$1);}| FLOAT {strcpy(type,$1);strcpy($$,$1);}| VOID {strcpy(type,$1);strcpy($$,$1);}| CHAR {strcpy(type,$1);strcpy($$,$1);}| DOUBLE {strcpy(type,$1);strcpy($$,$1);}| 
+Type:   INT {strcpy(type,$1);strcpy($$,$1);}| FLOAT {strcpy(type,$1);strcpy($$,$1);}| VOID {strcpy(type,$1);strcpy($$,$1);}| CHAR {strcpy(type,$1);strcpy($$,$1);}| DOUBLE {strcpy(type,$1);strcpy($$,$1);}| 
         Modifiers INT {strcpy(type,$2);}| Modifiers FLOAT {strcpy(type,$2);}| Modifiers DOUBLE {strcpy(type,$2);}| Modifiers CHAR {strcpy(type,$2);}
         ;
 Modifiers: SHORT | LONG | UNSIGNED | SIGNED
         ;
 
 FuncArrayNotation: ID '[' ']'   {
+                                        pCount++;
                                         char temp[100];
                                         strcpy(temp, type);
                                         strcat(pList,strcat(temp," "));
-                                        char ar[100] = "array -"; 
+                                        char ar[100] = "arr -"; 
                                         strcat(ar, type);
                                         strcpy(temp, $1);
                                         strcat(pList,strcat(temp,"[], "));
-                                        insertSymbolItem($1,ar,lineNo,nextNum + 1,0);
+                                        insertArrayItem($1,ar,lineNo,nextNum + 1,0,0);
                                 }
-            | ID '[' NUM ']'   { 
-                                        char temp[100];
-                                        strcpy(temp, type);
-                                        strcat(pList,strcat(temp," "));
-                                        char ar[100] = "array -"; 
-                                        strcat(ar, type);
-                                        strcat(pList,strcat(temp,", "));
-                                        strcpy(temp, $1);
-                                        //strcat(pList,strcat(itoa($3),"], "));
-                                        insertSymbolItem($1,ar,lineNo,nextNum + 1,0);
+            | ID '[' Expr ']'   {       if(num<=0)
+                                                printIllArrayError(lineNo,$1,num);
+                                        else{
+                                                pCount++;
+                                                char temp[100];
+                                                strcpy(temp, type);
+                                                strcat(pList,strcat(temp," "));
+                                                char ar[100] = "arr -"; 
+                                                strcat(ar, type);
+                                                strcpy(temp, $1);
+                                                strcat(pList,strcat(temp,"[], "));
+                                                insertArrayItem($1,ar,lineNo,nextNum + 1,0,num);
+                                        }    
                                 }
             ;
 
@@ -191,18 +245,19 @@ DefArrayNotation: ID '[' ']'   {
             | ID '[' Expr ']' {
                                 if(lookUpSymbolItem_scope($1, curScope))
                                         printReDecError(lineNo, $1);
+                                else if(num<=0)
+                                        printIllArrayError(lineNo,$1,num);
                                 else{
                                         char ar[100] = "arr -";
                                         strcat(ar, type);
-                                        insertSymbolItem($1,type,lineNo,curScope,0);
+                                        insertArrayItem($1,type,lineNo,curScope,0,num);
                                     }
                                 }
             ;
-ArrayNotation: ID '[' ']'       {if(!checkAncestors($1))
+ArrayNotation: ID '[' Expr ']'   {if(!checkAncestors($1))
                                         printUndecVarErr(lineNo, $1);
-                                }
-            | ID '[' Expr ']'   {if(!checkAncestors($1))
-                                        printUndecVarErr(lineNo, $1);
+                                  else if(num<=0)
+                                        printIllArrayError(lineNo,$1,num);
                                 }
             ;
 
@@ -305,8 +360,8 @@ DefineAssign: ID '=' Expr                      {
             ;
 
 
-ParamList: Expr
-        | Expr ',' ParamList
+ParamList: Expr                 {pCount++;}
+        | Expr ',' ParamList    {pCount++;}
         | 
         ;
 
@@ -389,7 +444,7 @@ Primary: OPEN_PAR Expr CLOSE_PAR
          | '&' ID                       {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
                                         }}
-         | '-' Primary
+         | '-' Primary                  {num = -num;}
          | '+' Primary
          | ArrayNotation
          | FunctionCall
@@ -424,7 +479,7 @@ Statement: WhileStatement
         | CONTINUE ';'                    
 	| ';'
         ; 
-ReturnStatement: RETURN Expr ';'   {DEBUGY_PRINT("Return Statement Call\n");}
+ReturnStatement: RETURN Expr ';'   
                  ;
 
 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement                                                        
@@ -448,7 +503,16 @@ ElseStatement: ELSE CompoundStatement
                |
                ;
 
-FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR           {DEBUGY_PRINT("Function Call\n");} 
+FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR   {
+                                                 if(!checkAncestors($1))
+                                                       printUndecVarErr(lineNo, $1);
+                                                 else if(pCount!=(lookUpSymbolItem($1))->paramCount)
+                                                        {
+                                                                printWrongParamCountError(lineNo,pCount,(lookUpSymbolItem($1))->paramCount, $1);
+                                                                pCount = 0;
+                                                        }
+                                                 pCount = 0;
+                                                }
                 ;
 
 %%

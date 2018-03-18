@@ -254,7 +254,7 @@ return                             { if(!comment){
 {number}+                           { if(!comment) {
                                         DEBUG_PRINT("%-20s%20s%20d\n", "NUMBER", yytext, lineNo); 
                                         //insertSymbolItem(yytext, "INTEGER", lineNo, 1);
-                                       // yylval = atoi(yytext);
+                                        yylval.num = atoi(yytext);
                                         return NUM;
                                         }
                                     }    

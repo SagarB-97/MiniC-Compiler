@@ -1,6 +1,6 @@
 #include <stdio.h>
  
-int anyh(float arr[], float l, char r, int z)
+int binarySearch(float arr[10], float l, char r, int z)
 {
    if (r >= l)
    {
@@ -16,10 +16,10 @@ int anyh(float arr[], float l, char r, int z)
         if (arr[2] > z) 
             {
                 t = t + 7;
-                return binarySearch(arr, l, mid-1, z);
+                return 5;
             }
  
-        return binarySearch(arr, mid+1, r, z);
+        return 10;
    }
    return -1;
    int y;
@@ -33,6 +33,7 @@ int main()
    //int n;
    n =  sizeof(arr)/ sizeof(arr);
    int x = z * y;
+   n = binarySearch();
    y = 6;
    mid = 7;
    result = binarySearch(arr, 0, n-1, x);        //No comma
