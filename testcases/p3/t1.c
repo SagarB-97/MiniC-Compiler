@@ -1,19 +1,19 @@
 #include <stdio.h>
  
-int anyh(int arr, int l, int r, int z)
+int anyh(float arr[], float l, char r, int z)
 {
    if (r >= l)
    {
+        float p;
         int mid;
         mid = l*(r - l)/2;   // Missing Operator
-
-        if (arr == z)  
+        if (arr[5] == z)  
             {
                 int t = 5;
                 return mid  ;      // No Semicolon
             }
  
-        if (arr > z) 
+        if (arr[2] > z) 
             {
                 t = t + 7;
                 return binarySearch(arr, l, mid-1, z);

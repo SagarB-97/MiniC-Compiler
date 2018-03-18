@@ -55,6 +55,8 @@ int checkAncestors(char * s)
         return 0;
 }
 
+char pList[100];
+int num;
 
 %}
 
@@ -64,12 +66,13 @@ int checkAncestors(char * s)
 %token SWITCH BREAK CONTINUE CASE DEFAULT STRUCT  
 %token FOR WHILE DO
 %token IF ELSE  
-%token NUM FLOATNUM STRING CHARCONST
+%token FLOATNUM STRING CHARCONST
 %token INCLUDE
 %token OPEN_PAR CLOSE_PAR
 
 %union {
 	char id[100];
+        int num;
 }
 %token <id> ID
 %token <id> INT
@@ -77,7 +80,8 @@ int checkAncestors(char * s)
 %token <id> FLOAT
 %token <id> DOUBLE
 %token <id> VOID
-
+%token <num> NUM
+%type <id> Type
 
 %right '=' PAS MAS DAS SAS           
 %left AND OR NOT PP MM
@@ -100,14 +104,46 @@ IncludeStatement: '#' INCLUDE LT ID GT
 Include:   IncludeStatement
            ;
 
-FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {insertSymbolItem($2,"function",lineNo,curScope,0);}
+FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {
+                                                                                        insertFunctionItem($2,"function",lineNo,curScope,0,pList);
+                                                                                        strcpy(pList, "");
+                                                                                }
              ;
-FormalParamList: Type ID                                        {insertSymbolItem($2,type,lineNo,nextNum + 1,0);DEBUGY_PRINT("FLIST Call 1\n");}
-                | Type '*' ID                                   {insertSymbolItem($3,type,lineNo,nextNum + 1,0);DEBUGY_PRINT("FLIST Call 2\n");}
-                | Type ArrayNotation                            {DEBUGY_PRINT("FLIST Call 3\n");}
-                | Type ID ',' FormalParamList                   {insertSymbolItem($2,type,lineNo,nextNum + 1,0);DEBUGY_PRINT("FLIST Call 4\n");}
-                | Type '*' ID ',' FormalParamList               {insertSymbolItem($3,type,lineNo,nextNum + 1,0);DEBUGY_PRINT("FLIST Call 5\n");}
-                | Type ArrayNotation ',' FormalParamList        {DEBUGY_PRINT("FLIST Call 6\n");}
+FormalParamList: Type ID                                        {
+                                                                        char temp[100];
+                                                                        strcpy(type, $1);
+                                                                        strcat(pList,strcat(temp," "));
+                                                                        strcpy(temp, $2);
+                                                                        strcat(pList,strcat(temp,", "));
+                                                                        insertSymbolItem($2,type,lineNo,nextNum + 1,0);
+                                                                }
+                | Type '*' ID                                   {
+                                                                        char temp[100];
+                                                                        strcpy(type, $1);
+                                                                        strcat(pList,strcat(temp," "));
+                                                                        strcpy(temp, $3);
+                                                                        strcat(pList,strcat(temp,", "));
+                                                                        insertSymbolItem($3,type,lineNo,nextNum + 1,0);
+                                                                }
+                | Type FuncArrayNotation                            {DEBUGY_PRINT("FLIST Call 3\n");}
+                | Type ID ',' FormalParamList                   {
+                                                                        char temp[100];
+                                                                        strcpy(type, $1);
+                                                                        printf("%s %s\n", $1, $2);
+                                                                        strcat(pList,strcat(temp," "));
+                                                                        strcpy(temp, $2);
+                                                                        strcat(pList,strcat(temp,", "));
+                                                                        insertSymbolItem($2,type,lineNo,nextNum + 1,0);
+                                                                }
+                | Type '*' ID ',' FormalParamList               {
+                                                                        char temp[100];
+                                                                        strcpy(type, $1);
+                                                                        strcat(pList,strcat(temp," "));
+                                                                        strcpy(temp, $3);
+                                                                        strcat(pList,strcat(temp,", "));
+                                                                        insertSymbolItem($3,type,lineNo,nextNum + 1,0);
+                                                                }
+                | Type FuncArrayNotation ',' FormalParamList        {DEBUGY_PRINT("FLIST Call 6\n");}
                 |
                 ;
 
@@ -115,17 +151,63 @@ FormalParamList: Type ID                                        {insertSymbolIte
 Declaration:  Type IDList ';'    {;}
         ;
 
-Type: INT {strcpy(type,$1);}| FLOAT {strcpy(type,$1);}| VOID {strcpy(type,$1);}| CHAR {strcpy(type,$1);}| DOUBLE {strcpy(type,$1);}| 
+Type: INT {strcpy(type,$1);strcpy($$,$1);}| FLOAT {strcpy(type,$1);strcpy($$,$1);}| VOID {strcpy(type,$1);strcpy($$,$1);}| CHAR {strcpy(type,$1);strcpy($$,$1);}| DOUBLE {strcpy(type,$1);strcpy($$,$1);}| 
         Modifiers INT {strcpy(type,$2);}| Modifiers FLOAT {strcpy(type,$2);}| Modifiers DOUBLE {strcpy(type,$2);}| Modifiers CHAR {strcpy(type,$2);}
         ;
 Modifiers: SHORT | LONG | UNSIGNED | SIGNED
         ;
 
-ArrayNotation: ID '[' ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,curScope,0);}
-            | ID '[' Expr ']' {char ar[] = "arr - "; insertSymbolItem($1,strcat(ar, type),lineNo,curScope,0);}
+FuncArrayNotation: ID '[' ']'   {
+                                        char temp[100];
+                                        strcpy(temp, type);
+                                        strcat(pList,strcat(temp," "));
+                                        char ar[100] = "array -"; 
+                                        strcat(ar, type);
+                                        strcpy(temp, $1);
+                                        strcat(pList,strcat(temp,"[], "));
+                                        insertSymbolItem($1,ar,lineNo,nextNum + 1,0);
+                                }
+            | ID '[' NUM ']'   { 
+                                        char temp[100];
+                                        strcpy(temp, type);
+                                        strcat(pList,strcat(temp," "));
+                                        char ar[100] = "array -"; 
+                                        strcat(ar, type);
+                                        strcat(pList,strcat(temp,", "));
+                                        strcpy(temp, $1);
+                                        //strcat(pList,strcat(itoa($3),"], "));
+                                        insertSymbolItem($1,ar,lineNo,nextNum + 1,0);
+                                }
             ;
 
-IDList: ArrayNotation
+DefArrayNotation: ID '[' ']'   {
+                                if(lookUpSymbolItem_scope($1, curScope))
+                                        printReDecError(lineNo, $1);
+                                else{
+                                        char ar[100] = "arr -"; 
+                                        insertSymbolItem($1,type,lineNo,curScope,0);
+                                    }
+                                }
+            | ID '[' Expr ']' {
+                                if(lookUpSymbolItem_scope($1, curScope))
+                                        printReDecError(lineNo, $1);
+                                else{
+                                        char ar[100] = "arr -";
+                                        strcat(ar, type);
+                                        insertSymbolItem($1,type,lineNo,curScope,0);
+                                    }
+                                }
+            ;
+ArrayNotation: ID '[' ']'       {if(!checkAncestors($1))
+                                        printUndecVarErr(lineNo, $1);
+                                }
+            | ID '[' Expr ']'   {if(!checkAncestors($1))
+                                        printUndecVarErr(lineNo, $1);
+                                }
+            ;
+
+
+IDList: DefArrayNotation
         | ID ',' IDList                        {
                                                 if(lookUpSymbolItem_scope($1, curScope))
                                                         printReDecError(lineNo, $1);
@@ -138,7 +220,7 @@ IDList: ArrayNotation
                                                 else
                                                         insertSymbolItem($2,type,lineNo,curScope,0);
                                                }
-        | ArrayNotation ',' IDList 
+        | DefArrayNotation ',' IDList 
         | ID                                   {
                                                 if(lookUpSymbolItem_scope($1,curScope))
                                                         printReDecError(lineNo, $1);
@@ -215,11 +297,11 @@ DefineAssign: ID '=' Expr                      {
                                                 else
                                                         insertSymbolItem($2,type,lineNo,curScope,0);
                                                }
-            | ArrayNotation '=' Expr                   
-            | ArrayNotation PAS Expr  
-            | ArrayNotation SAS Expr  
-            | ArrayNotation MAS Expr  
-            | ArrayNotation DAS Expr
+            | DefArrayNotation '=' Expr                   
+            | DefArrayNotation PAS Expr  
+            | DefArrayNotation SAS Expr  
+            | DefArrayNotation MAS Expr  
+            | DefArrayNotation DAS Expr
             ;
 
 
@@ -296,7 +378,8 @@ Multiplicative_Expr: Primary
                      | Multiplicative_Expr '%' Primary
                      ;
 Primary: OPEN_PAR Expr CLOSE_PAR
-         | NUM | FLOATNUM | CHARCONST | STRING 
+         | NUM                          {num = $1;}
+         | FLOATNUM | CHARCONST | STRING 
          | ID                           {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                         }}

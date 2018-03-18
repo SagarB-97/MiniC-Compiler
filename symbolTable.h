@@ -22,6 +22,8 @@ const int symbolTableSize = 1000;
         char tokenType[100];
         int lineNumber;
         int scope;
+        int arrayDim;
+        char paramList[100];
         struct symbolItemStruct* next;
     } symbolItem;
     symbolItem * symbolTable[1000];
@@ -55,6 +57,7 @@ symbolItem* createSymbolItem(char *tokenValue, char *tokenType, int lineNumber, 
     item->lineNumber = lineNumber;
     item->scope = scope;
     item->next = NULL;
+    item->arrayDim = -1;
 
     return item;
 }
@@ -118,19 +121,49 @@ void insertSymbolItem(char *tokenValue, char *tokenType, int lineNumber, int sco
         else
             temp->next = item;
     }
+}
+
+void insertFunctionItem(char *tokenValue, char *tokenType, int lineNumber, int scope, int tableno, char *pList){
     
-    
+    int hashIndex = hash(tokenValue);
+
+    symbolItem *item = createSymbolItem(tokenValue, tokenType, lineNumber, scope);
+    strcpy(item->paramList, pList);
+
+    if(tableno == 0)
+    {
+        symbolItem * temp = symbolTable[hashIndex];
+        while(temp!=NULL && temp->next!=NULL)
+            temp = temp->next;
+
+        if(temp == NULL)
+            symbolTable[hashIndex] = item;
+        else
+            temp->next = item;
+    }
+
+    else
+    {
+        symbolItem * temp = constantTable[hashIndex];
+        while(temp!=NULL && temp->next!=NULL)
+            temp = temp->next;
+
+        if(temp == NULL)
+            constantTable[hashIndex] = item;
+        else
+            temp->next = item;
+    }
 }
 
 void printSymbolItem(symbolItem * item){
-    DEBUG_PRINT("%-20s%10s%20d%20d\n",item->tokenValue, item->tokenType, item->lineNumber, item->scope);
+    DEBUG_PRINT("%-20s%10s%20d%20d%40s\n",item->tokenValue, item->tokenType, item->lineNumber, item->scope, item->paramList);
 }
 
 void showSymbolTable(){
     int i;
-    DEBUG_PRINT("\n-----------------------------------------------------------------\n");
-    DEBUG_PRINT(BLU "%-20s%10s%24s%20s\n","VALUE","TYPE","LINE NUMBER", "SCOPE" RESET);
-    DEBUG_PRINT("-----------------------------------------------------------------\n");
+    DEBUG_PRINT("\n----------------------------------------------------------------------------------------------------------\n");
+    DEBUG_PRINT(BLU "%-20s%10s%24s%20s%30s\n","VALUE","TYPE","LINE NUMBER", "SCOPE","ParamList" RESET);
+    DEBUG_PRINT("----------------------------------------------------------------------------------------------------------\n");
 
     for(int i=0;i<symbolTableSize;i++){
         symbolItem* temp = symbolTable[i];
