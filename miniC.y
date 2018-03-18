@@ -1,13 +1,9 @@
 %{
 /*
         TO DO
-- Convert SymbolItem.paramList to symbolitem array type for better access. 
-- Compare return type with function type
-- Check if id is array but used as a normal variable and vice versa.
-- Expression should have variables of the same type. both lhs and rhs
-- void variables shouldn't be allowed (Low Priority)
-- Type checking in function call param list
-- redeclaration of function def variables (low pri)
+- Check if id is array but used as a normal variable and vice versa. --
+- void variables shouldn't be allowed (Low Priority) --
+- Type checking in function call param list 
 - better printing
 */
 
@@ -59,8 +55,28 @@ extern int curScope;
 
 char type[100];
 
+int isHigherPri(char * type1, char * type2){
+        int type1_pri, type2_pri;
+
+        if(strcmp(type1,"char")==0) type1_pri = 1;
+        else if(strcmp(type1,"int")==0) type1_pri = 2;
+        else if(strcmp(type1,"float")==0) type1_pri = 3;
+
+        if(strcmp(type2,"char")==0) type2_pri = 1;
+        else if(strcmp(type2,"int")==0) type2_pri = 2;
+        else if(strcmp(type2,"float")==0) type2_pri = 3;
+
+        return type1_pri>type2_pri;
+}
+
 void printUndecVarErr(int lineNo, char * s){
         printf(RED "Variable %s not declared at line %d\n" RESET, s,lineNo);
+}
+void printWrongIDUsageError(int lineNo, char * id){
+        printf(RED "%s at Line %d is Array. No Subscript given\n" RESET, id,lineNo);
+}
+void printWrongArrayUsageError(int lineNo, char * id){
+        printf(RED "%s at Line %d is not Array\n" RESET, id,lineNo);
 }
 void printReDecError(int lineNo, char *s){
         printf(RED "Variable %s redeclared at line %d\n" RESET, s,lineNo);
@@ -74,8 +90,17 @@ void printRetTypeError(int lineNo, char *ret, char *typ, char *name){
 void printWrongParamCountError(int lineNo, int wrong, int actual, char *s){
         printf(RED "%s expects %d parameters and not %d parameters at line %d\n" RESET, s, actual, wrong, lineNo);
 }
+void printMismatchError(int lineNo, char *lhsType, char *rhsType){
+        printf(RED "Error : Type Mismatch in expression at line %d. LHS : %s, RHS : %s\n" RESET, lineNo, lhsType, rhsType);
+}
+void printVoidVariableError(int lineNo){
+        printf(RED "Error : Line - %d. void variables are not allowed\n" RESET, lineNo);
+}
+void printVoidFunctionReturningError(int lineNo, char *returnType){
+        printf(RED "Void function at line %d returning %s" RESET, lineNo, returnType);
+}
 
-int checkAncestors(char * s)
+symbolItem* checkAncestors(char * s)
 {
         //printf("%s\n", s);
         ScopeNode *node = findChild(root, curScope);
@@ -83,16 +108,16 @@ int checkAncestors(char * s)
         {
                 //printf("%d\n", node->num);
                 if(lookUpSymbolItem_scope(s,node->num))
-                        return 1; 
+                        return lookUpSymbolItem_scope(s,node->num); 
                         
                 node = node->parent;
         }
-        return 0;
+        return NULL;
 }
 
 char pList[100];
 int num = -1;
-char returnType[100];
+char returnType[100] = "initial";
 int pCount = 0;
 
 %}
@@ -120,6 +145,15 @@ int pCount = 0;
 %token <num> NUM
 %type <id> Type
 
+%type <id> Expr
+%type <id> Logical_Expr
+%type <id> Primary
+%type <id> Relational_Expr
+%type <id> Additive_Expr
+%type <id> Multiplicative_Expr
+%type <id> ArrayNotation
+%type <id> FunctionCall
+
 %right '=' PAS MAS DAS SAS           
 %left AND OR NOT PP MM
 %left LE GE EQ NE LT GT                        // LE <= GE >= EQ == NE != LT < GT >
@@ -142,63 +176,64 @@ Include:   IncludeStatement
            ;
 
 FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {
-                                                                                        //if(strcmp(returnType,$1)!=0)
-                                                                                        //        printRetTypeError(lineNo, returnType, $1, $2);
-                                                                                        //else{
+                                                                                        if(strcmp(returnType,$1)!=0)
+                                                                                                printRetTypeError(lineNo, returnType, $1, $2);
+                                                                                        else if(strcmp($1,"void")==0 && strcmp(returnType,"initial")!=0)
+                                                                                                printVoidFunctionReturningError(lineNo, returnType);
+                                                                                        else{
                                                                                                 strcpy(returnType, "");
-                                                                                                char ftype[100] = "func-";
-                                                                                                strcat(ftype, $1);
-                                                                                                printf("%d - ParamCount\n", pCount);
-                                                                                                insertFunctionItem($2,ftype,lineNo,curScope,0,pList, pCount);
+                                                                                                insertFunctionItem($2,$1,lineNo,curScope,0,pList, pCount);
                                                                                                 strcpy(pList, "");
                                                                                                 pCount = 0;
-                                                                                        //}
+                                                                                        }
+                                                                                        strcpy(returnType, "initial");
                                                                                 }
              ;
 FormalParamList: Type ID                                        {       
                                                                         pCount++;
                                                                         char temp[100];
                                                                         strcpy(temp, $1);
+                                                                        insertSymbolItem($2,temp,lineNo,nextNum + 1,0);
                                                                         strcat(pList,strcat(temp," "));
                                                                         strcpy(temp, $2);
-                                                                        strcat(pList,strcat(temp,", "));
-                                                                        insertSymbolItem($2,type,lineNo,nextNum + 1,0);
+                                                                        strcat(pList,strcat(temp,", "));                                                                       
                                                                 }
                 | Type '*' ID                                   {
                                                                         pCount++;
                                                                         char temp[100];
                                                                         strcpy(temp, $1);
+                                                                        insertSymbolItem($3,temp,lineNo,nextNum + 1,0);
                                                                         strcat(pList,strcat(temp," "));
                                                                         strcpy(temp, $3);
                                                                         strcat(pList,strcat(temp,", "));
-                                                                        insertSymbolItem($3,type,lineNo,nextNum + 1,0);
+                                                                        
                                                                 }
                 | Type FuncArrayNotation                            {DEBUGY_PRINT("FLIST Call 3\n");}
                 | Type ID ',' FormalParamList                   {       
                                                                         pCount++;
                                                                         char temp[100];
                                                                         strcpy(temp, $1);
-                                                                        printf("%s %s\n", $1, $2);
+                                                                        insertSymbolItem($2,temp,lineNo,nextNum + 1,0);
                                                                         strcat(pList,strcat(temp," "));
                                                                         strcpy(temp, $2);
                                                                         strcat(pList,strcat(temp,", "));
-                                                                        insertSymbolItem($2,type,lineNo,nextNum + 1,0);
+                                                                        
                                                                 }
                 | Type '*' ID ',' FormalParamList               {
                                                                         pCount++;
                                                                         char temp[100];
                                                                         strcpy(temp, $1);
+                                                                        insertSymbolItem($3,temp,lineNo,nextNum + 1,0);
                                                                         strcat(pList,strcat(temp," "));
                                                                         strcpy(temp, $3);
                                                                         strcat(pList,strcat(temp,", "));
-                                                                        insertSymbolItem($3,type,lineNo,nextNum + 1,0);
                                                                 }
                 | Type FuncArrayNotation ',' FormalParamList        {DEBUGY_PRINT("FLIST Call 6\n");}
                 |
                 ;
 
 
-Declaration:  Type IDList ';'    {;}
+Declaration:  Type IDList ';'    {if(strcmp($1,"void")==0) printVoidVariableError(lineNo);}
         ;
 
 Type:   INT {strcpy(type,$1);strcpy($$,$1);}| FLOAT {strcpy(type,$1);strcpy($$,$1);}| VOID {strcpy(type,$1);strcpy($$,$1);}| CHAR {strcpy(type,$1);strcpy($$,$1);}| DOUBLE {strcpy(type,$1);strcpy($$,$1);}| 
@@ -212,11 +247,9 @@ FuncArrayNotation: ID '[' ']'   {
                                         char temp[100];
                                         strcpy(temp, type);
                                         strcat(pList,strcat(temp," "));
-                                        char ar[100] = "arr -"; 
-                                        strcat(ar, type);
                                         strcpy(temp, $1);
                                         strcat(pList,strcat(temp,"[], "));
-                                        insertArrayItem($1,ar,lineNo,nextNum + 1,0,0);
+                                        insertArrayItem($1,type,lineNo,nextNum + 1,0,0);
                                 }
             | ID '[' Expr ']'   {       if(num<=0)
                                                 printIllArrayError(lineNo,$1,num);
@@ -225,11 +258,9 @@ FuncArrayNotation: ID '[' ']'   {
                                                 char temp[100];
                                                 strcpy(temp, type);
                                                 strcat(pList,strcat(temp," "));
-                                                char ar[100] = "arr -"; 
-                                                strcat(ar, type);
                                                 strcpy(temp, $1);
                                                 strcat(pList,strcat(temp,"[], "));
-                                                insertArrayItem($1,ar,lineNo,nextNum + 1,0,num);
+                                                insertArrayItem($1,type,lineNo,nextNum + 1,0,num);
                                         }    
                                 }
             ;
@@ -238,7 +269,6 @@ DefArrayNotation: ID '[' ']'   {
                                 if(lookUpSymbolItem_scope($1, curScope))
                                         printReDecError(lineNo, $1);
                                 else{
-                                        char ar[100] = "arr -"; 
                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                     }
                                 }
@@ -248,16 +278,19 @@ DefArrayNotation: ID '[' ']'   {
                                 else if(num<=0)
                                         printIllArrayError(lineNo,$1,num);
                                 else{
-                                        char ar[100] = "arr -";
-                                        strcat(ar, type);
                                         insertArrayItem($1,type,lineNo,curScope,0,num);
                                     }
                                 }
             ;
 ArrayNotation: ID '[' Expr ']'   {if(!checkAncestors($1))
                                         printUndecVarErr(lineNo, $1);
+                                  else if(checkAncestors($1)->arrayDim!=1)
+                                        printWrongArrayUsageError(lineNo,$1);
                                   else if(num<=0)
                                         printIllArrayError(lineNo,$1,num);
+                                  else{
+                                        strcpy($$,checkAncestors($1)->tokenType);
+                                  }
                                 }
             ;
 
@@ -365,101 +398,209 @@ ParamList: Expr                 {pCount++;}
         | 
         ;
 
-Assignment: ID '=' Expr                   {if(!checkAncestors($1)){
+Assignment: ID '=' Expr                   {if(!checkAncestors($1))
                                                 printUndecVarErr(lineNo, $1);
-                                          }}
-            | ID PAS Expr                 {if(!checkAncestors($1)){
+                                           else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                           else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                          }
+            | ID PAS Expr                 {if(!checkAncestors($1))
                                                 printUndecVarErr(lineNo, $1);
-                                          }}      
-            | ID SAS Expr                 {if(!checkAncestors($1)){
+                                           else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                           else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                          }   
+            | ID SAS Expr                 {if(!checkAncestors($1))
                                                 printUndecVarErr(lineNo, $1);
-                                          }}  
-            | ID MAS Expr                 {if(!checkAncestors($1)){
+                                          else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                          }  
+            | ID MAS Expr                 {if(!checkAncestors($1))
                                                 printUndecVarErr(lineNo, $1);
-                                          }}
-            | ID DAS Expr                 {if(!checkAncestors($1)){
+                                          else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                          }
+            | ID DAS Expr                 {if(!checkAncestors($1))
                                                 printUndecVarErr(lineNo, $1);
-                                          }}
-            | '*' ID '=' Expr             {if(!checkAncestors($2)){
+                                           else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                          }
+            | '*' ID '=' Expr             {if(!checkAncestors($2))
                                                 printUndecVarErr(lineNo, $2);
-                                          }}
-            | '*' ID PAS Expr             {if(!checkAncestors($2)){
+                                           else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | '*' ID PAS Expr             {if(!checkAncestors($2))
                                                 printUndecVarErr(lineNo, $2);
-                                          }} 
-            | '*' ID SAS Expr             {if(!checkAncestors($2)){
+                                          else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | '*' ID SAS Expr             {if(!checkAncestors($2))
                                                 printUndecVarErr(lineNo, $2);
-                                          }}
-            | '*' ID MAS Expr             {if(!checkAncestors($2)){
+                                           else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | '*' ID MAS Expr             {if(!checkAncestors($2))
                                                 printUndecVarErr(lineNo, $2);
-                                          }}
-            | '*' ID DAS Expr             {if(!checkAncestors($2)){
+                                           else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | '*' ID DAS Expr             {if(!checkAncestors($2))
                                                 printUndecVarErr(lineNo, $2);
+                                           else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | ArrayNotation '=' Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          }}           
+            | ArrayNotation PAS Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
                                           }}
-            | ArrayNotation '=' Expr                   
-            | ArrayNotation PAS Expr  
-            | ArrayNotation SAS Expr  
-            | ArrayNotation MAS Expr  
-            | ArrayNotation DAS Expr
-            | Primary   
+            | ArrayNotation SAS Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          }}
+            | ArrayNotation MAS Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          }}
+            | ArrayNotation DAS Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          }}
+            | Primary                      
             ;
 
-Expr: Logical_Expr
+Expr: Logical_Expr { strcpy($$, $1); }
       ;
 
 
-Logical_Expr: Relational_Expr
-              | Logical_Expr AND Relational_Expr
-              | Logical_Expr OR Relational_Expr
-              | NOT Relational_Expr 
+Logical_Expr: Relational_Expr { strcpy($$, $1); }
+              | Logical_Expr AND Relational_Expr { strcpy($$, "int"); }
+              | Logical_Expr OR Relational_Expr { strcpy($$, "int"); }
+              | NOT Relational_Expr { strcpy($$, "int"); }
               ;
 
-Relational_Expr: Additive_Expr
-                 | Relational_Expr GT Additive_Expr
-                 | Relational_Expr LT Additive_Expr
-                 | Relational_Expr GE Additive_Expr
-                 | Relational_Expr LE Additive_Expr
-                 | Relational_Expr EQ Additive_Expr
-                 | Relational_Expr NE Additive_Expr
+Relational_Expr: Additive_Expr { strcpy($$, $1); }
+                 | Relational_Expr GT Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr LT Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr GE Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr LE Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr EQ Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr NE Additive_Expr { strcpy($$, "int"); }
                  ;
 
 
-Additive_Expr: Multiplicative_Expr
-               | Additive_Expr '+' Multiplicative_Expr
-               | Additive_Expr '-' Multiplicative_Expr
+Additive_Expr: Multiplicative_Expr { strcpy($$, $1); }
+               | Additive_Expr '+' Multiplicative_Expr { if(isHigherPri($1,$3)) strcpy($$,$1);
+                                                         else strcpy($$,$3);
+                                                        }
+               | Additive_Expr '-' Multiplicative_Expr { if(isHigherPri($1,$3)) strcpy($$,$1);
+                                                         else strcpy($$,$3);
+                                                        }
                ;
-Multiplicative_Expr: Primary
-                     | Multiplicative_Expr '*' Primary
-                     | Multiplicative_Expr '/' Primary
-                     | Multiplicative_Expr '%' Primary
+Multiplicative_Expr: Primary { strcpy($$, $1); }
+                     | Multiplicative_Expr '*' Primary { if(isHigherPri($1,$3)) strcpy($$,$1);
+                                                         else strcpy($$,$3);
+                                                        }
+                     | Multiplicative_Expr '/' Primary { if(isHigherPri($1,$3)) strcpy($$,$1);
+                                                         else strcpy($$,$3);
+                                                        }
+                     | Multiplicative_Expr '%' Primary { if(strcmp($1,"int")!=0 || strcmp($3,"int")!=0){
+                                                                printf(RED "Error : Modulus operator expects int\n" RESET);
+                                                                strcpy($$, "int");
+                                                        }
+                                                        else{
+                                                                strcpy($$, "int");
+                                                        }
+                                                        }
                      ;
-Primary: OPEN_PAR Expr CLOSE_PAR
-         | NUM                          {num = $1;}
-         | FLOATNUM | CHARCONST | STRING 
+Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$, $2); }
+         | NUM                                          {num = $1; strcpy($$,"int"); }
+         | FLOATNUM                                     { strcpy($$,"float"); }
+         | CHARCONST                                    { strcpy($$,"char"); }
+         | STRING                                       { strcpy($$,"string"); }
          | ID                           {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
-                                        }}
+                                         }
+                                        else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                         else{
+                                                 strcpy($$,checkAncestors($1)->tokenType);
+                                         }
+                                        }
          | '*' ID                       {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
-                                        }}
+                                        }
+                                        else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                        else{
+                                                 strcpy($$,checkAncestors($2)->tokenType);
+                                         }
+                                        }
          | '&' ID                       {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
-                                        }}
-         | '-' Primary                  {num = -num;}
-         | '+' Primary
-         | ArrayNotation
-         | FunctionCall
+                                        }
+                                        else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                        else{
+                                                 strcpy($$,checkAncestors($2)->tokenType);
+                                         }}
+         | '-' Primary                  {num = -num; strcpy($$,$2);}
+         | '+' Primary                  {strcpy($$,$2);}
+         | ArrayNotation                {strcpy($$,$1);}
+         | FunctionCall                 {       if(!checkAncestors($1))
+                                                        printUndecVarErr(lineNo, $1);
+                                                else 
+                                                        strcpy($$,checkAncestors($1)->tokenType);
+                                        }
          | PP ID                        {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
-                                        }}
+                                        }
+                                        else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                        else{
+                                                 strcpy($$,checkAncestors($2)->tokenType);
+                                         }}
          | ID PP                        {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
-                                        }}
+                                        }
+                                        else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                        else{
+                                                 strcpy($$,checkAncestors($1)->tokenType);
+                                         }}
          | MM ID                        {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
-                                        }}
+                                        }
+                                        else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                        else{
+                                                 strcpy($$,checkAncestors($2)->tokenType);
+                                         }}
          | ID MM                        {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
-                                        }}
+                                        }
+                                        else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                        else{
+                                                 strcpy($$,checkAncestors($1)->tokenType);
+                                         }}
          ;
 
 CompoundStatement: '{' StatementList '}'
@@ -479,7 +620,7 @@ Statement: WhileStatement
         | CONTINUE ';'                    
 	| ';'
         ; 
-ReturnStatement: RETURN Expr ';'   
+ReturnStatement: RETURN Expr ';'   { strcpy(returnType, $2); }
                  ;
 
 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement                                                        
@@ -512,6 +653,7 @@ FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR   {
                                                                 pCount = 0;
                                                         }
                                                  pCount = 0;
+                                                 strcpy($$,$1);
                                                 }
                 ;
 
