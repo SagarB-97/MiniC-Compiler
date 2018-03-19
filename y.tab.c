@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.0.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -389,7 +389,7 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
+typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
 #line 209 "miniC.y" /* yacc.c:355  */
@@ -399,8 +399,6 @@ union YYSTYPE
 
 #line 401 "y.tab.c" /* yacc.c:355  */
 };
-
-typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -414,7 +412,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 418 "y.tab.c" /* yacc.c:358  */
+#line 416 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1723,7 +1721,7 @@ yyreduce:
                                                                                         }
                                                                                         strcpy(returnType, "void");
                                                                                 }
-#line 1727 "y.tab.c" /* yacc.c:1646  */
+#line 1725 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
@@ -1737,7 +1735,7 @@ yyreduce:
                                                                         strcpy(temp, (yyvsp[0].id));
                                                                         strcat(pList,strcat(temp,", "));                                                                       
                                                                 }
-#line 1741 "y.tab.c" /* yacc.c:1646  */
+#line 1739 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
@@ -1752,13 +1750,13 @@ yyreduce:
                                                                         strcat(pList,strcat(temp,", "));
                                                                         
                                                                 }
-#line 1756 "y.tab.c" /* yacc.c:1646  */
+#line 1754 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
 #line 285 "miniC.y" /* yacc.c:1646  */
     {DEBUGY_PRINT("FLIST Call 3\n");}
-#line 1762 "y.tab.c" /* yacc.c:1646  */
+#line 1760 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
@@ -1773,7 +1771,7 @@ yyreduce:
                                                                         strcat(pList,strcat(temp,", "));
                                                                         
                                                                 }
-#line 1777 "y.tab.c" /* yacc.c:1646  */
+#line 1775 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
@@ -1787,73 +1785,73 @@ yyreduce:
                                                                         strcpy(temp, (yyvsp[-2].id));
                                                                         strcat(pList,strcat(temp,", "));
                                                                 }
-#line 1791 "y.tab.c" /* yacc.c:1646  */
+#line 1789 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 305 "miniC.y" /* yacc.c:1646  */
     {DEBUGY_PRINT("FLIST Call 6\n");}
-#line 1797 "y.tab.c" /* yacc.c:1646  */
+#line 1795 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 310 "miniC.y" /* yacc.c:1646  */
     {if(strcmp((yyvsp[-2].id),"void")==0) printVoidVariableError(lineNo);}
-#line 1803 "y.tab.c" /* yacc.c:1646  */
+#line 1801 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
 #line 313 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1809 "y.tab.c" /* yacc.c:1646  */
+#line 1807 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
 #line 313 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1815 "y.tab.c" /* yacc.c:1646  */
+#line 1813 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
 #line 313 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1821 "y.tab.c" /* yacc.c:1646  */
+#line 1819 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
 #line 313 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1827 "y.tab.c" /* yacc.c:1646  */
+#line 1825 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
 #line 313 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1833 "y.tab.c" /* yacc.c:1646  */
+#line 1831 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
 #line 314 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));}
-#line 1839 "y.tab.c" /* yacc.c:1646  */
+#line 1837 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
 #line 314 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));}
-#line 1845 "y.tab.c" /* yacc.c:1646  */
+#line 1843 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
 #line 314 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));}
-#line 1851 "y.tab.c" /* yacc.c:1646  */
+#line 1849 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
 #line 314 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));}
-#line 1857 "y.tab.c" /* yacc.c:1646  */
+#line 1855 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
@@ -1867,7 +1865,7 @@ yyreduce:
                                         strcat(pList,strcat(temp,"[], "));
                                         insertArrayItem((yyvsp[-2].id),type,lineNo,nextNum + 1,0,0);
                                 }
-#line 1871 "y.tab.c" /* yacc.c:1646  */
+#line 1869 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
@@ -1884,7 +1882,7 @@ yyreduce:
                                                 insertArrayItem((yyvsp[-3].id),type,lineNo,nextNum + 1,0,num);
                                         }    
                                 }
-#line 1888 "y.tab.c" /* yacc.c:1646  */
+#line 1886 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
@@ -1896,7 +1894,7 @@ yyreduce:
                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                     }
                                 }
-#line 1900 "y.tab.c" /* yacc.c:1646  */
+#line 1898 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
@@ -1910,7 +1908,7 @@ yyreduce:
                                         insertArrayItem((yyvsp[-3].id),type,lineNo,curScope,0,num);
                                     }
                                 }
-#line 1914 "y.tab.c" /* yacc.c:1646  */
+#line 1912 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
@@ -1927,7 +1925,7 @@ yyreduce:
                                         strcpy((yyval.id),checkAncestors((yyvsp[-3].id))->tokenType);
                                   }
                                 }
-#line 1931 "y.tab.c" /* yacc.c:1646  */
+#line 1929 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
@@ -1938,7 +1936,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 1942 "y.tab.c" /* yacc.c:1646  */
+#line 1940 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
@@ -1949,7 +1947,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 1953 "y.tab.c" /* yacc.c:1646  */
+#line 1951 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
@@ -1960,7 +1958,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[0].id),type,lineNo,curScope,0);
                                                }
-#line 1964 "y.tab.c" /* yacc.c:1646  */
+#line 1962 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
@@ -1971,7 +1969,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[0].id),type,lineNo,curScope,0);
                                                }
-#line 1975 "y.tab.c" /* yacc.c:1646  */
+#line 1973 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
@@ -1982,7 +1980,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 1986 "y.tab.c" /* yacc.c:1646  */
+#line 1984 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
@@ -1993,7 +1991,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 1997 "y.tab.c" /* yacc.c:1646  */
+#line 1995 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
@@ -2004,7 +2002,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 2008 "y.tab.c" /* yacc.c:1646  */
+#line 2006 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
@@ -2015,7 +2013,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 2019 "y.tab.c" /* yacc.c:1646  */
+#line 2017 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
@@ -2026,7 +2024,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 2030 "y.tab.c" /* yacc.c:1646  */
+#line 2028 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
@@ -2037,7 +2035,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 2041 "y.tab.c" /* yacc.c:1646  */
+#line 2039 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
@@ -2048,7 +2046,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 2052 "y.tab.c" /* yacc.c:1646  */
+#line 2050 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
@@ -2059,7 +2057,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 2063 "y.tab.c" /* yacc.c:1646  */
+#line 2061 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
@@ -2070,7 +2068,7 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 2074 "y.tab.c" /* yacc.c:1646  */
+#line 2072 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
@@ -2081,19 +2079,19 @@ yyreduce:
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 2085 "y.tab.c" /* yacc.c:1646  */
+#line 2083 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
 #line 472 "miniC.y" /* yacc.c:1646  */
     {addToParamList((yyvsp[0].id), pCount); pCount++; }
-#line 2091 "y.tab.c" /* yacc.c:1646  */
+#line 2089 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
 #line 473 "miniC.y" /* yacc.c:1646  */
     {addToParamList((yyvsp[-2].id), pCount); pCount++; }
-#line 2097 "y.tab.c" /* yacc.c:1646  */
+#line 2095 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
@@ -2105,7 +2103,7 @@ yyreduce:
                                            else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2109 "y.tab.c" /* yacc.c:1646  */
+#line 2107 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
@@ -2117,7 +2115,7 @@ yyreduce:
                                            else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2121 "y.tab.c" /* yacc.c:1646  */
+#line 2119 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
@@ -2129,7 +2127,7 @@ yyreduce:
                                           else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2133 "y.tab.c" /* yacc.c:1646  */
+#line 2131 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
@@ -2141,7 +2139,7 @@ yyreduce:
                                           else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2145 "y.tab.c" /* yacc.c:1646  */
+#line 2143 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
@@ -2153,7 +2151,7 @@ yyreduce:
                                           else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2157 "y.tab.c" /* yacc.c:1646  */
+#line 2155 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
@@ -2165,7 +2163,7 @@ yyreduce:
                                           else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2169 "y.tab.c" /* yacc.c:1646  */
+#line 2167 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
@@ -2177,7 +2175,7 @@ yyreduce:
                                           else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2181 "y.tab.c" /* yacc.c:1646  */
+#line 2179 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
@@ -2189,7 +2187,7 @@ yyreduce:
                                           else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2193 "y.tab.c" /* yacc.c:1646  */
+#line 2191 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
@@ -2201,7 +2199,7 @@ yyreduce:
                                           else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2205 "y.tab.c" /* yacc.c:1646  */
+#line 2203 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
@@ -2213,7 +2211,7 @@ yyreduce:
                                           else if(checkAncestors((yyvsp[-2].id))->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,(yyvsp[-2].id));
                                           }
-#line 2217 "y.tab.c" /* yacc.c:1646  */
+#line 2215 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
@@ -2221,7 +2219,7 @@ yyreduce:
     {if(strcmp((yyvsp[-2].id),(yyvsp[0].id))!=0){
                                                   printMismatchError(lineNo,checkAncestors((yyvsp[-2].id))->tokenType,(yyvsp[0].id));
                                           }}
-#line 2225 "y.tab.c" /* yacc.c:1646  */
+#line 2223 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
@@ -2229,7 +2227,7 @@ yyreduce:
     {if(strcmp((yyvsp[-2].id),(yyvsp[0].id))!=0){
                                                   printMismatchError(lineNo,checkAncestors((yyvsp[-2].id))->tokenType,(yyvsp[0].id));
                                           }}
-#line 2233 "y.tab.c" /* yacc.c:1646  */
+#line 2231 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
@@ -2237,7 +2235,7 @@ yyreduce:
     {if(strcmp((yyvsp[-2].id),(yyvsp[0].id))!=0){
                                                   printMismatchError(lineNo,checkAncestors((yyvsp[-2].id))->tokenType,(yyvsp[0].id));
                                           }}
-#line 2241 "y.tab.c" /* yacc.c:1646  */
+#line 2239 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
@@ -2245,7 +2243,7 @@ yyreduce:
     {if(strcmp((yyvsp[-2].id),(yyvsp[0].id))!=0){
                                                   printMismatchError(lineNo,checkAncestors((yyvsp[-2].id))->tokenType,(yyvsp[0].id));
                                           }}
-#line 2249 "y.tab.c" /* yacc.c:1646  */
+#line 2247 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
@@ -2253,85 +2251,85 @@ yyreduce:
     {if(strcmp((yyvsp[-2].id),(yyvsp[0].id))!=0){
                                                   printMismatchError(lineNo,checkAncestors((yyvsp[-2].id))->tokenType,(yyvsp[0].id));
                                           }}
-#line 2257 "y.tab.c" /* yacc.c:1646  */
+#line 2255 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
 #line 565 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), (yyvsp[0].id)); }
-#line 2263 "y.tab.c" /* yacc.c:1646  */
+#line 2261 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
 #line 569 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), (yyvsp[0].id)); }
-#line 2269 "y.tab.c" /* yacc.c:1646  */
+#line 2267 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
 #line 570 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), "int"); }
-#line 2275 "y.tab.c" /* yacc.c:1646  */
+#line 2273 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
 #line 571 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), "int"); }
-#line 2281 "y.tab.c" /* yacc.c:1646  */
+#line 2279 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
 #line 572 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), "int"); }
-#line 2287 "y.tab.c" /* yacc.c:1646  */
+#line 2285 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
 #line 575 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), (yyvsp[0].id)); }
-#line 2293 "y.tab.c" /* yacc.c:1646  */
+#line 2291 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
 #line 576 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), "int"); }
-#line 2299 "y.tab.c" /* yacc.c:1646  */
+#line 2297 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
 #line 577 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), "int"); }
-#line 2305 "y.tab.c" /* yacc.c:1646  */
+#line 2303 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
 #line 578 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), "int"); }
-#line 2311 "y.tab.c" /* yacc.c:1646  */
+#line 2309 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
 #line 579 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), "int"); }
-#line 2317 "y.tab.c" /* yacc.c:1646  */
+#line 2315 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
 #line 580 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), "int"); }
-#line 2323 "y.tab.c" /* yacc.c:1646  */
+#line 2321 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
 #line 581 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), "int"); }
-#line 2329 "y.tab.c" /* yacc.c:1646  */
+#line 2327 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
 #line 585 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), (yyvsp[0].id)); }
-#line 2335 "y.tab.c" /* yacc.c:1646  */
+#line 2333 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
@@ -2339,7 +2337,7 @@ yyreduce:
     { if(isHigherPri((yyvsp[-2].id),(yyvsp[0].id))) strcpy((yyval.id),(yyvsp[-2].id));
                                                          else strcpy((yyval.id),(yyvsp[0].id));
                                                         }
-#line 2343 "y.tab.c" /* yacc.c:1646  */
+#line 2341 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
@@ -2347,13 +2345,13 @@ yyreduce:
     { if(isHigherPri((yyvsp[-2].id),(yyvsp[0].id))) strcpy((yyval.id),(yyvsp[-2].id));
                                                          else strcpy((yyval.id),(yyvsp[0].id));
                                                         }
-#line 2351 "y.tab.c" /* yacc.c:1646  */
+#line 2349 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
 #line 593 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), (yyvsp[0].id)); }
-#line 2357 "y.tab.c" /* yacc.c:1646  */
+#line 2355 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
@@ -2361,7 +2359,7 @@ yyreduce:
     { if(isHigherPri((yyvsp[-2].id),(yyvsp[0].id))) strcpy((yyval.id),(yyvsp[-2].id));
                                                          else strcpy((yyval.id),(yyvsp[0].id));
                                                         }
-#line 2365 "y.tab.c" /* yacc.c:1646  */
+#line 2363 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
@@ -2369,7 +2367,7 @@ yyreduce:
     { if(isHigherPri((yyvsp[-2].id),(yyvsp[0].id))) strcpy((yyval.id),(yyvsp[-2].id));
                                                          else strcpy((yyval.id),(yyvsp[0].id));
                                                         }
-#line 2373 "y.tab.c" /* yacc.c:1646  */
+#line 2371 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
@@ -2382,37 +2380,37 @@ yyreduce:
                                                                 strcpy((yyval.id), "int");
                                                         }
                                                         }
-#line 2386 "y.tab.c" /* yacc.c:1646  */
+#line 2384 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
 #line 609 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id), (yyvsp[-1].id)); }
-#line 2392 "y.tab.c" /* yacc.c:1646  */
+#line 2390 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
 #line 610 "miniC.y" /* yacc.c:1646  */
     {num = (yyvsp[0].num); strcpy((yyval.id),"int"); }
-#line 2398 "y.tab.c" /* yacc.c:1646  */
+#line 2396 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
 #line 611 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id),"float"); }
-#line 2404 "y.tab.c" /* yacc.c:1646  */
+#line 2402 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
 #line 612 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id),"char"); }
-#line 2410 "y.tab.c" /* yacc.c:1646  */
+#line 2408 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 103:
 #line 613 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.id),"string"); }
-#line 2416 "y.tab.c" /* yacc.c:1646  */
+#line 2414 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 104:
@@ -2426,7 +2424,7 @@ yyreduce:
                                                  strcpy((yyval.id),checkAncestors((yyvsp[0].id))->tokenType);
                                          }
                                         }
-#line 2430 "y.tab.c" /* yacc.c:1646  */
+#line 2428 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 105:
@@ -2440,7 +2438,7 @@ yyreduce:
                                                  strcpy((yyval.id),checkAncestors((yyvsp[0].id))->tokenType);
                                          }
                                         }
-#line 2444 "y.tab.c" /* yacc.c:1646  */
+#line 2442 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 106:
@@ -2453,25 +2451,25 @@ yyreduce:
                                         else{
                                                  strcpy((yyval.id),checkAncestors((yyvsp[0].id))->tokenType);
                                          }}
-#line 2457 "y.tab.c" /* yacc.c:1646  */
+#line 2455 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 107:
 #line 640 "miniC.y" /* yacc.c:1646  */
     {num = -num; strcpy((yyval.id),(yyvsp[0].id));}
-#line 2463 "y.tab.c" /* yacc.c:1646  */
+#line 2461 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 108:
 #line 641 "miniC.y" /* yacc.c:1646  */
     {strcpy((yyval.id),(yyvsp[0].id));}
-#line 2469 "y.tab.c" /* yacc.c:1646  */
+#line 2467 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 109:
 #line 642 "miniC.y" /* yacc.c:1646  */
     {strcpy((yyval.id),(yyvsp[0].id));}
-#line 2475 "y.tab.c" /* yacc.c:1646  */
+#line 2473 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 110:
@@ -2481,7 +2479,7 @@ yyreduce:
                                                 else 
                                                         strcpy((yyval.id),checkAncestors((yyvsp[0].id))->tokenType);
                                         }
-#line 2485 "y.tab.c" /* yacc.c:1646  */
+#line 2483 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 111:
@@ -2494,7 +2492,7 @@ yyreduce:
                                         else{
                                                  strcpy((yyval.id),checkAncestors((yyvsp[0].id))->tokenType);
                                          }}
-#line 2498 "y.tab.c" /* yacc.c:1646  */
+#line 2496 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 112:
@@ -2507,7 +2505,7 @@ yyreduce:
                                         else{
                                                  strcpy((yyval.id),checkAncestors((yyvsp[-1].id))->tokenType);
                                          }}
-#line 2511 "y.tab.c" /* yacc.c:1646  */
+#line 2509 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 113:
@@ -2520,7 +2518,7 @@ yyreduce:
                                         else{
                                                  strcpy((yyval.id),checkAncestors((yyvsp[0].id))->tokenType);
                                          }}
-#line 2524 "y.tab.c" /* yacc.c:1646  */
+#line 2522 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 114:
@@ -2533,13 +2531,13 @@ yyreduce:
                                         else{
                                                  strcpy((yyval.id),checkAncestors((yyvsp[-1].id))->tokenType);
                                          }}
-#line 2537 "y.tab.c" /* yacc.c:1646  */
+#line 2535 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 128:
 #line 699 "miniC.y" /* yacc.c:1646  */
     { strcpy(returnType, (yyvsp[-1].id)); }
-#line 2543 "y.tab.c" /* yacc.c:1646  */
+#line 2541 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 139:
@@ -2558,11 +2556,11 @@ yyreduce:
                                                  pCount = 0;
                                                  strcpy((yyval.id),(yyvsp[-3].id));
                                                 }
-#line 2562 "y.tab.c" /* yacc.c:1646  */
+#line 2560 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2566 "y.tab.c" /* yacc.c:1646  */
+#line 2564 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
