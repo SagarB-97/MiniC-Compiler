@@ -99,6 +99,42 @@ void printVoidVariableError(int lineNo){
 void printVoidFunctionReturningError(int lineNo, char *returnType){
         printf(RED "Void function at line %d returning %s" RESET, lineNo, returnType);
 }
+void printWrongParamError(int lineNo, char * fnName, char expectedParams[100][100], char gotParams[100][100], int count){
+        printf(RED "Wrong parameters passed to function %s at line %d\n" RESET,fnName,lineNo);
+
+        int i,j;        
+        for(i=0,j=count-1; i<j;i++,j--){
+                char temp[100];
+                strcpy(temp,expectedParams[j]);
+                strcpy(expectedParams[j],expectedParams[i]);
+                strcpy(expectedParams[i],temp);
+        }
+
+        for(i=0,j=count-1; i<j;i++,j--){
+                char temp[100];
+                strcpy(temp,gotParams[j]);
+                strcpy(gotParams[j],gotParams[i]);
+                strcpy(gotParams[i],temp);
+        }
+        printf(RED "Expected : ");
+        
+        printf("(");
+        for(i=0;i<count;i++){
+                printf("%s,",expectedParams[i]);
+        }
+        printf(")");
+
+        printf("\nGot : ");
+        
+        printf("(");
+        for(i=0;i<count;i++){
+                printf("%s,",gotParams[i]);
+        }
+        printf(")\n" RESET);
+}
+void printWrongArraySubscriptError(int lineNo, char * id){
+        printf(RED "Wrong array subscript at line %d for %s\n" RESET, lineNo, id);
+}
 
 symbolItem* checkAncestors(char * s)
 {
@@ -117,8 +153,46 @@ symbolItem* checkAncestors(char * s)
 
 char pList[100];
 int num = -1;
-char returnType[100] = "initial";
+char returnType[100] = "void";
+
+char params[100][100];
 int pCount = 0;
+
+void addToParamList(char *paramType, int position){
+        strcpy(params[position],paramType);
+}
+int isCorrectParams(char params[][100], char * list, char * fnName){
+        int i,j;
+        // for(i=0,j=pCount-1; i<j;i++,j--){
+        //         char temp[100];
+        //         strcpy(temp,params[j]);
+        //         strcpy(params[j],params[i]);
+        //         strcpy(params[i],temp);
+        // }
+        i=0;
+        char thisList[100][100];
+        int l = 0;
+        while(list[i]!='\0'){
+                int k=0;
+                char temp[100];
+                while(list[i]!=' ' && list[i]!='\0'){
+                        temp[k++] = list[i++];
+                }
+                temp[k]='\0';
+                strcpy(thisList[l++],temp);
+
+                while(list[i]!=',' && list[i]!='\0') i++;
+                i+=2;
+        }
+
+        for(i=0;i<l;i++){
+                if(strcmp(thisList[i],params[i])!=0){
+                        printWrongParamError(lineNo, fnName, thisList, params, l);
+                        return 0;
+                }
+        }
+        return 1;
+}
 
 %}
 
@@ -178,7 +252,7 @@ Include:   IncludeStatement
 FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {
                                                                                         if(strcmp(returnType,$1)!=0)
                                                                                                 printRetTypeError(lineNo, returnType, $1, $2);
-                                                                                        else if(strcmp($1,"void")==0 && strcmp(returnType,"initial")!=0)
+                                                                                        else if(strcmp($1,"void")==0 && strcmp(returnType,"void")!=0)
                                                                                                 printVoidFunctionReturningError(lineNo, returnType);
                                                                                         else{
                                                                                                 strcpy(returnType, "");
@@ -186,7 +260,7 @@ FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       
                                                                                                 strcpy(pList, "");
                                                                                                 pCount = 0;
                                                                                         }
-                                                                                        strcpy(returnType, "initial");
+                                                                                        strcpy(returnType, "void");
                                                                                 }
              ;
 FormalParamList: Type ID                                        {       
@@ -284,8 +358,10 @@ DefArrayNotation: ID '[' ']'   {
             ;
 ArrayNotation: ID '[' Expr ']'   {if(!checkAncestors($1))
                                         printUndecVarErr(lineNo, $1);
-                                  else if(checkAncestors($1)->arrayDim!=1)
+                                  else if(checkAncestors($1)->arrayDim==-1)
                                         printWrongArrayUsageError(lineNo,$1);
+                                  else if(strcmp($3,"int")!=0)
+                                        printWrongArraySubscriptError(lineNo, $1);
                                   else if(num<=0)
                                         printIllArrayError(lineNo,$1,num);
                                   else{
@@ -393,8 +469,8 @@ DefineAssign: ID '=' Expr                      {
             ;
 
 
-ParamList: Expr                 {pCount++;}
-        | Expr ',' ParamList    {pCount++;}
+ParamList: Expr                 {addToParamList($1, pCount); pCount++; }
+        | Expr ',' ParamList    {addToParamList($1, pCount); pCount++; }
         | 
         ;
 
@@ -652,6 +728,9 @@ FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR   {
                                                                 printWrongParamCountError(lineNo,pCount,(lookUpSymbolItem($1))->paramCount, $1);
                                                                 pCount = 0;
                                                         }
+                                                else if(!isCorrectParams(params,lookUpSymbolItem($1)->paramList,$1)){
+                                                        //printWrongParamError(lineNo, $1);
+                                                }
                                                  pCount = 0;
                                                  strcpy($$,$1);
                                                 }
