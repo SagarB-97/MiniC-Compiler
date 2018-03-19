@@ -15,7 +15,7 @@ int main(){
     int h = fn(2,'h',2.6); // Wrong parameters
     fn(a);                  // Wrong number of parameters
 
-    y = 8;
+    y = 8;          // Undeclared Variable
     int a;          // Duplicate Declaration
 
     arr = 18;       // Array id has no subscript
