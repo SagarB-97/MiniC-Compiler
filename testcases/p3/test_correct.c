@@ -18,9 +18,9 @@ int main(){
     int y = 8;
     //int a;          // Duplicate Declaration
 
-    arr[1] = 18;       // Array id has no subscript
+    //arr[1] = 18;       // Array id has no subscript
     b = 5;       // Normal variable has array subscript
-    arr[4] = 6;   // Float array subscript
+    //arr[4] = 6;   // Float array subscript
 
     a = b + 6;   // Wrong expression
     //dummy = 6.8;        // Variable not declared in scope

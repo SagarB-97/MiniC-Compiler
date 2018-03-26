@@ -142,12 +142,17 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 209 "miniC.y" /* yacc.c:1909  */
+#line 220 "miniC.y" /* yacc.c:1909  */
 
 	char id[100];
         int num;
+        //symbolAttrib symAttrib;
+        struct{
+        char type[100];
+        char val[100];
+        } symAttrib;
 
-#line 151 "y.tab.h" /* yacc.c:1909  */
+#line 156 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

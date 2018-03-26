@@ -23,13 +23,10 @@
 - some more stuff
 
 */
-//#include <bits/stdc++.h>
-//using namespace std;
 #include <stdio.h>
 #include <stdlib.h>
 #include "symbolTable.h"
 #include "scope.h"
-#include "icg.h"
 
 #define DEBUGY 0
 
@@ -57,14 +54,6 @@ extern int lineNo;
 extern int curScope;
 
 char type[100];
-int tempVarCount = 0;
-
-char * itoa_(int num)
-{
-        char buffer[100];
-        itoa(num, buffer,10);
-        return buffer;
-}
 
 int isHigherPri(char * type1, char * type2){
         int type1_pri, type2_pri;
@@ -220,11 +209,6 @@ int isCorrectParams(char params[][100], char * list, char * fnName){
 %union {
 	char id[100];
         int num;
-        //symbolAttrib symAttrib;
-        struct{
-        char type[100];
-        char val[100];
-        } symAttrib;
 }
 %token <id> ID
 %token <id> INT
@@ -235,12 +219,12 @@ int isCorrectParams(char params[][100], char * list, char * fnName){
 %token <num> NUM
 %type <id> Type
 
-%type <symAttrib> Expr
-%type <symAttrib> Logical_Expr
-%type <symAttrib> Primary
-%type <symAttrib> Relational_Expr
-%type <symAttrib> Additive_Expr
-%type <symAttrib> Multiplicative_Expr
+%type <id> Expr
+%type <id> Logical_Expr
+%type <id> Primary
+%type <id> Relational_Expr
+%type <id> Additive_Expr
+%type <id> Multiplicative_Expr
 %type <id> ArrayNotation
 %type <id> FunctionCall
 
@@ -288,7 +272,16 @@ FormalParamList: Type ID                                        {
                                                                         strcpy(temp, $2);
                                                                         strcat(pList,strcat(temp,", "));                                                                       
                                                                 }
-
+                | Type '*' ID                                   {
+                                                                        pCount++;
+                                                                        char temp[100];
+                                                                        strcpy(temp, $1);
+                                                                        insertSymbolItem($3,temp,lineNo,nextNum + 1,0);
+                                                                        strcat(pList,strcat(temp," "));
+                                                                        strcpy(temp, $3);
+                                                                        strcat(pList,strcat(temp,", "));
+                                                                        
+                                                                }
                 | Type FuncArrayNotation                            {DEBUGY_PRINT("FLIST Call 3\n");}
                 | Type ID ',' FormalParamList                   {       
                                                                         pCount++;
@@ -300,6 +293,15 @@ FormalParamList: Type ID                                        {
                                                                         strcat(pList,strcat(temp,", "));
                                                                         
                                                                 }
+                | Type '*' ID ',' FormalParamList               {
+                                                                        pCount++;
+                                                                        char temp[100];
+                                                                        strcpy(temp, $1);
+                                                                        insertSymbolItem($3,temp,lineNo,nextNum + 1,0);
+                                                                        strcat(pList,strcat(temp," "));
+                                                                        strcpy(temp, $3);
+                                                                        strcat(pList,strcat(temp,", "));
+                                                                }
                 | Type FuncArrayNotation ',' FormalParamList        {DEBUGY_PRINT("FLIST Call 6\n");}
                 |
                 ;
@@ -308,15 +310,8 @@ FormalParamList: Type ID                                        {
 Declaration:  Type IDList ';'    {if(strcmp($1,"void")==0) printVoidVariableError(lineNo);}
         ;
 
-Type:   INT                     {strcpy(type,$1);strcpy($$,$1);}
-        | FLOAT                 {strcpy(type,$1);strcpy($$,$1);}
-        | VOID                  {strcpy(type,$1);strcpy($$,$1);}
-        | CHAR                  {strcpy(type,$1);strcpy($$,$1);}
-        | DOUBLE                {strcpy(type,$1);strcpy($$,$1);} 
-        | Modifiers INT         {strcpy(type,$2);}
-        | Modifiers FLOAT       {strcpy(type,$2);}
-        | Modifiers DOUBLE      {strcpy(type,$2);}
-        | Modifiers CHAR        {strcpy(type,$2);}
+Type:   INT {strcpy(type,$1);strcpy($$,$1);}| FLOAT {strcpy(type,$1);strcpy($$,$1);}| VOID {strcpy(type,$1);strcpy($$,$1);}| CHAR {strcpy(type,$1);strcpy($$,$1);}| DOUBLE {strcpy(type,$1);strcpy($$,$1);}| 
+        Modifiers INT {strcpy(type,$2);}| Modifiers FLOAT {strcpy(type,$2);}| Modifiers DOUBLE {strcpy(type,$2);}| Modifiers CHAR {strcpy(type,$2);}
         ;
 Modifiers: SHORT | LONG | UNSIGNED | SIGNED
         ;
@@ -367,7 +362,7 @@ ArrayNotation: ID '[' Expr ']'   {
                                         printUndecVarErr(lineNo, $1);
                                   else if(checkAncestors($1)->arrayDim==-1)
                                         printWrongArrayUsageError(lineNo,$1);
-                                  else if(strcmp($3.type,"int")!=0)
+                                  else if(strcmp($3,"int")!=0)
                                         printWrongArraySubscriptError(lineNo, $1);
                                   else if(num<=0)
                                         printIllArrayError(lineNo,$1,num);
@@ -385,13 +380,24 @@ IDList: DefArrayNotation
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }
-
+        | '*' ID ',' IDList                    {
+                                                if(lookUpSymbolItem_scope($2, curScope))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,curScope,0);
+                                               }
         | DefArrayNotation ',' IDList 
         | ID                                   {
                                                 if(lookUpSymbolItem_scope($1,curScope))
                                                         printReDecError(lineNo, $1);
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
+                                               }
+        | '*' ID                               {
+                                                if(lookUpSymbolItem_scope($2,curScope))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,curScope,0);
                                                }
         | DefineAssign ',' IDList
         | DefineAssign 
@@ -427,7 +433,36 @@ DefineAssign: ID '=' Expr                      {
                                                 else
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }  
-
+            | '*' ID '=' Expr                  {
+                                                if(lookUpSymbolItem_scope($2,curScope))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,curScope,0);
+                                               }           
+            | '*' ID PAS Expr                  {
+                                                if(lookUpSymbolItem_scope($2,curScope))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,curScope,0);
+                                               }  
+            | '*' ID SAS Expr                  {
+                                                if(lookUpSymbolItem_scope($2,curScope))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,curScope,0);
+                                               }  
+            | '*' ID MAS Expr                  {
+                                                if(lookUpSymbolItem_scope($2,curScope))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,curScope,0);
+                                               }  
+            | '*' ID DAS Expr                  {
+                                                if(lookUpSymbolItem_scope($2,curScope))
+                                                        printReDecError(lineNo, $2);
+                                                else
+                                                        insertSymbolItem($2,type,lineNo,curScope,0);
+                                               }
             | DefArrayNotation '=' Expr                   
             | DefArrayNotation PAS Expr  
             | DefArrayNotation SAS Expr  
@@ -436,97 +471,181 @@ DefineAssign: ID '=' Expr                      {
             ;
 
 
-ParamList: Expr                 {addToParamList($1.type, pCount); pCount++; }
-        | Expr ',' ParamList    {addToParamList($1.type, pCount); pCount++; }
+ParamList: Expr                 {addToParamList($1, pCount); pCount++; }
+        | Expr ',' ParamList    {addToParamList($1, pCount); pCount++; }
         | 
         ;
 
 Assignment: ID '=' Expr                   {if(!checkAncestors($1))
                                                 printUndecVarErr(lineNo, $1);
-                                           else if(strcmp(checkAncestors($1)->tokenType,$3.type)!=0)
-                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3.type);
+                                           else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
                                            else if(checkAncestors($1)->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,$1);
-                                           else
-                                           {
-                                                   printf("%s = %s\n", $1, $3.val);
-                                           }
                                           }
-            | ArrayNotation '=' Expr      {if(strcmp($1,$3.type)!=0){
-                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3.type);
+            | ID PAS Expr                 {if(!checkAncestors($1))
+                                                printUndecVarErr(lineNo, $1);
+                                           else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                           else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                          }   
+            | ID SAS Expr                 {if(!checkAncestors($1))
+                                                printUndecVarErr(lineNo, $1);
+                                          else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                          }  
+            | ID MAS Expr                 {if(!checkAncestors($1))
+                                                printUndecVarErr(lineNo, $1);
+                                          else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                          }
+            | ID DAS Expr                 {if(!checkAncestors($1))
+                                                printUndecVarErr(lineNo, $1);
+                                           else if(strcmp(checkAncestors($1)->tokenType,$3)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          else if(checkAncestors($1)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$1);
+                                          }
+            | '*' ID '=' Expr             {if(!checkAncestors($2))
+                                                printUndecVarErr(lineNo, $2);
+                                           else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | '*' ID PAS Expr             {if(!checkAncestors($2))
+                                                printUndecVarErr(lineNo, $2);
+                                          else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | '*' ID SAS Expr             {if(!checkAncestors($2))
+                                                printUndecVarErr(lineNo, $2);
+                                           else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | '*' ID MAS Expr             {if(!checkAncestors($2))
+                                                printUndecVarErr(lineNo, $2);
+                                           else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | '*' ID DAS Expr             {if(!checkAncestors($2))
+                                                printUndecVarErr(lineNo, $2);
+                                           else if(strcmp(checkAncestors($2)->tokenType,$4)!=0)
+                                                  printMismatchError(lineNo,checkAncestors($2)->tokenType,$4);
+                                          else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                          }
+            | ArrayNotation '=' Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
                                           }}           
-
+            | ArrayNotation PAS Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          }}
+            | ArrayNotation SAS Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          }}
+            | ArrayNotation MAS Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          }}
+            | ArrayNotation DAS Expr      {if(strcmp($1,$3)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3);
+                                          }}
             | Primary                      
             ;
 
-Expr: Logical_Expr { strcpy($$.type, $1.type); strcpy($$.val,$1.val);}
+Expr: Logical_Expr { strcpy($$, $1); }
       ;
 
 
-Logical_Expr: Relational_Expr { strcpy($$.type, $1.type); strcpy($$.val,$1.val);}
-              | Logical_Expr AND Relational_Expr { strcpy($$.type, "int"); }
-              | Logical_Expr OR Relational_Expr { strcpy($$.type, "int"); }
-              | NOT Relational_Expr { strcpy($$.type, "int"); }
+Logical_Expr: Relational_Expr { strcpy($$, $1); }
+              | Logical_Expr AND Relational_Expr { strcpy($$, "int"); }
+              | Logical_Expr OR Relational_Expr { strcpy($$, "int"); }
+              | NOT Relational_Expr { strcpy($$, "int"); }
               ;
 
-Relational_Expr: Additive_Expr { strcpy($$.type, $1.type); strcpy($$.val,$1.val);}
-                 | Relational_Expr GT Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr LT Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr GE Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr LE Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr EQ Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr NE Additive_Expr { strcpy($$.type, "int"); }
+Relational_Expr: Additive_Expr { strcpy($$, $1); }
+                 | Relational_Expr GT Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr LT Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr GE Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr LE Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr EQ Additive_Expr { strcpy($$, "int"); }
+                 | Relational_Expr NE Additive_Expr { strcpy($$, "int"); }
                  ;
 
 
-Additive_Expr: Multiplicative_Expr { strcpy($$.type, $1.type); strcpy($$.val,$1.val);}
-               | Additive_Expr '+' Multiplicative_Expr { if(isHigherPri($1.type,$3.type)) strcpy($$.type,$1.type);
-                                                         else {strcpy($$.type,$3.type);strcpy($$.val, strcat("T",itoa_(tempVarCount++)));
-                                                         printf("%s = %s * %s\n", $$.val, $1.val,$3.val);}
+Additive_Expr: Multiplicative_Expr { strcpy($$, $1); }
+               | Additive_Expr '+' Multiplicative_Expr { if(isHigherPri($1,$3)) strcpy($$,$1);
+                                                         else strcpy($$,$3);
                                                         }
-               | Additive_Expr '-' Multiplicative_Expr { if(isHigherPri($1.type,$3.type)) strcpy($$.type,$1.type);
-                                                         else strcpy($$.type,$3.type);
+               | Additive_Expr '-' Multiplicative_Expr { if(isHigherPri($1,$3)) strcpy($$,$1);
+                                                         else strcpy($$,$3);
                                                         }
                ;
-Multiplicative_Expr: Primary { strcpy($$.type, $1.type); strcpy($$.val, $1.val); }
-                     | Multiplicative_Expr '*' Primary { if(isHigherPri($1.type,$3.type)) strcpy($$.type,$1.type);
-                                                         else {strcpy($$.type,$3.type);strcpy($$.val, strcat("T",itoa_(tempVarCount++)));
-                                                         printf("%s = %s * %s\n", $$.val, $1.val,$3.val);}
+Multiplicative_Expr: Primary { strcpy($$, $1); }
+                     | Multiplicative_Expr '*' Primary { if(isHigherPri($1,$3)) strcpy($$,$1);
+                                                         else strcpy($$,$3);
                                                         }
-                     | Multiplicative_Expr '/' Primary { if(isHigherPri($1.type,$3.type)) strcpy($$.type,$1.type);
-                                                         else strcpy($$.type,$3.type);
+                     | Multiplicative_Expr '/' Primary { if(isHigherPri($1,$3)) strcpy($$,$1);
+                                                         else strcpy($$,$3);
                                                         }
-                     | Multiplicative_Expr '%' Primary { if(strcmp($1.type,"int")!=0 || strcmp($3.type,"int")!=0){
+                     | Multiplicative_Expr '%' Primary { if(strcmp($1,"int")!=0 || strcmp($3,"int")!=0){
                                                                 printf(RED "Error : Modulus operator expects int\n" RESET);
-                                                                strcpy($$.type, "int");
+                                                                strcpy($$, "int");
                                                         }
                                                         else{
-                                                                strcpy($$.type, "int");
+                                                                strcpy($$, "int");
                                                         }
                                                         }
                      ;
-Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.type); }
-         | NUM                                          {num = $1; strcpy($$.type,"int"); }
-         | FLOATNUM                                     { strcpy($$.type,"float"); }
-         | CHARCONST                                    { strcpy($$.type,"char"); }
-         | STRING                                       { strcpy($$.type,"string"); }
+Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$, $2); }
+         | NUM                                          {num = $1; strcpy($$,"int"); }
+         | FLOATNUM                                     { strcpy($$,"float"); }
+         | CHARCONST                                    { strcpy($$,"char"); }
+         | STRING                                       { strcpy($$,"string"); }
          | ID                           {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                          }
                                         else if(checkAncestors($1)->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,$1);
                                          else{
-                                                 strcpy($$.type,checkAncestors($1)->tokenType);
-                                                 strcpy($$.val, $1);
+                                                 strcpy($$,checkAncestors($1)->tokenType);
                                          }
                                         }
-         | '-' Primary                  {num = -num; strcpy($$.type,$2.type);}
-         | '+' Primary                  {strcpy($$.type,$2.type);}
-         | ArrayNotation                {strcpy($$.type,$1);}
+         | '*' ID                       {if(!checkAncestors($2)){
+                                                printUndecVarErr(lineNo, $2);
+                                        }
+                                        else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                        else{
+                                                 strcpy($$,checkAncestors($2)->tokenType);
+                                         }
+                                        }
+         | '&' ID                       {if(!checkAncestors($2)){
+                                                printUndecVarErr(lineNo, $2);
+                                        }
+                                        else if(checkAncestors($2)->arrayDim!=-1)
+                                                printWrongIDUsageError(lineNo,$2);
+                                        else{
+                                                 strcpy($$,checkAncestors($2)->tokenType);
+                                         }}
+         | '-' Primary                  {num = -num; strcpy($$,$2);}
+         | '+' Primary                  {strcpy($$,$2);}
+         | ArrayNotation                {strcpy($$,$1);}
          | FunctionCall                 {       if(!checkAncestors($1))
                                                         printUndecVarErr(lineNo, $1);
                                                 else 
-                                                        strcpy($$.type,checkAncestors($1)->tokenType);
+                                                        strcpy($$,checkAncestors($1)->tokenType);
                                         }
          | PP ID                        {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
@@ -534,7 +653,7 @@ Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.typ
                                         else if(checkAncestors($2)->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,$2);
                                         else{
-                                                 strcpy($$.type,checkAncestors($2)->tokenType);
+                                                 strcpy($$,checkAncestors($2)->tokenType);
                                          }}
          | ID PP                        {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
@@ -542,7 +661,7 @@ Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.typ
                                         else if(checkAncestors($1)->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,$1);
                                         else{
-                                                 strcpy($$.type,checkAncestors($1)->tokenType);
+                                                 strcpy($$,checkAncestors($1)->tokenType);
                                          }}
          | MM ID                        {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
@@ -550,7 +669,7 @@ Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.typ
                                         else if(checkAncestors($2)->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,$2);
                                         else{
-                                                 strcpy($$.type,checkAncestors($2)->tokenType);
+                                                 strcpy($$,checkAncestors($2)->tokenType);
                                          }}
          | ID MM                        {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
@@ -558,7 +677,7 @@ Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.typ
                                         else if(checkAncestors($1)->arrayDim!=-1)
                                                 printWrongIDUsageError(lineNo,$1);
                                         else{
-                                                 strcpy($$.type,checkAncestors($1)->tokenType);
+                                                 strcpy($$,checkAncestors($1)->tokenType);
                                          }}
          ;
 
@@ -579,7 +698,7 @@ Statement: WhileStatement
         | CONTINUE ';'                    
 	| ';'
         ; 
-ReturnStatement: RETURN Expr ';'   { strcpy(returnType, $2.type); }
+ReturnStatement: RETURN Expr ';'   { strcpy(returnType, $2); }
                  ;
 
 WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement                                                        
@@ -621,13 +740,13 @@ FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR   {
 
 %%
 #include<ctype.h>
-
 int count=0;
 
 int main(int argc, char *argv[])
 {
         initScope();
         yyin = fopen(argv[1], "r");
+	
         if(!yyparse())
                 printf("\nParsing complete\n");
         else
@@ -635,7 +754,7 @@ int main(int argc, char *argv[])
 
         fclose(yyin);
 
-        //showSymbolTable();
+        showSymbolTable();
         return 0;
 }
          
