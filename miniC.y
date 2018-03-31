@@ -1,30 +1,4 @@
 %{
-/*
-        TO DO
-- Check if id is array but used as a normal variable and vice versa. --
-- void variables shouldn't be allowed (Low Priority) --
-- Type checking in function call param list 
-- better printing
-*/
-
-/*
-        Done
-- Scope eval
-- Undeclared variable checking
-- Undeclared function checking
-- Redeclaration checking
-- Illegal array size checking
-- Wrong parameter count in function call detected
-- Counting number of params
-- Making list of params of a function
-- array support
-- had to add different arraynotation due to differing usage
-- Checks if array size < 0
-- some more stuff
-
-*/
-//#include <bits/stdc++.h>
-//using namespace std;
 #include <stdio.h>
 #include <stdlib.h>
 #include "symbolTable.h"
@@ -58,14 +32,55 @@ extern int curScope;
 
 char type[100];
 int tempVarCount = 0;
+FILE * threeAddressFile = NULL;
+int labelCount = 0;
+char threeAddressLabelStack[100][100];
+int threeAddressLabelStackTop = -1;
 
-char * itoa_(int num)
-{
-        char buffer[100];
-        itoa(num, buffer,10);
-        return buffer;
+void pushThreeAddressLabelStack(char * label){
+        strcpy(threeAddressLabelStack[++threeAddressLabelStackTop],label);
+}
+void popThreeAddressLabelStack(){
+        threeAddressLabelStackTop--;
 }
 
+char * tempVarName() {
+        char * buffer = (char*)malloc(10);
+        sprintf(buffer,"T%d",tempVarCount);
+        tempVarCount++;
+        return buffer;
+}
+char * labelName() {
+        char * buffer = (char*)malloc(10);
+        sprintf(buffer,"Label_%d",labelCount);
+        labelCount++;
+        return buffer;
+}
+char * nextLabelName(){
+        char * buffer = (char*)malloc(10);
+        sprintf(buffer,"Label_%d",labelCount);
+        return buffer;
+}
+char * nextnextLabelName(){
+        char * buffer = (char*)malloc(10);
+        sprintf(buffer,"Label_%d",labelCount + 1);
+        return buffer;
+}
+char * integerToString(int a){
+        char * buffer = (char*)malloc(100);
+        sprintf(buffer, "%d", a);
+        return buffer;
+}
+char * floatToString(float a){
+        char * buffer = (char*)malloc(100);
+        sprintf(buffer, "%f", a);
+        return buffer;
+}
+char * charToString(char a){
+        char * buffer = (char*)malloc(100);
+        sprintf(buffer, "\'%c\'", a);
+        return buffer;
+}
 int isHigherPri(char * type1, char * type2){
         int type1_pri, type2_pri;
 
@@ -213,19 +228,23 @@ int isCorrectParams(char params[][100], char * list, char * fnName){
 %token SWITCH BREAK CONTINUE CASE DEFAULT STRUCT  
 %token FOR WHILE DO
 %token IF ELSE  
-%token FLOATNUM STRING CHARCONST
+%token STRING
 %token INCLUDE
 %token OPEN_PAR CLOSE_PAR
 
 %union {
 	char id[100];
         int num;
+        float floatNum;
+        char charConst;
         //symbolAttrib symAttrib;
         struct{
-        char type[100];
-        char val[100];
+                char type[100];
+                char val[100];
         } symAttrib;
 }
+%token <floatNum> FLOATNUM
+%token <charConst> CHARCONST
 %token <id> ID
 %token <id> INT
 %token <id> CHAR
@@ -241,7 +260,7 @@ int isCorrectParams(char params[][100], char * list, char * fnName){
 %type <symAttrib> Relational_Expr
 %type <symAttrib> Additive_Expr
 %type <symAttrib> Multiplicative_Expr
-%type <id> ArrayNotation
+%type <symAttrib> ArrayNotation
 %type <id> FunctionCall
 
 %right '=' PAS MAS DAS SAS           
@@ -265,7 +284,8 @@ IncludeStatement: '#' INCLUDE LT ID GT
 Include:   IncludeStatement
            ;
 
-FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {
+FunctionDef: Type ID { fprintf(threeAddressFile, "\nfunc begin %s :\n", $2);}
+                    OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       {
                                                                                         if(strcmp(returnType,$1)!=0)
                                                                                                 printRetTypeError(lineNo, returnType, $1, $2);
                                                                                         else if(strcmp($1,"void")==0 && strcmp(returnType,"void")!=0)
@@ -277,6 +297,7 @@ FunctionDef: Type ID OPEN_PAR FormalParamList CLOSE_PAR CompoundStatement       
                                                                                                 pCount = 0;
                                                                                         }
                                                                                         strcpy(returnType, "void");
+                                                                                        fprintf(threeAddressFile, "func end\n");
                                                                                 }
              ;
 FormalParamList: Type ID                                        {       
@@ -362,17 +383,24 @@ DefArrayNotation: ID '[' ']'   {
                                 }
             ;
 ArrayNotation: ID '[' Expr ']'   {
-                                  strcpy($$,"none");      
+                                  strcpy($$.type,"none");
                                   if(!checkAncestors($1))
                                         printUndecVarErr(lineNo, $1);
                                   else if(checkAncestors($1)->arrayDim==-1)
                                         printWrongArrayUsageError(lineNo,$1);
                                   else if(strcmp($3.type,"int")!=0)
                                         printWrongArraySubscriptError(lineNo, $1);
-                                  else if(num<=0)
+                                  else if(num<0)
                                         printIllArrayError(lineNo,$1,num);
                                   else{
-                                        strcpy($$,checkAncestors($1)->tokenType);
+                                        strcpy($$.type,checkAncestors($1)->tokenType);
+                                        char * tempVarIndex = tempVarName();
+                                        char * tempVarAddress = tempVarName();
+                                        char * tempVarValue = tempVarName();
+                                        fprintf(threeAddressFile, "%s = addr(%s)\n", tempVarAddress, $1);
+                                        fprintf(threeAddressFile, "%s = %s * 4\n", tempVarIndex, $3.val);
+                                        fprintf(threeAddressFile, "%s = %s[%s]\n", tempVarValue, tempVarAddress, tempVarIndex);
+                                        strcpy($$.val,tempVarValue);
                                   }
                                 }
             ;
@@ -386,7 +414,7 @@ IDList: DefArrayNotation
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }
 
-        | DefArrayNotation ',' IDList 
+        | DefArrayNotation ',' IDList
         | ID                                   {
                                                 if(lookUpSymbolItem_scope($1,curScope))
                                                         printReDecError(lineNo, $1);
@@ -428,10 +456,10 @@ DefineAssign: ID '=' Expr                      {
                                                         insertSymbolItem($1,type,lineNo,curScope,0);
                                                }  
 
-            | DefArrayNotation '=' Expr                   
-            | DefArrayNotation PAS Expr  
-            | DefArrayNotation SAS Expr  
-            | DefArrayNotation MAS Expr  
+            | DefArrayNotation '=' Expr
+            | DefArrayNotation PAS Expr
+            | DefArrayNotation SAS Expr
+            | DefArrayNotation MAS Expr
             | DefArrayNotation DAS Expr
             ;
 
@@ -449,14 +477,19 @@ Assignment: ID '=' Expr                   {if(!checkAncestors($1))
                                                 printWrongIDUsageError(lineNo,$1);
                                            else
                                            {
-                                                   printf("%s = %s\n", $1, $3.val);
+                                                   //printf("Assignment executed\n");
+                                                   fprintf(threeAddressFile, "%s = %s\n", $1, $3.val);
                                            }
                                           }
-            | ArrayNotation '=' Expr      {if(strcmp($1,$3.type)!=0){
-                                                  printMismatchError(lineNo,checkAncestors($1)->tokenType,$3.type);
-                                          }}           
+            | ArrayNotation '=' Expr      {if(strcmp($1.type,$3.type)!=0){
+                                                  printMismatchError(lineNo,checkAncestors($1.val)->tokenType,$3.type);
+                                          }
+                                          else{
+                                                  fprintf(threeAddressFile, "%s = %s\n",$1.val,$3.val);
+                                          }
+                                          }
 
-            | Primary                      
+            | Primary
             ;
 
 Expr: Logical_Expr { strcpy($$.type, $1.type); strcpy($$.val,$1.val);}
@@ -464,37 +497,73 @@ Expr: Logical_Expr { strcpy($$.type, $1.type); strcpy($$.val,$1.val);}
 
 
 Logical_Expr: Relational_Expr { strcpy($$.type, $1.type); strcpy($$.val,$1.val);}
-              | Logical_Expr AND Relational_Expr { strcpy($$.type, "int"); }
-              | Logical_Expr OR Relational_Expr { strcpy($$.type, "int"); }
-              | NOT Relational_Expr { strcpy($$.type, "int"); }
+              | Logical_Expr AND Relational_Expr { strcpy($$.type, "int");
+                                                   strcpy($$.val, tempVarName());
+                                                   fprintf(threeAddressFile, "%s = %s & %s\n", $$.val, $1.val,$3.val);
+                                                 }
+              | Logical_Expr OR Relational_Expr  { strcpy($$.type, "int");
+                                                   strcpy($$.val, tempVarName());
+                                                   fprintf(threeAddressFile, "%s = %s | %s\n", $$.val, $1.val,$3.val);
+                                                 }
+              | NOT Relational_Expr {   strcpy($$.type, "int");
+                                        strcpy($$.val, tempVarName());
+                                        fprintf(threeAddressFile, "%s = !(%s)\n", $$.val, $2.val);
+                                    }
               ;
 
 Relational_Expr: Additive_Expr { strcpy($$.type, $1.type); strcpy($$.val,$1.val);}
-                 | Relational_Expr GT Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr LT Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr GE Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr LE Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr EQ Additive_Expr { strcpy($$.type, "int"); }
-                 | Relational_Expr NE Additive_Expr { strcpy($$.type, "int"); }
+                 | Relational_Expr GT Additive_Expr {   strcpy($$.type, "int");
+                                                        strcpy($$.val, tempVarName());
+                                                        fprintf(threeAddressFile, "%s = (%s > %s)\n", $$.val, $1.val,$3.val);
+                                                    }
+                 | Relational_Expr LT Additive_Expr {   strcpy($$.type, "int");
+                                                        strcpy($$.val, tempVarName());
+                                                        fprintf(threeAddressFile, "%s = (%s < %s)\n", $$.val, $1.val,$3.val);
+                                                    }
+                 | Relational_Expr GE Additive_Expr {   strcpy($$.type, "int");
+                                                        strcpy($$.val, tempVarName());
+                                                        fprintf(threeAddressFile, "%s = (%s >= %s)\n", $$.val, $1.val,$3.val);
+                                                    }
+                 | Relational_Expr LE Additive_Expr {   strcpy($$.type, "int");
+                                                        strcpy($$.val, tempVarName());
+                                                        fprintf(threeAddressFile, "%s = (%s <= %s)\n", $$.val, $1.val,$3.val);
+                                                    }
+                 | Relational_Expr EQ Additive_Expr {   strcpy($$.type, "int");
+                                                        strcpy($$.val, tempVarName());
+                                                        fprintf(threeAddressFile, "%s = (%s == %s)\n", $$.val, $1.val,$3.val);
+                                                    }
+                 | Relational_Expr NE Additive_Expr {   strcpy($$.type, "int");
+                                                        strcpy($$.val, tempVarName());
+                                                        fprintf(threeAddressFile, "%s = (%s != %s)\n", $$.val, $1.val,$3.val);
+                                                    }
                  ;
 
 
 Additive_Expr: Multiplicative_Expr { strcpy($$.type, $1.type); strcpy($$.val,$1.val);}
                | Additive_Expr '+' Multiplicative_Expr { if(isHigherPri($1.type,$3.type)) strcpy($$.type,$1.type);
-                                                         else {strcpy($$.type,$3.type);strcpy($$.val, strcat("T",itoa_(tempVarCount++)));
-                                                         printf("%s = %s * %s\n", $$.val, $1.val,$3.val);}
+                                                         else { strcpy($$.type,$3.type);
+                                                                strcpy($$.val, tempVarName());
+                                                                fprintf(threeAddressFile, "%s = %s + %s\n", $$.val, $1.val,$3.val);
+                                                              }
                                                         }
                | Additive_Expr '-' Multiplicative_Expr { if(isHigherPri($1.type,$3.type)) strcpy($$.type,$1.type);
-                                                         else strcpy($$.type,$3.type);
+                                                         else { strcpy($$.type,$3.type);
+                                                                strcpy($$.val, tempVarName());
+                                                                fprintf(threeAddressFile, "%s = %s - %s\n", $$.val, $1.val,$3.val);
+                                                              }
                                                         }
                ;
 Multiplicative_Expr: Primary { strcpy($$.type, $1.type); strcpy($$.val, $1.val); }
                      | Multiplicative_Expr '*' Primary { if(isHigherPri($1.type,$3.type)) strcpy($$.type,$1.type);
-                                                         else {strcpy($$.type,$3.type);strcpy($$.val, strcat("T",itoa_(tempVarCount++)));
-                                                         printf("%s = %s * %s\n", $$.val, $1.val,$3.val);}
+                                                         else { strcpy($$.type,$3.type);
+                                                                strcpy($$.val, tempVarName());
+                                                                fprintf(threeAddressFile, "%s = %s * %s\n", $$.val, $1.val,$3.val);}
                                                         }
                      | Multiplicative_Expr '/' Primary { if(isHigherPri($1.type,$3.type)) strcpy($$.type,$1.type);
-                                                         else strcpy($$.type,$3.type);
+                                                         else { strcpy($$.type,$3.type);
+                                                                strcpy($$.val, tempVarName());
+                                                                fprintf(threeAddressFile, "%s = %s / %s\n", $$.val, $1.val,$3.val);}
+
                                                         }
                      | Multiplicative_Expr '%' Primary { if(strcmp($1.type,"int")!=0 || strcmp($3.type,"int")!=0){
                                                                 printf(RED "Error : Modulus operator expects int\n" RESET);
@@ -502,13 +571,15 @@ Multiplicative_Expr: Primary { strcpy($$.type, $1.type); strcpy($$.val, $1.val);
                                                         }
                                                         else{
                                                                 strcpy($$.type, "int");
+                                                                strcpy($$.val, tempVarName());
+                                                                fprintf(threeAddressFile, "%s = %s % %s\n", $$.val, $1.val,$3.val);
                                                         }
                                                         }
                      ;
-Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.type); }
-         | NUM                                          {num = $1; strcpy($$.type,"int"); }
-         | FLOATNUM                                     { strcpy($$.type,"float"); }
-         | CHARCONST                                    { strcpy($$.type,"char"); }
+Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.type); strcpy($$.val, $2.val); }
+         | NUM                                          {num = $1; strcpy($$.type,"int"); strcpy($$.val, integerToString($1));}
+         | FLOATNUM                                     { strcpy($$.type,"float"); strcpy($$.val, floatToString($1));}
+         | CHARCONST                                    { strcpy($$.type,"char"); strcpy($$.val, charToString($1));}
          | STRING                                       { strcpy($$.type,"string"); }
          | ID                           {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
@@ -522,7 +593,9 @@ Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.typ
                                         }
          | '-' Primary                  {num = -num; strcpy($$.type,$2.type);}
          | '+' Primary                  {strcpy($$.type,$2.type);}
-         | ArrayNotation                {strcpy($$.type,$1);}
+         | ArrayNotation                {       strcpy($$.type,$1.type);
+                                                strcpy($$.val, $1.val);
+                                        }
          | FunctionCall                 {       if(!checkAncestors($1))
                                                         printUndecVarErr(lineNo, $1);
                                                 else 
@@ -535,7 +608,10 @@ Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.typ
                                                 printWrongIDUsageError(lineNo,$2);
                                         else{
                                                  strcpy($$.type,checkAncestors($2)->tokenType);
-                                         }}
+                                                 strcpy($$.val, tempVarName());
+                                                 fprintf(threeAddressFile, "%s = %s + 1\n", $$.val, $2);
+                                                 fprintf(threeAddressFile, "%s = %s\n", $2, $$.val);}
+                                         }
          | ID PP                        {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
                                         }
@@ -543,6 +619,9 @@ Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.typ
                                                 printWrongIDUsageError(lineNo,$1);
                                         else{
                                                  strcpy($$.type,checkAncestors($1)->tokenType);
+                                                 strcpy($$.val, tempVarName());
+                                                 fprintf(threeAddressFile, "%s = %s + 1\n", $$.val, $1);
+                                                 fprintf(threeAddressFile, "%s = %s\n", $1, $$.val);
                                          }}
          | MM ID                        {if(!checkAncestors($2)){
                                                 printUndecVarErr(lineNo, $2);
@@ -551,6 +630,9 @@ Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.typ
                                                 printWrongIDUsageError(lineNo,$2);
                                         else{
                                                  strcpy($$.type,checkAncestors($2)->tokenType);
+                                                 strcpy($$.val, tempVarName());
+                                                 fprintf(threeAddressFile, "%s = %s - 1\n", $$.val, $2);
+                                                 fprintf(threeAddressFile, "%s = %s\n", $2, $$.val);
                                          }}
          | ID MM                        {if(!checkAncestors($1)){
                                                 printUndecVarErr(lineNo, $1);
@@ -559,6 +641,9 @@ Primary: OPEN_PAR Expr CLOSE_PAR                        { strcpy($$.type, $2.typ
                                                 printWrongIDUsageError(lineNo,$1);
                                         else{
                                                  strcpy($$.type,checkAncestors($1)->tokenType);
+                                                 strcpy($$.val, tempVarName());
+                                                 fprintf(threeAddressFile, "%s = %s - 1\n", $$.val, $1);
+                                                 fprintf(threeAddressFile, "%s = %s\n", $1, $$.val);
                                          }}
          ;
 
@@ -568,13 +653,13 @@ StatementList: Statement StatementList
                |
                ;
 
-Statement: WhileStatement 
+Statement: WhileStatement
 	| Declaration   
 	| ForStatement  
-	| IfStatement  
+	| IfStatement
         | Assignment    ';'
         | ReturnStatement    
-        | DoWhileStatement      
+        | DoWhileStatement
         | BREAK ';'
         | CONTINUE ';'                    
 	| ';'
@@ -582,20 +667,43 @@ Statement: WhileStatement
 ReturnStatement: RETURN Expr ';'   { strcpy(returnType, $2.type); }
                  ;
 
-WhileStatement: WHILE OPEN_PAR Expr CLOSE_PAR Statement                                                        
-                | WHILE OPEN_PAR Expr CLOSE_PAR CompoundStatement
+WhileStatement: WHILE                           {       pushThreeAddressLabelStack(nextLabelName());
+                                                        fprintf(threeAddressFile, "\n%s : \n", labelName());
+                                                }
+                OPEN_PAR Expr CLOSE_PAR         {       fprintf(threeAddressFile, "IF (%s) GOTO %s\nGOTO (to-be-resolved)\n", $4.val, nextLabelName());
+                                                        fprintf(threeAddressFile, "\n%s : \n", labelName());
+                                                }
+                CompoundStatement               {       fprintf(threeAddressFile, "GOTO %s\n", threeAddressLabelStack[threeAddressLabelStackTop]);
+                                                        popThreeAddressLabelStack();
+                                                        fprintf(threeAddressFile, "\n%s :\n", labelName());
+                                                }
                 ;
 
-DoWhileStatement: DO CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR ';'
+DoWhileStatement: DO                            {       pushThreeAddressLabelStack(nextLabelName());
+                                                        fprintf(threeAddressFile, "\n%s : \n", labelName());
+                                                }
+                CompoundStatement WHILE OPEN_PAR Expr CLOSE_PAR ';'     {       fprintf(threeAddressFile, "IF (%s) GOTO %s\n", $6.val, threeAddressLabelStack[threeAddressLabelStackTop]);
+                                                                                popThreeAddressLabelStack();
+                                                                        }
                   ;
 
 
-ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement 
-              | FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement 
+ForStatement: FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR Statement
+              | FOR OPEN_PAR Assignment ';' Expr ';' Assignment CLOSE_PAR CompoundStatement
               ;
 
-IfStatement: IF OPEN_PAR Expr CLOSE_PAR Statement ElseStatement
-             | IF OPEN_PAR Expr CLOSE_PAR CompoundStatement ElseStatement
+IfStatement: IF OPEN_PAR Expr CLOSE_PAR         {       fprintf(threeAddressFile, "IF (%s) GOTO %s\nGOTO (to-be-resolved)\n", $3.val, nextLabelName());
+                                                        fprintf(threeAddressFile, "\n%s : \n", labelName());
+                                                }
+                Statement                       {       fprintf(threeAddressFile, "\n%s : \n", labelName());
+                                                }
+                ElseStatement
+                | IF OPEN_PAR Expr CLOSE_PAR    {       fprintf(threeAddressFile, "IF (%s) GOTO %s\nGOTO (to-be-resolved)\n", $3.val, nextLabelName());
+                                                        fprintf(threeAddressFile, "\n%s : \n", labelName());
+                                                }
+                CompoundStatement               {       fprintf(threeAddressFile, "%s : \n", labelName());
+                                                }
+                ElseStatement
              ;
 
 ElseStatement: ELSE CompoundStatement
@@ -628,6 +736,7 @@ int main(int argc, char *argv[])
 {
         initScope();
         yyin = fopen(argv[1], "r");
+        threeAddressFile = fopen("threeAddressCode.txt","w");
         if(!yyparse())
                 printf("\nParsing complete\n");
         else

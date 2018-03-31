@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -61,12 +61,12 @@ extern int yydebug;
     DO = 271,
     IF = 272,
     ELSE = 273,
-    FLOATNUM = 274,
-    STRING = 275,
-    CHARCONST = 276,
-    INCLUDE = 277,
-    OPEN_PAR = 278,
-    CLOSE_PAR = 279,
+    STRING = 274,
+    INCLUDE = 275,
+    OPEN_PAR = 276,
+    CLOSE_PAR = 277,
+    FLOATNUM = 278,
+    CHARCONST = 279,
     ID = 280,
     INT = 281,
     CHAR = 282,
@@ -108,12 +108,12 @@ extern int yydebug;
 #define DO 271
 #define IF 272
 #define ELSE 273
-#define FLOATNUM 274
-#define STRING 275
-#define CHARCONST 276
-#define INCLUDE 277
-#define OPEN_PAR 278
-#define CLOSE_PAR 279
+#define STRING 274
+#define INCLUDE 275
+#define OPEN_PAR 276
+#define CLOSE_PAR 277
+#define FLOATNUM 278
+#define CHARCONST 279
 #define ID 280
 #define INT 281
 #define CHAR 282
@@ -139,21 +139,25 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE YYSTYPE;
+
 union YYSTYPE
 {
-#line 220 "miniC.y" /* yacc.c:1909  */
+#line 235 "miniC.y" /* yacc.c:1909  */
 
 	char id[100];
         int num;
+        float floatNum;
+        char charConst;
         //symbolAttrib symAttrib;
         struct{
-        char type[100];
-        char val[100];
+                char type[100];
+                char val[100];
         } symAttrib;
 
-#line 156 "y.tab.h" /* yacc.c:1909  */
+#line 158 "y.tab.h" /* yacc.c:1909  */
 };
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

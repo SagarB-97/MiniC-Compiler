@@ -230,6 +230,7 @@ return                             { if(!comment){
                                         DEBUG_PRINT("%-20s%20s%20d\n", "CHARACTER", yytext, lineNo); 
                                         //insertSymbolItem(yytext, "CHARACTER", lineNo, 1);
                                         // strcpy(yylval, yytext);
+                                        yylval.charConst = yytext[1];
                                         return CHARCONST;
                                         }
                                     }
@@ -237,7 +238,7 @@ return                             { if(!comment){
 {number}+(\.{number}+)?e{number}+    { if(!comment) {
                                         DEBUG_PRINT("%-20s%20s%20d\n", "FLOAT EXP FORM", yytext, lineNo); 
                                         //insertSymbolItem(yytext, "FLOAT", lineNo, 1);
-                                        // yylval = atof(yytext);
+                                        yylval.floatNum = atof(yytext);
                                         return FLOATNUM;
                                         }
                                     } 
@@ -245,7 +246,7 @@ return                             { if(!comment){
 {number}+\.{number}+                { if(!comment) {
                                         DEBUG_PRINT("%-20s%20s%20d\n", "FLOAT NUMBER", yytext, lineNo); 
                                         //insertSymbolItem(yytext, "FLOAT", lineNo, 1);
-                                        //yylval = atof(yytext);
+                                        yylval.floatNum = atof(yytext);
                                         return FLOATNUM;
                                         }
                                     } 
