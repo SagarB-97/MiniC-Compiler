@@ -1,53 +1,62 @@
 
+func begin find :
+T0 = x + 5
+return y  
+func end
+
+func begin hello :
+return
+func end
+
 func begin main :
 a = 0
 d = 6
 
 Label_0 : 
-T0 = a * 2
-T2 = addr(arr)
-T1 = T0 * 4
-T3 = T2[T1]
-T4 = a + T3
-a = T4
+T1 = a * 2
+T3 = addr(arr)
+T2 = T1 * 4
+T4 = T3[T2]
+T5 = a + T4
+a = T5
 
 Label_1 : 
-T5 = d + 1
-d = T5
-T6 = (d < 6)
-IF (T6) GOTO Label_1
-T7 = (a < 5)
-T8 = (d < 6)
-T9 = T7 & T8
-IF (T9) GOTO Label_0
+T6 = d + 1
+d = T6
+T7 = (d < 6)
+IF (T7) GOTO Label_1
+T8 = (a < 5)
+T9 = (d < 6)
+T10 = T8 & T9
+IF (T10) GOTO Label_0
 a = 18
 
 Label_2 : 
-T10 = (a < 3)
-IF (T10) GOTO Label_3
+T11 = (a < 3)
+IF (T11) GOTO Label_3
 GOTO Label_9
 
 Label_3 : 
-T11 = a + 2
-a = T11
+T12 = a + 2
+a = T12
 
 Label_4 : 
-T12 = (d < 6)
-IF (T12) GOTO Label_5
+T13 = (d < 6)
+IF (T13) GOTO Label_5
 GOTO Label_8
 
 Label_5 : 
-T13 = d + 9
-d = T13
-T14 = (d == 2)
-T15 = (a == 3)
-T16 = T14 | T15
-IF (T16) GOTO Label_6
+T14 = d + 9
+d = T14
+T15 = (d == 2)
+T16 = (a == 3)
+T17 = T15 | T16
+IF (T17) GOTO Label_6
 GOTO Label_7
 
 Label_6 : 
-T17 = b + 1
-b = T17
+T18 = b + 1
+b = T18
 Label_7 : 
 GOTO Label_4
 
@@ -56,4 +65,6 @@ a = 4
 GOTO Label_2
 
 Label_9 :
+CALL find, Params: 5.500000, 'c', 5, 
+return
 func end

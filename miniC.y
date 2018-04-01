@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include "symbolTable.h"
 #include "scope.h"
-#include "icg.h"
 
 #define DEBUGY 0
 
@@ -42,6 +41,7 @@ char threeAddressCodeLineNo = 0;
 int backPatchStack[100];
 int backPatchStackTop = -1;
 char tempCode[100];
+char pVal[200];
 
 void pushBackPatchStack(int n){
         backPatchStackTop++;
@@ -184,11 +184,9 @@ void printWrongArraySubscriptError(int lineNo, char * id){
 
 symbolItem* checkAncestors(char * s)
 {
-        //printf("%s\n", s);
         ScopeNode *node = findChild(root, curScope);
         while(node!=NULL)
         {
-                //printf("%d\n", node->num);
                 if(lookUpSymbolItem_scope(s,node->num))
                         return lookUpSymbolItem_scope(s,node->num); 
                         
@@ -209,12 +207,6 @@ void addToParamList(char *paramType, int position){
 }
 int isCorrectParams(char params[][100], char * list, char * fnName){
         int i,j;
-        // for(i=0,j=pCount-1; i<j;i++,j--){
-        //         char temp[100];
-        //         strcpy(temp,params[j]);
-        //         strcpy(params[j],params[i]);
-        //         strcpy(params[i],temp);
-        // }
         i=0;
         char thisList[100][100];
         int l = 0;
@@ -257,7 +249,6 @@ int isCorrectParams(char params[][100], char * list, char * fnName){
         int num;
         float floatNum;
         char charConst;
-        //symbolAttrib symAttrib;
         struct{
                 char type[100];
                 char val[100];
@@ -311,11 +302,14 @@ FunctionDef: Type ID { sprintf(tempCode, "\nfunc begin %s :\n", $2); addThreeAdd
                                                                                         else if(strcmp($1,"void")==0 && strcmp(returnType,"void")!=0)
                                                                                                 printVoidFunctionReturningError(lineNo, returnType);
                                                                                         else{
-                                                                                                strcpy(returnType, "");
                                                                                                 insertFunctionItem($2,$1,lineNo,curScope,0,pList, pCount);
                                                                                                 strcpy(pList, "");
                                                                                                 pCount = 0;
                                                                                         }
+                                                                                        if(strcmp(returnType, "void") == 0)
+                                                                                                {
+                                                                                                     sprintf(tempCode, "return\n"); addThreeAddressCode(tempCode);   
+                                                                                                }
                                                                                         strcpy(returnType, "void");
                                                                                         sprintf(tempCode, "func end\n"); addThreeAddressCode(tempCode);
                                                                                 }
@@ -484,8 +478,8 @@ DefineAssign: ID '=' Expr                      {
             ;
 
 
-ParamList: Expr                 {addToParamList($1.type, pCount); pCount++; }
-        | Expr ',' ParamList    {addToParamList($1.type, pCount); pCount++; }
+ParamList: Expr                 {addToParamList($1.type, pCount); pCount++; strcat(pVal, $1.val); strcat(pVal,", ");}
+        | Expr ',' ParamList    {addToParamList($1.type, pCount); pCount++; strcat(pVal, $1.val);strcat(pVal,", ");}
         | 
         ;
 
@@ -593,7 +587,7 @@ Multiplicative_Expr: Primary { strcpy($$.type, $1.type); strcpy($$.val, $1.val);
                                                         else{
                                                                 strcpy($$.type, "int");
                                                                 strcpy($$.val, tempVarName());
-                                                                sprintf(tempCode, "%s = %s % %s\n", $$.val, $1.val,$3.val);
+                                                                sprintf(tempCode, "%s = %s %% %s\n", $$.val, $1.val,$3.val);
                                                                 addThreeAddressCode(tempCode);
                                                         }
                                                         }
@@ -686,7 +680,9 @@ Statement: WhileStatement
         | CONTINUE ';'                    
 	| ';'
         ; 
-ReturnStatement: RETURN Expr ';'   { strcpy(returnType, $2.type); }
+ReturnStatement: RETURN Expr ';'   { strcpy(returnType, $2.type); 
+                                     sprintf(tempCode, "return %s  \n", $2.val);addThreeAddressCode(tempCode);
+                                  }
                  ;
 
 WhileStatement: WHILE                           {       pushThreeAddressLabelStack(nextLabelName());
@@ -762,6 +758,12 @@ FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR   {
                                                 else if(!isCorrectParams(params,lookUpSymbolItem($1)->paramList,$1)){
                                                         //printWrongParamError(lineNo, $1);
                                                 }
+                                                else
+                                                {
+                                                        sprintf(tempCode, "CALL %s, Params: %s\n", $1, pVal);addThreeAddressCode(tempCode);
+                                                        strcpy(pVal,"");
+                                                }
+                                                
                                                  pCount = 0;
                                                  strcpy($$,$1);
                                                 }

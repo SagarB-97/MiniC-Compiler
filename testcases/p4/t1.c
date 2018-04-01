@@ -1,3 +1,15 @@
+int find(int x, char z, float t)
+{
+    int y = x + 5;
+    return y;
+}
+
+void hello(int x, float y)
+{   
+    int a;
+}
+
+
 void main()
 {
 
@@ -24,4 +36,7 @@ void main()
         }
         a = 4;
     }
+
+
+    find(5,'c', 5.5);
 }
