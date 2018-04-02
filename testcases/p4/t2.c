@@ -1,24 +1,28 @@
 #include <stdio.h>
 
+void hello(int x, float y)
+{   
+    float a;
+    a = x + y;
+}
 
 int main()
 {
-    int a,b,c;
+    int a,b,c,d;
 
     b = 5;
     c = 4 + 3;
-    a = b + c * b;
+    a = b + c;
+    d = 6;
 
-    if(a>5)
+    while(a>5)
     {
-        if(b>3)
-        {
-            c = 7;
+        a = a * b * c;
+        while(b>d || a>c){
+            hello(5,5.36);
         }
     }
 
-    else
-        b = a/3;
 
 
     return 0;

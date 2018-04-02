@@ -1,25 +1,44 @@
 
+func begin hello :
+T0 = x + y
+a = T0
+return
+func end
+
 func begin main :
 b = 5
-T0 = 4 + 3
-c = T0
-T1 = c * b
-T2 = b + T1
+T1 = 4 + 3
+c = T1
+T2 = b + c
 a = T2
-T3 = (a > 5)
-IF (T3) GOTO Label_0
-GOTO Label_3
+d = 6
 
 Label_0 : 
-T4 = (b > 3)
-IF (T4) GOTO Label_1
-GOTO Label_2
+T3 = (a > 5)
+IF (T3) GOTO Label_1
+GOTO Label_5
 
 Label_1 : 
-c = 7
+T4 = a * b
+T5 = T4 * c
+a = T5
+
 Label_2 : 
+T6 = (b > d)
+T7 = (a > c)
+T8 = T6 | T7
+IF (T8) GOTO Label_3
+GOTO Label_4
+
 Label_3 : 
-T5 = a / 3
-b = T5
+Push param 5
+Push param 5.360000
+CALL hello
+GOTO Label_2
+
+Label_4 :
+GOTO Label_0
+
+Label_5 :
 return 0  
 func end
