@@ -733,14 +733,26 @@ IfStatement: IF OPEN_PAR Expr CLOSE_PAR         {       pushBackPatchStack(three
                                                         sprintf(tempCode, "IF (%s) GOTO %s\nGOTO ", $3.val, nextLabelName());addThreeAddressCode(tempCode);
                                                         sprintf(tempCode, "\n%s : \n", labelName());addThreeAddressCode(tempCode);
                                                 }
-                CompoundStatement               {       char * newLabelName = labelName();
+                CompoundStatement               {       int prevTop = popBackPatchStack();
+                                                        pushBackPatchStack(threeAddressCodeLineNo);
+                                                        pushBackPatchStack(prevTop);
+                                                        sprintf(tempCode, "GOTO "); addThreeAddressCode(tempCode);
+
+                        
+                                                        char * newLabelName = labelName();
                                                         sprintf(tempCode, "%s : \n", newLabelName);addThreeAddressCode(tempCode);
 
                                                         char tempString[100];
                                                         sprintf(tempString, "%s\n", newLabelName);
                                                         strcat(threeAddressCode[popBackPatchStack()], tempString);
                                                 }
-                ElseStatement
+                ElseStatement                   {       char * newLabelName = labelName();
+                                                        sprintf(tempCode, "%s : \n", newLabelName);addThreeAddressCode(tempCode);
+
+                                                        char tempString[100];
+                                                        sprintf(tempString, "%s\n", newLabelName);
+                                                        strcat(threeAddressCode[popBackPatchStack()], tempString);       
+                                                }
              ;
 
 ElseStatement: ELSE CompoundStatement

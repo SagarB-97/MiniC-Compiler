@@ -9,7 +9,7 @@ int main(){
     // d = a+b*c+d;
     // d = (a+b)*(c+d);
 
-    // d = a>b||c>d;
-    d = a>(b||c)>d;
+    d = a>b||c>d;
+    // d = a>(b||c)>d;
     return 0;
 }

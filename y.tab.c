@@ -770,8 +770,8 @@ static const yytype_uint16 yyrline[] =
      598,   599,   600,   601,   611,   612,   613,   616,   621,   632,
      643,   654,   667,   669,   670,   673,   674,   675,   676,   677,
      678,   679,   680,   681,   682,   684,   689,   692,   689,   707,
-     707,   716,   717,   720,   724,   720,   732,   736,   732,   746,
-     747,   748,   751
+     707,   716,   717,   720,   724,   720,   732,   736,   732,   758,
+     759,   760,   763
 };
 #endif
 
@@ -2444,18 +2444,36 @@ yyreduce:
 
   case 117:
 #line 736 "miniC.y" /* yacc.c:1646  */
-    {       char * newLabelName = labelName();
+    {       int prevTop = popBackPatchStack();
+                                                        pushBackPatchStack(threeAddressCodeLineNo);
+                                                        pushBackPatchStack(prevTop);
+                                                        sprintf(tempCode, "GOTO "); addThreeAddressCode(tempCode);
+
+                        
+                                                        char * newLabelName = labelName();
                                                         sprintf(tempCode, "%s : \n", newLabelName);addThreeAddressCode(tempCode);
 
                                                         char tempString[100];
                                                         sprintf(tempString, "%s\n", newLabelName);
                                                         strcat(threeAddressCode[popBackPatchStack()], tempString);
                                                 }
-#line 2455 "y.tab.c" /* yacc.c:1646  */
+#line 2461 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 118:
+#line 749 "miniC.y" /* yacc.c:1646  */
+    {       char * newLabelName = labelName();
+                                                        sprintf(tempCode, "%s : \n", newLabelName);addThreeAddressCode(tempCode);
+
+                                                        char tempString[100];
+                                                        sprintf(tempString, "%s\n", newLabelName);
+                                                        strcat(threeAddressCode[popBackPatchStack()], tempString);       
+                                                }
+#line 2473 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 122:
-#line 751 "miniC.y" /* yacc.c:1646  */
+#line 763 "miniC.y" /* yacc.c:1646  */
     {
                                                  if(!checkAncestors((yyvsp[-3].id)))
                                                        printUndecVarErr(lineNo, (yyvsp[-3].id));
@@ -2480,11 +2498,11 @@ yyreduce:
                                                  pCount = 0;
                                                  strcpy((yyval.id),(yyvsp[-3].id));
                                                 }
-#line 2484 "y.tab.c" /* yacc.c:1646  */
+#line 2502 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2488 "y.tab.c" /* yacc.c:1646  */
+#line 2506 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2712,7 +2730,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 777 "miniC.y" /* yacc.c:1906  */
+#line 789 "miniC.y" /* yacc.c:1906  */
 
 #include<ctype.h>
 
