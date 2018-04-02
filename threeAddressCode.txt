@@ -1,70 +1,25 @@
 
-func begin find :
-T0 = x + 5
-return y  
-func end
-
-func begin hello :
-return
-func end
-
 func begin main :
-a = 0
-d = 6
+b = 5
+T0 = 4 + 3
+c = T0
+T1 = c * b
+T2 = b + T1
+a = T2
+T3 = (a > 5)
+IF (T3) GOTO Label_0
+GOTO Label_3
 
 Label_0 : 
-T1 = a * 2
-T3 = addr(arr)
-T2 = T1 * 4
-T4 = T3[T2]
-T5 = a + T4
-a = T5
-
-Label_1 : 
-T6 = d + 1
-d = T6
-T7 = (d < 6)
-IF (T7) GOTO Label_1
-T8 = (a < 5)
-T9 = (d < 6)
-T10 = T8 & T9
-IF (T10) GOTO Label_0
-a = 18
-
-Label_2 : 
-T11 = (a < 3)
-IF (T11) GOTO Label_3
-GOTO Label_9
-
-Label_3 : 
-T12 = a + 2
-a = T12
-
-Label_4 : 
-T13 = (d < 6)
-IF (T13) GOTO Label_5
-GOTO Label_8
-
-Label_5 : 
-T14 = d + 9
-d = T14
-T15 = (d == 2)
-T16 = (a == 3)
-T17 = T15 | T16
-IF (T17) GOTO Label_6
-GOTO Label_7
-
-Label_6 : 
-T18 = b + 1
-b = T18
-Label_7 : 
-GOTO Label_4
-
-Label_8 :
-a = 4
+T4 = (b > 3)
+IF (T4) GOTO Label_1
 GOTO Label_2
 
-Label_9 :
-CALL find, Params: 5.500000, 'c', 5, 
-return
+Label_1 : 
+c = 7
+Label_2 : 
+Label_3 : 
+T5 = a / 3
+b = T5
+return 0  
 func end

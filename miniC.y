@@ -41,7 +41,8 @@ char threeAddressCodeLineNo = 0;
 int backPatchStack[100];
 int backPatchStackTop = -1;
 char tempCode[100];
-char pVal[200];
+char pVal[100][100];
+int countPval = 0;
 
 void pushBackPatchStack(int n){
         backPatchStackTop++;
@@ -478,8 +479,8 @@ DefineAssign: ID '=' Expr                      {
             ;
 
 
-ParamList: Expr                 {addToParamList($1.type, pCount); pCount++; strcat(pVal, $1.val); strcat(pVal,", ");}
-        | Expr ',' ParamList    {addToParamList($1.type, pCount); pCount++; strcat(pVal, $1.val);strcat(pVal,", ");}
+ParamList: Expr                 {addToParamList($1.type, pCount); pCount++; strcpy(pVal[countPval++], $1.val);}
+        | Expr ',' ParamList    {addToParamList($1.type, pCount); pCount++; strcpy(pVal[countPval++], $1.val);}
         | 
         ;
 
@@ -760,8 +761,12 @@ FunctionCall: ID OPEN_PAR ParamList CLOSE_PAR   {
                                                 }
                                                 else
                                                 {
-                                                        sprintf(tempCode, "CALL %s, Params: %s\n", $1, pVal);addThreeAddressCode(tempCode);
-                                                        strcpy(pVal,"");
+                                                        for(int i = countPval-1; i >=0; i--)
+                                                        {
+                                                                sprintf(tempCode, "Push param %s\n",pVal[i]);addThreeAddressCode(tempCode);
+                                                        }
+                                                        sprintf(tempCode, "CALL %s\n", $1);addThreeAddressCode(tempCode);
+                                                        countPval = 0;
                                                 }
                                                 
                                                  pCount = 0;

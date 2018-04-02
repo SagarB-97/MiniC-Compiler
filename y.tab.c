@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.0.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -106,7 +106,8 @@ char threeAddressCodeLineNo = 0;
 int backPatchStack[100];
 int backPatchStackTop = -1;
 char tempCode[100];
-char pVal[200];
+char pVal[100][100];
+int countPval = 0;
 
 void pushBackPatchStack(int n){
         backPatchStackTop++;
@@ -298,7 +299,7 @@ int isCorrectParams(char params[][100], char * list, char * fnName){
 }
 
 
-#line 302 "y.tab.c" /* yacc.c:339  */
+#line 303 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -427,10 +428,10 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
+typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 247 "miniC.y" /* yacc.c:355  */
+#line 248 "miniC.y" /* yacc.c:355  */
 
 	char id[100];
         int num;
@@ -441,10 +442,8 @@ union YYSTYPE
                 char val[100];
         } symAttrib;
 
-#line 445 "y.tab.c" /* yacc.c:355  */
+#line 446 "y.tab.c" /* yacc.c:355  */
 };
-
-typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -458,7 +457,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 462 "y.tab.c" /* yacc.c:358  */
+#line 461 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -760,19 +759,19 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   284,   284,   285,   286,   287,   288,   289,   292,   293,
-     295,   298,   298,   317,   327,   328,   338,   339,   343,   346,
-     347,   348,   349,   350,   351,   352,   353,   354,   356,   356,
-     356,   356,   359,   368,   382,   389,   399,   423,   424,   431,
-     432,   438,   439,   442,   448,   454,   460,   466,   473,   474,
-     475,   476,   477,   481,   482,   483,   486,   498,   506,   509,
-     513,   514,   518,   522,   528,   529,   533,   537,   541,   545,
-     549,   556,   557,   563,   570,   571,   576,   583,   595,   596,
-     597,   598,   599,   600,   610,   611,   612,   615,   620,   631,
-     642,   653,   666,   668,   669,   672,   673,   674,   675,   676,
-     677,   678,   679,   680,   681,   683,   688,   691,   688,   706,
-     706,   715,   716,   719,   723,   719,   731,   735,   731,   745,
-     746,   747,   750
+       0,   285,   285,   286,   287,   288,   289,   290,   293,   294,
+     296,   299,   299,   318,   328,   329,   339,   340,   344,   347,
+     348,   349,   350,   351,   352,   353,   354,   355,   357,   357,
+     357,   357,   360,   369,   383,   390,   400,   424,   425,   432,
+     433,   439,   440,   443,   449,   455,   461,   467,   474,   475,
+     476,   477,   478,   482,   483,   484,   487,   499,   507,   510,
+     514,   515,   519,   523,   529,   530,   534,   538,   542,   546,
+     550,   557,   558,   564,   571,   572,   577,   584,   596,   597,
+     598,   599,   600,   601,   611,   612,   613,   616,   621,   632,
+     643,   654,   667,   669,   670,   673,   674,   675,   676,   677,
+     678,   679,   680,   681,   682,   684,   689,   692,   689,   707,
+     707,   716,   717,   720,   724,   720,   732,   736,   732,   746,
+     747,   748,   751
 };
 #endif
 
@@ -1719,13 +1718,13 @@ yyreduce:
   switch (yyn)
     {
         case 11:
-#line 298 "miniC.y" /* yacc.c:1646  */
+#line 299 "miniC.y" /* yacc.c:1646  */
     { sprintf(tempCode, "\nfunc begin %s :\n", (yyvsp[0].id)); addThreeAddressCode(tempCode); }
-#line 1725 "y.tab.c" /* yacc.c:1646  */
+#line 1724 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 299 "miniC.y" /* yacc.c:1646  */
+#line 300 "miniC.y" /* yacc.c:1646  */
     {
                                                                                         if(strcmp(returnType,(yyvsp[-6].id))!=0)
                                                                                                 printRetTypeError(lineNo, returnType, (yyvsp[-6].id), (yyvsp[-5].id));
@@ -1743,11 +1742,11 @@ yyreduce:
                                                                                         strcpy(returnType, "void");
                                                                                         sprintf(tempCode, "func end\n"); addThreeAddressCode(tempCode);
                                                                                 }
-#line 1747 "y.tab.c" /* yacc.c:1646  */
+#line 1746 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 317 "miniC.y" /* yacc.c:1646  */
+#line 318 "miniC.y" /* yacc.c:1646  */
     {
                                                                         pCount++;
                                                                         char temp[100];
@@ -1757,17 +1756,17 @@ yyreduce:
                                                                         strcpy(temp, (yyvsp[0].id));
                                                                         strcat(pList,strcat(temp,", "));                                                                       
                                                                 }
-#line 1761 "y.tab.c" /* yacc.c:1646  */
+#line 1760 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 327 "miniC.y" /* yacc.c:1646  */
+#line 328 "miniC.y" /* yacc.c:1646  */
     {DEBUGY_PRINT("FLIST Call 3\n");}
-#line 1767 "y.tab.c" /* yacc.c:1646  */
+#line 1766 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 328 "miniC.y" /* yacc.c:1646  */
+#line 329 "miniC.y" /* yacc.c:1646  */
     {       
                                                                         pCount++;
                                                                         char temp[100];
@@ -1778,77 +1777,77 @@ yyreduce:
                                                                         strcat(pList,strcat(temp,", "));
                                                                         
                                                                 }
-#line 1782 "y.tab.c" /* yacc.c:1646  */
+#line 1781 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 338 "miniC.y" /* yacc.c:1646  */
+#line 339 "miniC.y" /* yacc.c:1646  */
     {DEBUGY_PRINT("FLIST Call 6\n");}
-#line 1788 "y.tab.c" /* yacc.c:1646  */
+#line 1787 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 343 "miniC.y" /* yacc.c:1646  */
+#line 344 "miniC.y" /* yacc.c:1646  */
     {if(strcmp((yyvsp[-2].id),"void")==0) printVoidVariableError(lineNo);}
-#line 1794 "y.tab.c" /* yacc.c:1646  */
+#line 1793 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 346 "miniC.y" /* yacc.c:1646  */
+#line 347 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1800 "y.tab.c" /* yacc.c:1646  */
+#line 1799 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 347 "miniC.y" /* yacc.c:1646  */
+#line 348 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1806 "y.tab.c" /* yacc.c:1646  */
+#line 1805 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 348 "miniC.y" /* yacc.c:1646  */
+#line 349 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1812 "y.tab.c" /* yacc.c:1646  */
+#line 1811 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 349 "miniC.y" /* yacc.c:1646  */
+#line 350 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1818 "y.tab.c" /* yacc.c:1646  */
+#line 1817 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 350 "miniC.y" /* yacc.c:1646  */
+#line 351 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));strcpy((yyval.id),(yyvsp[0].id));}
-#line 1824 "y.tab.c" /* yacc.c:1646  */
+#line 1823 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 351 "miniC.y" /* yacc.c:1646  */
+#line 352 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));}
-#line 1830 "y.tab.c" /* yacc.c:1646  */
+#line 1829 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 352 "miniC.y" /* yacc.c:1646  */
+#line 353 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));}
-#line 1836 "y.tab.c" /* yacc.c:1646  */
+#line 1835 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 353 "miniC.y" /* yacc.c:1646  */
+#line 354 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));}
-#line 1842 "y.tab.c" /* yacc.c:1646  */
+#line 1841 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 354 "miniC.y" /* yacc.c:1646  */
+#line 355 "miniC.y" /* yacc.c:1646  */
     {strcpy(type,(yyvsp[0].id));}
-#line 1848 "y.tab.c" /* yacc.c:1646  */
+#line 1847 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 359 "miniC.y" /* yacc.c:1646  */
+#line 360 "miniC.y" /* yacc.c:1646  */
     {
                                         pCount++;
                                         char temp[100];
@@ -1858,11 +1857,11 @@ yyreduce:
                                         strcat(pList,strcat(temp,"[], "));
                                         insertArrayItem((yyvsp[-2].id),type,lineNo,nextNum + 1,0,0);
                                 }
-#line 1862 "y.tab.c" /* yacc.c:1646  */
+#line 1861 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 368 "miniC.y" /* yacc.c:1646  */
+#line 369 "miniC.y" /* yacc.c:1646  */
     {       if(num<=0)
                                                 printIllArrayError(lineNo,(yyvsp[-3].id),num);
                                         else{
@@ -1875,11 +1874,11 @@ yyreduce:
                                                 insertArrayItem((yyvsp[-3].id),type,lineNo,nextNum + 1,0,num);
                                         }    
                                 }
-#line 1879 "y.tab.c" /* yacc.c:1646  */
+#line 1878 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 382 "miniC.y" /* yacc.c:1646  */
+#line 383 "miniC.y" /* yacc.c:1646  */
     {
                                 if(lookUpSymbolItem_scope((yyvsp[-2].id), curScope))
                                         printReDecError(lineNo, (yyvsp[-2].id));
@@ -1887,11 +1886,11 @@ yyreduce:
                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                     }
                                 }
-#line 1891 "y.tab.c" /* yacc.c:1646  */
+#line 1890 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 389 "miniC.y" /* yacc.c:1646  */
+#line 390 "miniC.y" /* yacc.c:1646  */
     {
                                 if(lookUpSymbolItem_scope((yyvsp[-3].id), curScope))
                                         printReDecError(lineNo, (yyvsp[-3].id));
@@ -1901,11 +1900,11 @@ yyreduce:
                                         insertArrayItem((yyvsp[-3].id),type,lineNo,curScope,0,num);
                                     }
                                 }
-#line 1905 "y.tab.c" /* yacc.c:1646  */
+#line 1904 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 399 "miniC.y" /* yacc.c:1646  */
+#line 400 "miniC.y" /* yacc.c:1646  */
     {
                                   strcpy((yyval.symAttrib).type,"none");
                                   if(!checkAncestors((yyvsp[-3].id)))
@@ -1927,100 +1926,100 @@ yyreduce:
                                         strcpy((yyval.symAttrib).val,tempVarValue);
                                   }
                                 }
-#line 1931 "y.tab.c" /* yacc.c:1646  */
+#line 1930 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 424 "miniC.y" /* yacc.c:1646  */
+#line 425 "miniC.y" /* yacc.c:1646  */
     {
                                                 if(lookUpSymbolItem_scope((yyvsp[-2].id), curScope))
                                                         printReDecError(lineNo, (yyvsp[-2].id));
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 1942 "y.tab.c" /* yacc.c:1646  */
+#line 1941 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 432 "miniC.y" /* yacc.c:1646  */
+#line 433 "miniC.y" /* yacc.c:1646  */
     {
                                                 if(lookUpSymbolItem_scope((yyvsp[0].id),curScope))
                                                         printReDecError(lineNo, (yyvsp[0].id));
                                                 else
                                                         insertSymbolItem((yyvsp[0].id),type,lineNo,curScope,0);
                                                }
-#line 1953 "y.tab.c" /* yacc.c:1646  */
+#line 1952 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 442 "miniC.y" /* yacc.c:1646  */
+#line 443 "miniC.y" /* yacc.c:1646  */
     {
                                                 if(lookUpSymbolItem_scope((yyvsp[-2].id),curScope))
                                                         printReDecError(lineNo, (yyvsp[-2].id));
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 1964 "y.tab.c" /* yacc.c:1646  */
+#line 1963 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 448 "miniC.y" /* yacc.c:1646  */
+#line 449 "miniC.y" /* yacc.c:1646  */
     {
                                                 if(lookUpSymbolItem_scope((yyvsp[-2].id),curScope))
                                                         printReDecError(lineNo, (yyvsp[-2].id));
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 1975 "y.tab.c" /* yacc.c:1646  */
+#line 1974 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 454 "miniC.y" /* yacc.c:1646  */
+#line 455 "miniC.y" /* yacc.c:1646  */
     {
                                                 if(lookUpSymbolItem_scope((yyvsp[-2].id),curScope))
                                                         printReDecError(lineNo, (yyvsp[-2].id));
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 1986 "y.tab.c" /* yacc.c:1646  */
+#line 1985 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 460 "miniC.y" /* yacc.c:1646  */
+#line 461 "miniC.y" /* yacc.c:1646  */
     {
                                                 if(lookUpSymbolItem_scope((yyvsp[-2].id),curScope))
                                                         printReDecError(lineNo, (yyvsp[-2].id));
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 1997 "y.tab.c" /* yacc.c:1646  */
+#line 1996 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 466 "miniC.y" /* yacc.c:1646  */
+#line 467 "miniC.y" /* yacc.c:1646  */
     {
                                                 if(lookUpSymbolItem_scope((yyvsp[-2].id),curScope))
                                                         printReDecError(lineNo, (yyvsp[-2].id));
                                                 else
                                                         insertSymbolItem((yyvsp[-2].id),type,lineNo,curScope,0);
                                                }
-#line 2008 "y.tab.c" /* yacc.c:1646  */
+#line 2007 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 481 "miniC.y" /* yacc.c:1646  */
-    {addToParamList((yyvsp[0].symAttrib).type, pCount); pCount++; strcat(pVal, (yyvsp[0].symAttrib).val); strcat(pVal,", ");}
-#line 2014 "y.tab.c" /* yacc.c:1646  */
+#line 482 "miniC.y" /* yacc.c:1646  */
+    {addToParamList((yyvsp[0].symAttrib).type, pCount); pCount++; strcpy(pVal[countPval++], (yyvsp[0].symAttrib).val);}
+#line 2013 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 482 "miniC.y" /* yacc.c:1646  */
-    {addToParamList((yyvsp[-2].symAttrib).type, pCount); pCount++; strcat(pVal, (yyvsp[-2].symAttrib).val);strcat(pVal,", ");}
-#line 2020 "y.tab.c" /* yacc.c:1646  */
+#line 483 "miniC.y" /* yacc.c:1646  */
+    {addToParamList((yyvsp[-2].symAttrib).type, pCount); pCount++; strcpy(pVal[countPval++], (yyvsp[-2].symAttrib).val);}
+#line 2019 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 486 "miniC.y" /* yacc.c:1646  */
+#line 487 "miniC.y" /* yacc.c:1646  */
     {if(!checkAncestors((yyvsp[-2].id)))
                                                 printUndecVarErr(lineNo, (yyvsp[-2].id));
                                            else if(strcmp(checkAncestors((yyvsp[-2].id))->tokenType,(yyvsp[0].symAttrib).type)!=0)
@@ -2033,11 +2032,11 @@ yyreduce:
                                                    sprintf(tempCode, "%s = %s\n", (yyvsp[-2].id), (yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                            }
                                           }
-#line 2037 "y.tab.c" /* yacc.c:1646  */
+#line 2036 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 498 "miniC.y" /* yacc.c:1646  */
+#line 499 "miniC.y" /* yacc.c:1646  */
     {if(strcmp((yyvsp[-2].symAttrib).type,(yyvsp[0].symAttrib).type)!=0){
                                                   printMismatchError(lineNo,checkAncestors((yyvsp[-2].symAttrib).val)->tokenType,(yyvsp[0].symAttrib).type);
                                           }
@@ -2045,154 +2044,154 @@ yyreduce:
                                                   sprintf(tempCode, "%s = %s\n",(yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                           }
                                           }
-#line 2049 "y.tab.c" /* yacc.c:1646  */
+#line 2048 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 509 "miniC.y" /* yacc.c:1646  */
+#line 510 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type, (yyvsp[0].symAttrib).type); strcpy((yyval.symAttrib).val,(yyvsp[0].symAttrib).val);}
-#line 2055 "y.tab.c" /* yacc.c:1646  */
+#line 2054 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 513 "miniC.y" /* yacc.c:1646  */
+#line 514 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type, (yyvsp[0].symAttrib).type); strcpy((yyval.symAttrib).val,(yyvsp[0].symAttrib).val);}
-#line 2061 "y.tab.c" /* yacc.c:1646  */
+#line 2060 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 514 "miniC.y" /* yacc.c:1646  */
+#line 515 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type, "int");
                                                    strcpy((yyval.symAttrib).val, tempVarName());
                                                    sprintf(tempCode, "%s = %s & %s\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                  }
-#line 2070 "y.tab.c" /* yacc.c:1646  */
+#line 2069 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 518 "miniC.y" /* yacc.c:1646  */
+#line 519 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type, "int");
                                                    strcpy((yyval.symAttrib).val, tempVarName());
                                                    sprintf(tempCode, "%s = %s | %s\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                  }
-#line 2079 "y.tab.c" /* yacc.c:1646  */
+#line 2078 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 522 "miniC.y" /* yacc.c:1646  */
+#line 523 "miniC.y" /* yacc.c:1646  */
     {   strcpy((yyval.symAttrib).type, "int");
                                         strcpy((yyval.symAttrib).val, tempVarName());
                                         sprintf(tempCode, "%s = !(%s)\n", (yyval.symAttrib).val, (yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                     }
-#line 2088 "y.tab.c" /* yacc.c:1646  */
+#line 2087 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 528 "miniC.y" /* yacc.c:1646  */
+#line 529 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type, (yyvsp[0].symAttrib).type); strcpy((yyval.symAttrib).val,(yyvsp[0].symAttrib).val);}
-#line 2094 "y.tab.c" /* yacc.c:1646  */
+#line 2093 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 529 "miniC.y" /* yacc.c:1646  */
+#line 530 "miniC.y" /* yacc.c:1646  */
     {   strcpy((yyval.symAttrib).type, "int");
                                                         strcpy((yyval.symAttrib).val, tempVarName());
                                                         sprintf(tempCode, "%s = (%s > %s)\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                     }
-#line 2103 "y.tab.c" /* yacc.c:1646  */
+#line 2102 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 533 "miniC.y" /* yacc.c:1646  */
+#line 534 "miniC.y" /* yacc.c:1646  */
     {   strcpy((yyval.symAttrib).type, "int");
                                                         strcpy((yyval.symAttrib).val, tempVarName());
                                                         sprintf(tempCode, "%s = (%s < %s)\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                     }
-#line 2112 "y.tab.c" /* yacc.c:1646  */
+#line 2111 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 537 "miniC.y" /* yacc.c:1646  */
+#line 538 "miniC.y" /* yacc.c:1646  */
     {   strcpy((yyval.symAttrib).type, "int");
                                                         strcpy((yyval.symAttrib).val, tempVarName());
                                                         sprintf(tempCode, "%s = (%s >= %s)\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                     }
-#line 2121 "y.tab.c" /* yacc.c:1646  */
+#line 2120 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 541 "miniC.y" /* yacc.c:1646  */
+#line 542 "miniC.y" /* yacc.c:1646  */
     {   strcpy((yyval.symAttrib).type, "int");
                                                         strcpy((yyval.symAttrib).val, tempVarName());
                                                         sprintf(tempCode, "%s = (%s <= %s)\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                     }
-#line 2130 "y.tab.c" /* yacc.c:1646  */
+#line 2129 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 545 "miniC.y" /* yacc.c:1646  */
+#line 546 "miniC.y" /* yacc.c:1646  */
     {   strcpy((yyval.symAttrib).type, "int");
                                                         strcpy((yyval.symAttrib).val, tempVarName());
                                                         sprintf(tempCode, "%s = (%s == %s)\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                     }
-#line 2139 "y.tab.c" /* yacc.c:1646  */
+#line 2138 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 549 "miniC.y" /* yacc.c:1646  */
+#line 550 "miniC.y" /* yacc.c:1646  */
     {   strcpy((yyval.symAttrib).type, "int");
                                                         strcpy((yyval.symAttrib).val, tempVarName());
                                                         sprintf(tempCode, "%s = (%s != %s)\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                     }
-#line 2148 "y.tab.c" /* yacc.c:1646  */
+#line 2147 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 556 "miniC.y" /* yacc.c:1646  */
+#line 557 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type, (yyvsp[0].symAttrib).type); strcpy((yyval.symAttrib).val,(yyvsp[0].symAttrib).val);}
-#line 2154 "y.tab.c" /* yacc.c:1646  */
+#line 2153 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 557 "miniC.y" /* yacc.c:1646  */
+#line 558 "miniC.y" /* yacc.c:1646  */
     { if(isHigherPri((yyvsp[-2].symAttrib).type,(yyvsp[0].symAttrib).type)) strcpy((yyval.symAttrib).type,(yyvsp[-2].symAttrib).type);
                                                          else { strcpy((yyval.symAttrib).type,(yyvsp[0].symAttrib).type);
                                                                 strcpy((yyval.symAttrib).val, tempVarName());
                                                                 sprintf(tempCode, "%s = %s + %s\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                               }
                                                         }
-#line 2165 "y.tab.c" /* yacc.c:1646  */
+#line 2164 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 563 "miniC.y" /* yacc.c:1646  */
+#line 564 "miniC.y" /* yacc.c:1646  */
     { if(isHigherPri((yyvsp[-2].symAttrib).type,(yyvsp[0].symAttrib).type)) strcpy((yyval.symAttrib).type,(yyvsp[-2].symAttrib).type);
                                                          else { strcpy((yyval.symAttrib).type,(yyvsp[0].symAttrib).type);
                                                                 strcpy((yyval.symAttrib).val, tempVarName());
                                                                 sprintf(tempCode, "%s = %s - %s\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode);
                                                               }
                                                         }
-#line 2176 "y.tab.c" /* yacc.c:1646  */
+#line 2175 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 570 "miniC.y" /* yacc.c:1646  */
+#line 571 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type, (yyvsp[0].symAttrib).type); strcpy((yyval.symAttrib).val, (yyvsp[0].symAttrib).val); }
-#line 2182 "y.tab.c" /* yacc.c:1646  */
+#line 2181 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 571 "miniC.y" /* yacc.c:1646  */
+#line 572 "miniC.y" /* yacc.c:1646  */
     { if(isHigherPri((yyvsp[-2].symAttrib).type,(yyvsp[0].symAttrib).type)) strcpy((yyval.symAttrib).type,(yyvsp[-2].symAttrib).type);
                                                          else { strcpy((yyval.symAttrib).type,(yyvsp[0].symAttrib).type);
                                                                 strcpy((yyval.symAttrib).val, tempVarName());
                                                                 sprintf(tempCode, "%s = %s * %s\n", (yyval.symAttrib).val, (yyvsp[-2].symAttrib).val,(yyvsp[0].symAttrib).val);addThreeAddressCode(tempCode); }
                                                         }
-#line 2192 "y.tab.c" /* yacc.c:1646  */
+#line 2191 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 576 "miniC.y" /* yacc.c:1646  */
+#line 577 "miniC.y" /* yacc.c:1646  */
     { if(isHigherPri((yyvsp[-2].symAttrib).type,(yyvsp[0].symAttrib).type)) strcpy((yyval.symAttrib).type,(yyvsp[-2].symAttrib).type);
                                                          else { strcpy((yyval.symAttrib).type,(yyvsp[0].symAttrib).type);
                                                                 strcpy((yyval.symAttrib).val, tempVarName());
@@ -2200,11 +2199,11 @@ yyreduce:
                                                                 addThreeAddressCode(tempCode); }
 
                                                         }
-#line 2204 "y.tab.c" /* yacc.c:1646  */
+#line 2203 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 583 "miniC.y" /* yacc.c:1646  */
+#line 584 "miniC.y" /* yacc.c:1646  */
     { if(strcmp((yyvsp[-2].symAttrib).type,"int")!=0 || strcmp((yyvsp[0].symAttrib).type,"int")!=0){
                                                                 printf(RED "Error : Modulus operator expects int\n" RESET);
                                                                 strcpy((yyval.symAttrib).type, "int");
@@ -2216,41 +2215,41 @@ yyreduce:
                                                                 addThreeAddressCode(tempCode);
                                                         }
                                                         }
-#line 2220 "y.tab.c" /* yacc.c:1646  */
+#line 2219 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 595 "miniC.y" /* yacc.c:1646  */
+#line 596 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type, (yyvsp[-1].symAttrib).type); strcpy((yyval.symAttrib).val, (yyvsp[-1].symAttrib).val); }
-#line 2226 "y.tab.c" /* yacc.c:1646  */
+#line 2225 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 596 "miniC.y" /* yacc.c:1646  */
+#line 597 "miniC.y" /* yacc.c:1646  */
     {num = (yyvsp[0].num); strcpy((yyval.symAttrib).type,"int"); strcpy((yyval.symAttrib).val, integerToString((yyvsp[0].num)));}
-#line 2232 "y.tab.c" /* yacc.c:1646  */
+#line 2231 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 597 "miniC.y" /* yacc.c:1646  */
+#line 598 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type,"float"); strcpy((yyval.symAttrib).val, floatToString((yyvsp[0].floatNum)));}
-#line 2238 "y.tab.c" /* yacc.c:1646  */
+#line 2237 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 598 "miniC.y" /* yacc.c:1646  */
+#line 599 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type,"char"); strcpy((yyval.symAttrib).val, charToString((yyvsp[0].charConst)));}
-#line 2244 "y.tab.c" /* yacc.c:1646  */
+#line 2243 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 599 "miniC.y" /* yacc.c:1646  */
+#line 600 "miniC.y" /* yacc.c:1646  */
     { strcpy((yyval.symAttrib).type,"string"); }
-#line 2250 "y.tab.c" /* yacc.c:1646  */
+#line 2249 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 600 "miniC.y" /* yacc.c:1646  */
+#line 601 "miniC.y" /* yacc.c:1646  */
     {if(!checkAncestors((yyvsp[0].id))){
                                                 printUndecVarErr(lineNo, (yyvsp[0].id));
                                          }
@@ -2261,41 +2260,41 @@ yyreduce:
                                                  strcpy((yyval.symAttrib).val, (yyvsp[0].id));
                                          }
                                         }
-#line 2265 "y.tab.c" /* yacc.c:1646  */
+#line 2264 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 610 "miniC.y" /* yacc.c:1646  */
+#line 611 "miniC.y" /* yacc.c:1646  */
     {num = -num; strcpy((yyval.symAttrib).type,(yyvsp[0].symAttrib).type);}
-#line 2271 "y.tab.c" /* yacc.c:1646  */
+#line 2270 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 611 "miniC.y" /* yacc.c:1646  */
+#line 612 "miniC.y" /* yacc.c:1646  */
     {strcpy((yyval.symAttrib).type,(yyvsp[0].symAttrib).type);}
-#line 2277 "y.tab.c" /* yacc.c:1646  */
+#line 2276 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 612 "miniC.y" /* yacc.c:1646  */
+#line 613 "miniC.y" /* yacc.c:1646  */
     {       strcpy((yyval.symAttrib).type,(yyvsp[0].symAttrib).type);
                                                 strcpy((yyval.symAttrib).val, (yyvsp[0].symAttrib).val);
                                         }
-#line 2285 "y.tab.c" /* yacc.c:1646  */
+#line 2284 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 615 "miniC.y" /* yacc.c:1646  */
+#line 616 "miniC.y" /* yacc.c:1646  */
     {       if(!checkAncestors((yyvsp[0].id)))
                                                         printUndecVarErr(lineNo, (yyvsp[0].id));
                                                 else 
                                                         strcpy((yyval.symAttrib).type,checkAncestors((yyvsp[0].id))->tokenType);
                                         }
-#line 2295 "y.tab.c" /* yacc.c:1646  */
+#line 2294 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 620 "miniC.y" /* yacc.c:1646  */
+#line 621 "miniC.y" /* yacc.c:1646  */
     {if(!checkAncestors((yyvsp[0].id))){
                                                 printUndecVarErr(lineNo, (yyvsp[0].id));
                                         }
@@ -2307,11 +2306,11 @@ yyreduce:
                                                  sprintf(tempCode, "%s = %s + 1\n", (yyval.symAttrib).val, (yyvsp[0].id));addThreeAddressCode(tempCode);
                                                  sprintf(tempCode, "%s = %s\n", (yyvsp[0].id), (yyval.symAttrib).val);addThreeAddressCode(tempCode); }
                                          }
-#line 2311 "y.tab.c" /* yacc.c:1646  */
+#line 2310 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 631 "miniC.y" /* yacc.c:1646  */
+#line 632 "miniC.y" /* yacc.c:1646  */
     {if(!checkAncestors((yyvsp[-1].id))){
                                                 printUndecVarErr(lineNo, (yyvsp[-1].id));
                                         }
@@ -2323,11 +2322,11 @@ yyreduce:
                                                  sprintf(tempCode, "%s = %s + 1\n", (yyval.symAttrib).val, (yyvsp[-1].id)); addThreeAddressCode(tempCode);
                                                  sprintf(tempCode, "%s = %s\n", (yyvsp[-1].id), (yyval.symAttrib).val); addThreeAddressCode(tempCode);
                                          }}
-#line 2327 "y.tab.c" /* yacc.c:1646  */
+#line 2326 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 642 "miniC.y" /* yacc.c:1646  */
+#line 643 "miniC.y" /* yacc.c:1646  */
     {if(!checkAncestors((yyvsp[0].id))){
                                                 printUndecVarErr(lineNo, (yyvsp[0].id));
                                         }
@@ -2339,11 +2338,11 @@ yyreduce:
                                                  sprintf(tempCode, "%s = %s - 1\n", (yyval.symAttrib).val, (yyvsp[0].id)); addThreeAddressCode(tempCode);
                                                  sprintf(tempCode, "%s = %s\n", (yyvsp[0].id), (yyval.symAttrib).val);addThreeAddressCode(tempCode);
                                          }}
-#line 2343 "y.tab.c" /* yacc.c:1646  */
+#line 2342 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 653 "miniC.y" /* yacc.c:1646  */
+#line 654 "miniC.y" /* yacc.c:1646  */
     {if(!checkAncestors((yyvsp[-1].id))){
                                                 printUndecVarErr(lineNo, (yyvsp[-1].id));
                                         }
@@ -2355,36 +2354,36 @@ yyreduce:
                                                  sprintf(tempCode, "%s = %s - 1\n", (yyval.symAttrib).val, (yyvsp[-1].id));addThreeAddressCode(tempCode);
                                                  sprintf(tempCode, "%s = %s\n", (yyvsp[-1].id), (yyval.symAttrib).val);addThreeAddressCode(tempCode);
                                          }}
-#line 2359 "y.tab.c" /* yacc.c:1646  */
+#line 2358 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 105:
-#line 683 "miniC.y" /* yacc.c:1646  */
+#line 684 "miniC.y" /* yacc.c:1646  */
     { strcpy(returnType, (yyvsp[-1].symAttrib).type); 
                                      sprintf(tempCode, "return %s  \n", (yyvsp[-1].symAttrib).val);addThreeAddressCode(tempCode);
                                   }
-#line 2367 "y.tab.c" /* yacc.c:1646  */
+#line 2366 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 688 "miniC.y" /* yacc.c:1646  */
+#line 689 "miniC.y" /* yacc.c:1646  */
     {       pushThreeAddressLabelStack(nextLabelName());
                                                         sprintf(tempCode, "\n%s : \n", labelName());addThreeAddressCode(tempCode);
                                                 }
-#line 2375 "y.tab.c" /* yacc.c:1646  */
+#line 2374 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 107:
-#line 691 "miniC.y" /* yacc.c:1646  */
+#line 692 "miniC.y" /* yacc.c:1646  */
     {       pushBackPatchStack(threeAddressCodeLineNo);
                                                         sprintf(tempCode, "IF (%s) GOTO %s\nGOTO ", (yyvsp[-1].symAttrib).val, nextLabelName());addThreeAddressCode(tempCode);
                                                         sprintf(tempCode, "\n%s : \n", labelName());addThreeAddressCode(tempCode);
                                                 }
-#line 2384 "y.tab.c" /* yacc.c:1646  */
+#line 2383 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 108:
-#line 695 "miniC.y" /* yacc.c:1646  */
+#line 696 "miniC.y" /* yacc.c:1646  */
     {       sprintf(tempCode, "GOTO %s\n", threeAddressLabelStack[threeAddressLabelStackTop]);addThreeAddressCode(tempCode);
                                                         popThreeAddressLabelStack();
                                                         char * newLabelName = labelName();
@@ -2394,36 +2393,36 @@ yyreduce:
                                                         sprintf(tempString, "%s\n", newLabelName);
                                                         strcat(threeAddressCode[popBackPatchStack()], tempString);
                                                 }
-#line 2398 "y.tab.c" /* yacc.c:1646  */
+#line 2397 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 109:
-#line 706 "miniC.y" /* yacc.c:1646  */
+#line 707 "miniC.y" /* yacc.c:1646  */
     {       pushThreeAddressLabelStack(nextLabelName());
                                                         sprintf(tempCode, "\n%s : \n", labelName());addThreeAddressCode(tempCode);
                                                 }
-#line 2406 "y.tab.c" /* yacc.c:1646  */
+#line 2405 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 110:
-#line 709 "miniC.y" /* yacc.c:1646  */
+#line 710 "miniC.y" /* yacc.c:1646  */
     {       sprintf(tempCode, "IF (%s) GOTO %s\n", (yyvsp[-2].symAttrib).val, threeAddressLabelStack[threeAddressLabelStackTop]);addThreeAddressCode(tempCode);
                                                                                 popThreeAddressLabelStack();
                                                                         }
-#line 2414 "y.tab.c" /* yacc.c:1646  */
+#line 2413 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 719 "miniC.y" /* yacc.c:1646  */
+#line 720 "miniC.y" /* yacc.c:1646  */
     {       pushBackPatchStack(threeAddressCodeLineNo);
                                                         sprintf(tempCode, "IF (%s) GOTO %s\nGOTO ", (yyvsp[-1].symAttrib).val, nextLabelName());addThreeAddressCode(tempCode);
                                                         sprintf(tempCode, "\n%s : \n", labelName());addThreeAddressCode(tempCode);
                                                 }
-#line 2423 "y.tab.c" /* yacc.c:1646  */
+#line 2422 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 114:
-#line 723 "miniC.y" /* yacc.c:1646  */
+#line 724 "miniC.y" /* yacc.c:1646  */
     {       char * newLabelName = labelName();
                                                         sprintf(tempCode, "\n%s : \n", newLabelName);addThreeAddressCode(tempCode);
 
@@ -2431,20 +2430,20 @@ yyreduce:
                                                         sprintf(tempString, "%s\n", newLabelName);
                                                         strcat(threeAddressCode[popBackPatchStack()], tempString);
                                                 }
-#line 2435 "y.tab.c" /* yacc.c:1646  */
+#line 2434 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 116:
-#line 731 "miniC.y" /* yacc.c:1646  */
+#line 732 "miniC.y" /* yacc.c:1646  */
     {       pushBackPatchStack(threeAddressCodeLineNo);
                                                         sprintf(tempCode, "IF (%s) GOTO %s\nGOTO ", (yyvsp[-1].symAttrib).val, nextLabelName());addThreeAddressCode(tempCode);
                                                         sprintf(tempCode, "\n%s : \n", labelName());addThreeAddressCode(tempCode);
                                                 }
-#line 2444 "y.tab.c" /* yacc.c:1646  */
+#line 2443 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 117:
-#line 735 "miniC.y" /* yacc.c:1646  */
+#line 736 "miniC.y" /* yacc.c:1646  */
     {       char * newLabelName = labelName();
                                                         sprintf(tempCode, "%s : \n", newLabelName);addThreeAddressCode(tempCode);
 
@@ -2452,11 +2451,11 @@ yyreduce:
                                                         sprintf(tempString, "%s\n", newLabelName);
                                                         strcat(threeAddressCode[popBackPatchStack()], tempString);
                                                 }
-#line 2456 "y.tab.c" /* yacc.c:1646  */
+#line 2455 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 122:
-#line 750 "miniC.y" /* yacc.c:1646  */
+#line 751 "miniC.y" /* yacc.c:1646  */
     {
                                                  if(!checkAncestors((yyvsp[-3].id)))
                                                        printUndecVarErr(lineNo, (yyvsp[-3].id));
@@ -2470,18 +2469,22 @@ yyreduce:
                                                 }
                                                 else
                                                 {
-                                                        sprintf(tempCode, "CALL %s, Params: %s\n", (yyvsp[-3].id), pVal);addThreeAddressCode(tempCode);
-                                                        strcpy(pVal,"");
+                                                        for(int i = countPval-1; i >=0; i--)
+                                                        {
+                                                                sprintf(tempCode, "Push param %s\n",pVal[i]);addThreeAddressCode(tempCode);
+                                                        }
+                                                        sprintf(tempCode, "CALL %s\n", (yyvsp[-3].id));addThreeAddressCode(tempCode);
+                                                        countPval = 0;
                                                 }
                                                 
                                                  pCount = 0;
                                                  strcpy((yyval.id),(yyvsp[-3].id));
                                                 }
-#line 2481 "y.tab.c" /* yacc.c:1646  */
+#line 2484 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2485 "y.tab.c" /* yacc.c:1646  */
+#line 2488 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2709,7 +2712,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 772 "miniC.y" /* yacc.c:1906  */
+#line 777 "miniC.y" /* yacc.c:1906  */
 
 #include<ctype.h>
 
